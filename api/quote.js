@@ -1,7 +1,7 @@
 // POST /api/quote — saves a quote request in Supabase, stores the artwork file,
 // and emails the owner and the customer (Resend). Configure with environment variables:
 // SUPABASE_URL, SUPABASE_SERVICE_KEY, RESEND_API_KEY, OWNER_EMAIL, FROM_EMAIL
-const { keyHeaders, clean, body, sb, sendEmail } = require('./_lib/sb');
+const { baseUrl, keyHeaders, clean, body, sb, sendEmail } = require('./_lib/sb');
 
 const MAX_FILE = 3 * 1024 * 1024; // 3 MB (request body limit on Vercel is ~4.5 MB after base64)
 const ALLOWED = ['application/pdf', 'image/png', 'image/jpeg', 'image/svg+xml', 'application/postscript', 'application/illustrator', 'application/octet-stream'];
@@ -36,7 +36,7 @@ module.exports = async (req, res) => {
     const safe = clean(b.file.name, 100).replace(/[^A-Za-z0-9._-]+/g, '_') || 'artwork';
     const path = new Date().toISOString().slice(0, 10) + '/' + Date.now() + '-' + safe;
     try {
-      const up = await fetch(`${env.SUPABASE_URL.replace(/\/+$/, '')}/storage/v1/object/artwork/${path}`, {
+      const up = await fetch(`${baseUrl()}/storage/v1/object/artwork/${path}`, {
         method: 'POST',
         headers: Object.assign(keyHeaders(), { 'Content-Type': type }),
         body: buf

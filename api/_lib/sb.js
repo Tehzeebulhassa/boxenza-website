@@ -8,6 +8,12 @@ function keyHeaders() {
   return k.startsWith('eyJ') ? { apikey: k, Authorization: 'Bearer ' + k } : { apikey: k };
 }
 
+// Project URL without anything extra: "https://xxxx.supabase.co" (also accepts a pasted ".../rest/v1/" or spaces)
+function baseUrl() {
+  const u = String(process.env.SUPABASE_URL || '').trim().replace(/\/+$/, '').replace(/\/(rest|storage|auth)\/v1.*$/, '').replace(/\/+$/, '');
+  return /^https?:\/\//.test(u) ? u : 'https://' + u;
+}
+
 const clean = (v, n) => (v == null ? '' : String(v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '').trim().slice(0, n));
 
 function body(req) {
@@ -22,7 +28,7 @@ async function sb(path, opts) {
   const env = process.env;
   opts = opts || {};
   const headers = Object.assign(keyHeaders(), { 'Content-Type': 'application/json' }, opts.headers || {});
-  const r = await fetch(env.SUPABASE_URL.replace(/\/+$/, '') + '/rest/v1/' + path, {
+  const r = await fetch(baseUrl() + '/rest/v1/' + path, {
     method: opts.method || 'GET',
     headers,
     body: opts.body === undefined ? undefined : JSON.stringify(opts.body)
@@ -82,4 +88,4 @@ function tokenOk(req) {
   try { return JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')).exp > Date.now(); } catch (e) { return false; }
 }
 
-module.exports = { keyHeaders, clean, body, sb, sendEmail, passwordOk, makeToken, tokenOk };
+module.exports = { baseUrl, keyHeaders, clean, body, sb, sendEmail, passwordOk, makeToken, tokenOk };

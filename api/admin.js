@@ -1,7 +1,7 @@
 // /api/admin — private API for the admin panel (one endpoint, ?r= picks the resource).
 // Login: POST ?r=login {password} -> {token}. Every other call needs "Authorization: Bearer <token>".
 // Needs env: SUPABASE_URL, SUPABASE_SERVICE_KEY, ADMIN_PASSWORD (12+ characters recommended).
-const { keyHeaders, clean, body, sb, passwordOk, makeToken, tokenOk } = require('./_lib/sb');
+const { baseUrl, keyHeaders, clean, body, sb, passwordOk, makeToken, tokenOk } = require('./_lib/sb');
 
 const QUOTE_STATUS = ['new', 'contacted', 'quoted', 'won', 'lost'];
 const STAGES = ['artwork', 'sample', 'production', 'shipping', 'delivered', 'cancelled'];
@@ -175,7 +175,7 @@ H.quotes = {
     const fp = r.data && r.data[0] && r.data[0].file_path;
     if (fp) {
       try {
-        await fetch(`${process.env.SUPABASE_URL.replace(/\/+$/, '')}/storage/v1/object/artwork/${fp}`, { method: 'DELETE',
+        await fetch(`${baseUrl()}/storage/v1/object/artwork/${fp}`, { method: 'DELETE',
           headers: keyHeaders() });
       } catch (e) { /* the file stays in storage; harmless */ }
     }
@@ -186,7 +186,7 @@ H.quotes = {
 H.file = async q => {
   const path = String(q.path || '');
   if (!/^[\w./-]+$/.test(path) || path.indexOf('..') >= 0) throw new Bad('Bad file path');
-  const env = process.env, base = env.SUPABASE_URL.replace(/\/+$/, '');
+  const base = baseUrl();
   const r = await fetch(`${base}/storage/v1/object/sign/artwork/${path}`, {
     method: 'POST',
     headers: Object.assign(keyHeaders(), { 'Content-Type': 'application/json' }),
