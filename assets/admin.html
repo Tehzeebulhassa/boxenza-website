@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#16224A">
+<title>Boxenza Admin</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #16224A; --navy-2: #22305F; --accent: #D21F66; --accent-ink: #B0144F; --accent-soft: #FCE8F0; --kraft: #C9A06B;
+  --bg: #F4F5F9; --card: #FFFFFF; --ink: #141A33; --ink-2: #5A6178; --line: #E2E5EE; --soft: #F7F8FB;
+  --good: #137A4B; --good-soft: #E3F5EC; --warn: #8A5A00; --warn-soft: #FFF3D6; --info: #0B5CAD; --info-soft: #E2EFFD;
+  --bad: #B3261E; --bad-soft: #FDE8E7; --mute: #5F6473; --mute-soft: #EEEFF3; --teal: #0F6E74; --teal-soft: #DDF3F3;
+  --violet: #5B3CC4; --violet-soft: #ECE7FC;
+  --f: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --r: 12px; --nav-h: 64px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; font: 15px/1.5 var(--f); color: var(--ink); background: var(--bg); }
+a { color: inherit; }
+h1, h2, h3 { margin: 0; letter-spacing: -0.01em; line-height: 1.2; }
+p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- top bar + nav ---------- */
+.top { position: sticky; top: 0; z-index: 30; background: var(--navy); color: #fff; }
+.top-in { max-width: 1240px; margin: 0 auto; padding: 0.7rem 1rem; display: flex; align-items: center; gap: 1rem; }
+.brand { display: flex; align-items: center; gap: 0.55rem; font-weight: 800; font-size: 1.05rem; text-decoration: none; }
+.brand small { font: 500 0.68rem var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--kraft); }
+.top-links { margin-left: auto; display: flex; gap: 0.4rem; }
+.top-links a, .top-links button { background: none; border: 1px solid rgba(255,255,255,0.22); color: #fff; border-radius: 8px; padding: 0.35rem 0.7rem; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: none; }
+.nav { display: flex; gap: 0.25rem; max-width: 1240px; margin: 0 auto; padding: 0 0.6rem; overflow-x: auto; scrollbar-width: none; }
+.nav::-webkit-scrollbar { display: none; }
+.nav a { display: flex; align-items: center; gap: 0.45rem; padding: 0.7rem 0.85rem; color: rgba(255,255,255,0.72); text-decoration: none; font-weight: 600; font-size: 0.92rem; border-bottom: 3px solid transparent; white-space: nowrap; }
+.nav a[aria-current="page"] { color: #fff; border-bottom-color: var(--accent); }
+.nav svg { width: 18px; height: 18px; flex: none; }
+.nav .badge { background: var(--accent); color: #fff; border-radius: 99px; font-size: 0.7rem; padding: 0 0.4rem; min-width: 1.2rem; text-align: center; }
+@media (max-width: 760px) {
+  .nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; background: #fff; border-top: 1px solid var(--line); justify-content: space-around; padding: 0 0 env(safe-area-inset-bottom); max-width: none; box-shadow: 0 -4px 16px rgba(20,26,51,0.06); }
+  .nav a { flex-direction: column; gap: 0.15rem; color: var(--ink-2); font-size: 0.7rem; padding: 0.5rem 0.2rem 0.45rem; border-bottom: 0; border-top: 3px solid transparent; flex: 1; justify-content: center; position: relative; }
+  .nav a[aria-current="page"] { color: var(--accent-ink); border-top-color: var(--accent); }
+  .nav svg { width: 22px; height: 22px; }
+  .nav .badge { position: absolute; top: 4px; left: calc(50% + 6px); }
+  main { padding-bottom: calc(var(--nav-h) + 1.5rem + env(safe-area-inset-bottom)) !important; }
+  .top-links .hide-sm { display: none; }
+}
+
+/* ---------- layout ---------- */
+main { max-width: 1240px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
+.page-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1rem; }
+.page-head h1 { font-size: 1.45rem; font-weight: 800; }
+.muted { color: var(--ink-2); font-size: 0.88rem; }
+.eyebrow { font: 500 0.7rem/1.2 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-ink); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 1rem; }
+.grid { display: grid; gap: 0.75rem; }
+.cols-2 { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); align-items: start; }
+.fgrid.tight { grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr)); }
+
+/* ---------- buttons + forms ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border: 1px solid var(--accent); background: var(--accent); color: #fff; border-radius: 9px; padding: 0.55rem 0.95rem; font-weight: 700; font-size: 0.9rem; cursor: pointer; text-decoration: none; white-space: nowrap; min-height: 40px; }
+.btn:hover { background: var(--accent-ink); border-color: var(--accent-ink); }
+.btn.ghost { background: #fff; color: var(--ink); border-color: var(--line); }
+.btn.ghost:hover { border-color: var(--ink-2); }
+.btn.danger { background: #fff; color: var(--bad); border-color: #F2C4C1; }
+.btn.small { min-height: 32px; padding: 0.3rem 0.65rem; font-size: 0.82rem; }
+.btn[disabled] { opacity: 0.6; cursor: progress; }
+.btn svg { width: 16px; height: 16px; }
+label.f { display: grid; gap: 0.3rem; font-size: 0.8rem; font-weight: 700; color: var(--ink-2); min-width: 0; }
+input:not([type=checkbox]):not([type=radio]):not([type=file]), select, textarea { width: 100%; border: 1px solid var(--line); border-radius: 9px; padding: 0.55rem 0.7rem; background: #fff; font-size: 0.95rem; font-weight: 500; color: var(--ink); min-height: 42px; }
+textarea { min-height: 84px; resize: vertical; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.fgrid { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); }
+.fgrid .wide { grid-column: 1 / -1; }
+.money { display: grid; grid-template-columns: 6.2rem 1fr; gap: 0.4rem; }
+.check { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.9rem; font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.chip { display: inline-flex; align-items: center; gap: 0.35rem; border: 1px solid var(--line); background: #fff; border-radius: 99px; padding: 0.35rem 0.75rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; color: var(--ink-2); text-decoration: none; white-space: nowrap; }
+.chip b { font-weight: 800; color: var(--ink); }
+.chip[aria-pressed="true"], .chip.on { background: var(--navy); border-color: var(--navy); color: #fff; }
+.chip[aria-pressed="true"] b, .chip.on b { color: #fff; }
+.chip { position: relative; }
+.chip input { position: absolute; opacity: 0; pointer-events: none; width: 1px; height: 1px; }
+.chip:has(input:checked) { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-ink); }
+.chip:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; }
+.toolbar .search { flex: 1 1 14rem; min-width: 0; }
+.scroll-x { overflow-x: auto; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
+.chips.scroll-x { flex-wrap: nowrap; padding-bottom: 0.2rem; }
+
+/* ---------- pills ---------- */
+.pill { display: inline-block; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.18rem 0.55rem; border-radius: 99px; white-space: nowrap; }
+.st-new { background: var(--accent-soft); color: var(--accent-ink); }
+.st-contacted { background: var(--info-soft); color: var(--info); }
+.st-quoted { background: var(--warn-soft); color: var(--warn); }
+.st-won, .sg-delivered { background: var(--good-soft); color: var(--good); }
+.st-lost, .sg-cancelled { background: var(--mute-soft); color: var(--mute); }
+.sg-artwork { background: var(--violet-soft); color: var(--violet); }
+.sg-sample { background: var(--warn-soft); color: var(--warn); }
+.sg-production { background: var(--info-soft); color: var(--info); }
+.sg-shipping { background: var(--teal-soft); color: var(--teal); }
+.tag-due { color: var(--bad); font-weight: 700; }
+.tag-ok { color: var(--good); font-weight: 700; }
+
+/* ---------- list items ---------- */
+.list { display: grid; gap: 0.6rem; }
+.item { display: grid; gap: 0.25rem; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 0.85rem 1rem; text-decoration: none; transition: border-color 0.15s, box-shadow 0.15s; min-width: 0; }
+.item:hover { border-color: #C8CDDB; box-shadow: 0 2px 10px rgba(20,26,51,0.06); }
+.item-top { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+.ref { font: 500 0.78rem var(--mono); color: var(--ink-2); }
+.item-title { font-weight: 700; font-size: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item-sub { color: var(--ink-2); font-size: 0.88rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item-meta { display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; font-size: 0.82rem; color: var(--ink-2); }
+.item-meta b { color: var(--ink); }
+.empty { text-align: center; padding: 2.5rem 1rem; color: var(--ink-2); background: var(--card); border: 1px dashed var(--line); border-radius: var(--r); display: grid; gap: 0.6rem; justify-items: center; }
+.more { display: flex; justify-content: center; margin-top: 0.75rem; }
+
+/* ---------- dashboard ---------- */
+.kpis { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr)); margin-bottom: 1rem; }
+.kpi { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 0.85rem 1rem; display: grid; gap: 0.15rem; text-decoration: none; }
+.kpi span { font-size: 0.8rem; font-weight: 600; color: var(--ink-2); }
+.kpi b { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.kpi small { font-size: 0.78rem; color: var(--ink-2); }
+.kpi.hot b { color: var(--accent-ink); }
+.kpi.good b { color: var(--good); }
+.sec-title { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.6rem; }
+.sec-title h2 { font-size: 1.02rem; font-weight: 800; }
+.sec-title a { font-size: 0.85rem; font-weight: 700; color: var(--accent-ink); text-decoration: none; }
+.rows { display: grid; }
+.rowlink { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.6rem 0; border-top: 1px solid var(--line); text-decoration: none; min-width: 0; }
+.rowlink:first-child { border-top: 0; }
+.rowlink > div { min-width: 0; }
+.rowlink b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.92rem; }
+.stagebar { display: flex; height: 12px; border-radius: 99px; overflow: hidden; background: var(--mute-soft); margin: 0.4rem 0 0.75rem; }
+.stagebar i { display: block; height: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: 0.35rem 0.9rem; font-size: 0.8rem; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 0.35rem; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+/* ---------- drawer ---------- */
+.overlay { position: fixed; inset: 0; background: rgba(20,26,51,0.38); z-index: 50; opacity: 0; transition: opacity 0.2s; }
+.overlay.on { opacity: 1; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(640px, 100%); background: var(--bg); z-index: 60; display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.22s ease; box-shadow: -10px 0 30px rgba(20,26,51,0.15); }
+.drawer.on { transform: none; }
+.dr-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; padding: 1rem 1.1rem 0.85rem; background: #fff; border-bottom: 1px solid var(--line); }
+.dr-head h2 { font-size: 1.2rem; font-weight: 800; overflow-wrap: anywhere; }
+.dr-x { flex: none; width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--line); background: #fff; display: grid; place-items: center; cursor: pointer; text-decoration: none; font-size: 1.4rem; line-height: 1; }
+.dr-body { overflow-y: auto; padding: 1rem 1.1rem calc(2rem + env(safe-area-inset-bottom)); display: grid; gap: 1rem; align-content: start; -webkit-overflow-scrolling: touch; }
+.dr-sec { background: #fff; border: 1px solid var(--line); border-radius: var(--r); padding: 1rem; display: grid; gap: 0.75rem; }
+.dr-sec h3 { font-size: 0.95rem; font-weight: 800; }
+.quick { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+dl.kv { display: grid; grid-template-columns: minmax(7rem, max-content) 1fr; gap: 0.4rem 1rem; margin: 0; font-size: 0.9rem; }
+dl.kv dt { color: var(--ink-2); font-weight: 600; }
+dl.kv dd { margin: 0; overflow-wrap: anywhere; }
+pre.sum { white-space: pre-wrap; background: var(--soft); border: 1px solid var(--line); padding: 0.75rem; border-radius: 9px; font: 0.82rem/1.55 var(--mono); margin: 0; overflow-wrap: anywhere; }
+.timeline { display: grid; gap: 0.1rem; }
+.tl { display: grid; grid-template-columns: 10px 1fr; gap: 0.7rem; padding: 0.35rem 0; }
+.tl i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); margin-top: 0.4rem; }
+.tl:first-child i { background: var(--accent); }
+.tl b { font-weight: 600; font-size: 0.9rem; display: block; overflow-wrap: anywhere; }
+.tl span { font-size: 0.78rem; color: var(--ink-2); }
+.note-form { display: flex; gap: 0.5rem; }
+.note-form input { flex: 1; min-width: 0; }
+.stepper { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.calc { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: 0.6rem; background: var(--soft); border: 1px solid var(--line); border-radius: 10px; padding: 0.75rem; }
+.calc div { display: grid; }
+.calc span { font-size: 0.75rem; font-weight: 700; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.04em; }
+.calc b { font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.calc b.neg { color: var(--bad); } .calc b.pos { color: var(--good); }
+.actions { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: space-between; align-items: center; }
+.form-msg { font-size: 0.85rem; font-weight: 600; }
+.form-msg.err { color: var(--bad); } .form-msg.ok { color: var(--good); }
+.stars { color: var(--kraft); letter-spacing: 0.05em; }
+
+/* ---------- tables ---------- */
+table.t { width: 100%; border-collapse: collapse; font-size: 0.86rem; min-width: 760px; }
+table.t th { text-align: left; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-2); font-weight: 700; padding: 0.55rem 0.7rem; background: var(--soft); border-bottom: 1px solid var(--line); position: sticky; top: 0; white-space: nowrap; }
+table.t td { padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.t td:first-child { min-width: 13rem; }
+table.t td.num, table.t th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.t tr.best td { background: #F1FAF5; }
+table.t tr.grp td { border-top: 2px solid var(--line); }
+.best-tag { display: inline-block; margin-left: 0.35rem; font-size: 0.65rem; font-weight: 800; color: var(--good); background: var(--good-soft); border-radius: 99px; padding: 0.05rem 0.4rem; text-transform: uppercase; vertical-align: middle; }
+.tbl-wrap { background: #fff; border: 1px solid var(--line); border-radius: var(--r); max-height: 70vh; }
+
+/* ---------- login + toast + loading ---------- */
+.login { max-width: 380px; margin: 9vh auto 0; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 1.75rem; display: grid; gap: 0.9rem; box-shadow: 0 10px 40px rgba(20,26,51,0.08); }
+.login h1 { font-size: 1.35rem; font-weight: 800; }
+.toast { position: fixed; left: 50%; bottom: calc(var(--nav-h) + 1rem + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(20px); background: var(--navy); color: #fff; padding: 0.7rem 1.1rem; border-radius: 10px; font-weight: 600; font-size: 0.9rem; z-index: 90; opacity: 0; transition: 0.2s; pointer-events: none; max-width: calc(100% - 2rem); text-align: center; }
+.toast.on { opacity: 1; transform: translateX(-50%); }
+.toast.err { background: var(--bad); }
+@media (min-width: 761px) { .toast { bottom: 1.5rem; } }
+.loading { padding: 2rem; text-align: center; color: var(--ink-2); }
+.spin { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: sp 0.7s linear infinite; vertical-align: middle; margin-right: 0.4rem; }
+@keyframes sp { to { transform: rotate(360deg); } }
+.preview-tbl { max-height: 260px; }
+.preview-tbl table.t { min-width: 560px; }
+@media (prefers-reduced-motion: reduce) { .drawer, .overlay, .toast { transition: none; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#/home"><svg width="26" height="26" viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3 24 8.5v11L14 25 4 19.5v-11Z" fill="#D21F66"/><path d="M4 8.5 14 14l10-5.5M14 14v11" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg><span>Boxenza <small>Admin</small></span></a>
+    <div class="top-links" id="top-links" hidden>
+      <a href="/" target="_blank" rel="noopener" class="hide-sm">View site</a>
+      <button type="button" id="logout">Log out</button>
+    </div>
+  </div>
+  <nav class="nav" id="nav" hidden aria-label="Admin sections">
+    <a href="#/home" data-v="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</a>
+    <a href="#/quotes" data-v="quotes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v12H7l-3 3z"/><path d="M8 9h8M8 12h5"/></svg>Quotes<span class="badge" id="badge-new" hidden></span></a>
+    <a href="#/orders" data-v="orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="m3 7.5 9 4.5 9-4.5M12 12v9"/></svg>Orders</a>
+    <a href="#/suppliers" data-v="suppliers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21V9l6 4V9l6 4V5l6 4v12z"/><path d="M7 17h2M12 17h2M17 17h1"/></svg>Suppliers</a>
+    <a href="#/rates" data-v="rates"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M4 10h16M10 4v16"/></svg>Rates</a>
+  </nav>
+</header>
+
+<main id="main">
+  <form class="login" id="login" hidden>
+    <div><p class="eyebrow">Boxenza</p><h1>Admin login</h1></div>
+    <label class="f">Password<input id="pw" type="password" autocomplete="current-password" required></label>
+    <button class="btn" type="submit" id="login-btn">Log in</button>
+    <p class="form-msg err" id="login-err" role="alert"></p>
+  </form>
+  <div id="view"></div>
+</main>
+
+<div class="overlay" id="overlay" hidden></div>
+<aside class="drawer" id="drawer" hidden role="dialog" aria-modal="true" aria-labelledby="dr-title"></aside>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>window.BX_CATS = /*BX_CATS*/[];</script>
+<script>
+(function () {
+  'use strict';
+  // ---------------- basics ----------------
+  var STATUS = ['new', 'contacted', 'quoted', 'won', 'lost'];
+  var STAGES = ['artwork', 'sample', 'production', 'shipping', 'delivered', 'cancelled'];
+  var STAGE_COLOR = { artwork: '#5B3CC4', sample: '#D49A1A', production: '#0B5CAD', shipping: '#0F8A91', delivered: '#137A4B', cancelled: '#A7ABB8' };
+  var CURRENCIES = ['USD', 'GBP', 'EUR', 'CAD', 'AUD', 'AED', 'SAR', 'PKR'];
+  var QTYS = [100, 250, 500, 1000, 2500, 5000, 10000];
+  var CATS = window.BX_CATS || [];
+  var S = { token: null, view: null, f: { quotes: { status: '', q: '' }, orders: { stage: 'open', q: '' }, suppliers: { q: '' }, rates: { supplier_id: '', category: '', qty: '', material: '', q: '' } }, suppliers: null };
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); };
+  var cap = function (s) { s = String(s || ''); return s.charAt(0).toUpperCase() + s.slice(1); };
+  var ref = function (id) { return 'BX-' + String(id).padStart(5, '0'); };
+  var num = function (n, d) { return n == null || n === '' ? '' : Number(n).toLocaleString('en-US', { maximumFractionDigits: d == null ? 2 : d }); };
+  var money = function (cur, n) { return n == null || n === '' ? '—' : (cur ? cur + ' ' : '') + num(n); };
+  var pkr = function (n) { return n == null ? '—' : 'PKR ' + num(Math.round(n), 0); };
+  var todayStr = function () { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var dateTxt = function (s) { if (!s) return ''; var p = String(s).slice(0, 10).split('-'); return +p[2] + ' ' + MONTHS[+p[1] - 1] + (p[0] !== String(new Date().getFullYear()) ? ' ' + p[0] : ''); };
+  var localDay = function (s) { var d = new Date(s); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  var timeTxt = function (s) { var day = localDay(s); return day === todayStr() ? 'Today' : dateTxt(day); };
+  var stamp = function (s) { return timeTxt(s) + ', ' + new Date(s).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); };
+  var digits = function (p) { var d = String(p || '').replace(/[^\d+]/g, ''); if (d.indexOf('+') === 0) return d.slice(1); if (d.indexOf('00') === 0) return d.slice(2); if (/^03\d{9}$/.test(d)) return '92' + d.slice(1); return d.replace(/\+/g, ''); };
+  var storage = { get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }, del: function (k) { try { localStorage.removeItem(k); } catch (e) {} } };
+
+  var toastT;
+  function toast(msg, err) { var t = $('toast'); t.textContent = msg; t.className = 'toast on' + (err ? ' err' : ''); clearTimeout(toastT); toastT = setTimeout(function () { t.className = 'toast'; }, 2600); }
+
+  function api(method, r, params, body) {
+    var qs = Object.keys(params || {}).filter(function (k) { return params[k] !== '' && params[k] != null; }).map(function (k) { return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]); }).join('&');
+    return fetch('/api/admin?r=' + r + (qs ? '&' + qs : ''), {
+      method: method,
+      headers: Object.assign({ 'Content-Type': 'application/json' }, S.token ? { Authorization: 'Bearer ' + S.token } : {}),
+      body: body ? JSON.stringify(body) : undefined
+    }).then(function (res) {
+      return res.json().catch(function () { return { ok: false, error: 'The server did not answer properly (' + res.status + ').' }; }).then(function (j) {
+        if (res.status === 401 && r !== 'login') { logout(true); throw new Error(j.error || 'Please log in again.'); }
+        if (!j.ok) throw new Error(j.error || 'Something went wrong.');
+        return j;
+      });
+    }, function () { throw new Error('No connection. Check your internet and try again.'); });
+  }
+  function busy(btn, on, label) { if (!btn) return; if (on) { btn.dataset.l = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<span class="spin"></span>' + esc(label || 'Saving…'); } else { btn.disabled = false; btn.innerHTML = btn.dataset.l || btn.innerHTML; } }
+  function formData(form) {
+    var o = {};
+    Array.prototype.forEach.call(form.elements, function (el) {
+      if (!el.name || el.disabled) return;
+      if (el.type === 'checkbox' && el.dataset.list) { o[el.name] = o[el.name] || []; if (el.checked) o[el.name].push(el.value); }
+      else if (el.type === 'checkbox') o[el.name] = el.checked;
+      else if (el.type === 'radio') { if (el.checked) o[el.name] = el.value; }
+      else o[el.name] = el.value.trim();
+    });
+    return o;
+  }
+  function opts(list, sel, blank) { return (blank != null ? '<option value="">' + esc(blank) + '</option>' : '') + list.map(function (x) { var v = Array.isArray(x) ? x[0] : x, t = Array.isArray(x) ? x[1] : x; return '<option value="' + esc(v) + '"' + (String(v) === String(sel == null ? '' : sel) ? ' selected' : '') + '>' + esc(t) + '</option>'; }).join(''); }
+  function loading() { return '<div class="loading"><span class="spin"></span>Loading…</div>'; }
+  function errBox(e, retry) { return '<div class="empty"><b>Could not load</b><span>' + esc(e.message) + '</span>' + (retry ? '<button class="btn ghost small" type="button" data-retry>Try again</button>' : '') + '</div>'; }
+  function csvDownload(name, rows, cols) {
+    var q = function (v) { v = v == null ? '' : String(v); return /[",\r\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    var text = '﻿' + [cols.map(function (c) { return q(c[0]); }).join(',')].concat(rows.map(function (r) { return cols.map(function (c) { return q(typeof c[1] === 'function' ? c[1](r) : r[c[1]]); }).join(','); })).join('\r\n');
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' })); a.download = name; document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  }
+  function suppliers(force) {
+    if (S.suppliers && !force) return Promise.resolve(S.suppliers);
+    return api('GET', 'suppliers').then(function (j) { S.suppliers = j.rows; return j.rows; });
+  }
+  var catNames = function () { return CATS.map(function (c) { return c.n; }); };
+  var quoteProduct = function (r) {
+    if (r.items && r.items.length) return r.items.map(function (it) { return it.name; }).join(', ');
+    return r.product || '—';
+  };
+  var quoteQty = function (r) { if (r.items && r.items.length) return r.items.map(function (it) { return num(it.qty, 0); }).join(' + '); return r.qty || ''; };
+
+  // ---------------- drawer ----------------
+  var drawerBack = '#/home', lastFocus = null;
+  function openDrawer(html, back) {
+    drawerBack = back; var d = $('drawer'), o = $('overlay');
+    if (d.hidden) lastFocus = document.activeElement;
+    d.innerHTML = html; d.hidden = false; o.hidden = false;
+    requestAnimationFrame(function () { d.classList.add('on'); o.classList.add('on'); });
+    document.body.style.overflow = 'hidden';
+    var x = d.querySelector('.dr-x'); if (x) x.focus({ preventScroll: true });
+  }
+  function drawerLoading(title, back) { openDrawer('<div class="dr-head"><h2 id="dr-title">' + esc(title) + '</h2><a class="dr-x" href="' + back + '" aria-label="Close">×</a></div><div class="dr-body">' + loading() + '</div>', back); }
+  function closeDrawer() {
+    var d = $('drawer'), o = $('overlay');
+    if (d.hidden) return;
+    d.classList.remove('on'); o.classList.remove('on'); document.body.style.overflow = '';
+    setTimeout(function () { if (!d.classList.contains('on')) { d.hidden = true; o.hidden = true; d.innerHTML = ''; } }, 230);
+    if (lastFocus && lastFocus.focus) try { lastFocus.focus({ preventScroll: true }); } catch (e) {}
+  }
+  $('overlay').addEventListener('click', function () { location.hash = drawerBack; });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('drawer').hidden) location.hash = drawerBack; });
+  function head(eyebrow, title, sub, back) {
+    return '<div class="dr-head"><div style="min-width:0">' + (eyebrow ? '<p class="ref">' + eyebrow + '</p>' : '') + '<h2 id="dr-title">' + esc(title) + '</h2>' + (sub ? '<p class="muted">' + sub + '</p>' : '') + '</div><a class="dr-x" href="' + back + '" aria-label="Close">×</a></div>';
+  }
+  function timeline(entity, id, rows) {
+    return '<div class="dr-sec"><h3>Activity and notes</h3><form class="note-form" data-note="' + entity + ':' + id + '"><input name="text" placeholder="Add a note (call, WhatsApp, price…)" maxlength="1000" aria-label="New note"><button class="btn small" type="submit">Add</button></form>' +
+      '<div class="timeline" id="tl">' + (rows.length ? rows.map(function (a) { return '<div class="tl"><i></i><div><b>' + esc(a.text) + '</b><span>' + esc(stamp(a.created_at)) + '</span></div></div>'; }).join('') : '<p class="muted">Nothing yet.</p>') + '</div></div>';
+  }
+  $('drawer').addEventListener('submit', function (e) {
+    var f = e.target;
+    if (!f.dataset.note) return;
+    e.preventDefault();
+    var p = f.dataset.note.split(':'), inp = f.elements.text, btn = f.querySelector('button');
+    if (!inp.value.trim()) { inp.focus(); return; }
+    busy(btn, true, '');
+    api('POST', 'activity', null, { entity: p[0], entity_id: +p[1], text: inp.value.trim() }).then(function (j) {
+      busy(btn, false); inp.value = '';
+      var tl = $('tl'); if (tl.querySelector('p.muted')) tl.innerHTML = '';
+      tl.insertAdjacentHTML('afterbegin', '<div class="tl"><i></i><div><b>' + esc(j.row.text) + '</b><span>' + esc(stamp(j.row.created_at)) + '</span></div></div>');
+      toast('Note added');
+    }).catch(function (er) { busy(btn, false); toast(er.message, true); });
+  });
+
+  // ---------------- views ----------------
+  var V = {};
+
+  // ===== Home / dashboard =====
+  V.home = {
+    list: function () {
+      var el = $('view'); el.innerHTML = '<div class="page-head"><div><p class="eyebrow">Overview</p><h1>Dashboard</h1></div><a class="btn" href="#/quotes/new">+ Add lead</a></div>' + loading();
+      api('GET', 'stats', { today: todayStr() }).then(function (j) {
+        var q = j.quotes, o = j.orders;
+        setBadge(q.byStatus.new);
+        var unpaid = Object.keys(o.unpaid).map(function (c) { return money(c, o.unpaid[c]); }).join(' · ') || 'Nothing';
+        var bar = STAGES.filter(function (s) { return s !== 'cancelled'; });
+        var openTotal = bar.reduce(function (a, s) { return a + (s === 'delivered' ? 0 : o.byStage[s]); }, 0);
+        el.innerHTML = '<div class="page-head"><div><p class="eyebrow">Overview</p><h1>Dashboard</h1></div><a class="btn" href="#/quotes/new">+ Add lead</a></div>' +
+          '<div class="kpis">' +
+          kpi('#/quotes?status=new', 'New quotes', q.byStatus.new, 'Waiting for your reply', q.byStatus.new ? 'hot' : '') +
+          kpi('#/quotes?follow=due', 'Follow-ups due', q.followUps.length, 'Today or overdue', q.followUps.length ? 'hot' : '') +
+          kpi('#/quotes', 'Quotes, last 30 days', q.last30, q.total + ' in total') +
+          kpi('#/quotes?status=won', 'Win rate', q.winRate == null ? '—' : q.winRate + '%', q.byStatus.won + ' won · ' + q.byStatus.lost + ' lost') +
+          kpi('#/orders', 'Open orders', o.open, o.dueSoon.length + ' due within 7 days') +
+          kpi('#/orders?stage=all', 'Profit this month', pkr(o.month.profit_pkr).replace('PKR ', ''), 'PKR · sales ' + num(o.month.revenue_pkr, 0) + (o.month.missingFx ? ' · ' + o.month.missingFx + ' order(s) need a PKR rate' : ''), o.month.profit_pkr > 0 ? 'good' : '') +
+          '</div><div class="cols-2">' +
+          '<section class="card"><div class="sec-title"><h2>Follow-ups due</h2><a href="#/quotes?follow=due">See all</a></div><div class="rows">' +
+          (q.followUps.length ? q.followUps.map(function (x) { return '<a class="rowlink" href="#/quotes/' + x.id + '"><div><b>' + esc(x.name) + (x.company ? ' · ' + esc(x.company) : '') + '</b><span class="muted">' + ref(x.id) + ' · ' + esc(x.product || '') + '</span></div><span class="tag-due">' + esc(dateTxt(x.follow_up)) + '</span></a>'; }).join('') : '<p class="muted">No follow-ups due. Set a follow-up date on a quote to see it here.</p>') + '</div></section>' +
+          '<section class="card"><div class="sec-title"><h2>Orders due within 7 days</h2><a href="#/orders">All orders</a></div><div class="rows">' +
+          (o.dueSoon.length ? o.dueSoon.map(function (x) { var late = x.due_date < j.today; return '<a class="rowlink" href="#/orders/' + x.id + '"><div><b>#' + x.id + ' · ' + esc(x.customer_name) + '</b><span class="muted">' + esc(x.product) + '</span></div><span style="text-align:right"><span class="pill sg-' + x.stage + '">' + esc(x.stage) + '</span><br><span class="' + (late ? 'tag-due' : 'muted') + '">' + (late ? 'Late · ' : '') + esc(dateTxt(x.due_date)) + '</span></span></a>'; }).join('') : '<p class="muted">Nothing due this week.</p>') + '</div></section>' +
+          '<section class="card"><div class="sec-title"><h2>Orders by stage</h2><span class="muted">' + openTotal + ' open</span></div>' +
+          '<div class="stagebar" role="img" aria-label="Orders by stage">' + bar.map(function (s) { var n = o.byStage[s]; return n ? '<i style="width:' + (n / Math.max(1, o.total - o.byStage.cancelled) * 100) + '%;background:' + STAGE_COLOR[s] + '" title="' + cap(s) + ': ' + n + '"></i>' : ''; }).join('') + '</div>' +
+          '<div class="legend">' + STAGES.map(function (s) { return '<span><i style="background:' + STAGE_COLOR[s] + '"></i>' + cap(s) + ' <b>' + o.byStage[s] + '</b></span>'; }).join('') + '</div>' +
+          '<p class="muted" style="margin-top:0.75rem">Still to collect: <b style="color:var(--ink)">' + esc(unpaid) + '</b></p></section>' +
+          '<section class="card"><div class="sec-title"><h2>Latest quotes</h2><a href="#/quotes">All quotes</a></div><div class="rows">' +
+          (q.recent.length ? q.recent.map(function (x) { return '<a class="rowlink" href="#/quotes/' + x.id + '"><div><b>' + esc(x.name) + (x.company ? ' · ' + esc(x.company) : '') + '</b><span class="muted">' + ref(x.id) + ' · ' + esc(timeTxt(x.created_at)) + '</span></div><span class="pill st-' + x.status + '">' + esc(x.status) + '</span></a>'; }).join('') : '<p class="muted">No quotes yet. They appear here as soon as someone sends the quote form.</p>') + '</div></section>' +
+          '</div>';
+      }).catch(function (e) { el.innerHTML = '<div class="page-head"><h1>Dashboard</h1></div>' + errBox(e, true); });
+    }
+  };
+  function kpi(href, label, val, small, cls) { return '<a class="kpi ' + (cls || '') + '" href="' + href + '"><span>' + esc(label) + '</span><b>' + esc(val) + '</b><small>' + esc(small) + '</small></a>'; }
+  function setBadge(n) { var b = $('badge-new'); b.hidden = !n; b.textContent = n > 99 ? '99+' : n; }
+
+  // ===== Quotes =====
+  V.quotes = {
+    rows: [], total: 0,
+    list: function () { if (!$('q-list')) this.head(); this.load(false); },
+    head: function () {
+      var f = S.f.quotes, el = $('view'), self = this;
+      {
+        el.innerHTML = '<div class="page-head"><div><p class="eyebrow">Sales</p><h1>Quotes and leads</h1></div><div class="chips"><button class="btn ghost" type="button" id="q-export">Export to Excel</button><a class="btn" href="#/quotes/new">+ Add lead</a></div></div>' +
+          '<div class="toolbar"><input class="search" type="search" id="q-search" placeholder="Search name, email, company, phone or BX number" value="' + esc(f.q) + '" aria-label="Search quotes"></div>' +
+          '<div class="chips scroll-x" style="margin-bottom:0.85rem" role="group" aria-label="Filter by status">' +
+          [['', 'All'], ['open', 'Open']].concat(STATUS.map(function (s) { return [s, cap(s)]; })).concat([['due', 'Follow-up due']]).map(function (c) {
+            var on = c[0] === 'due' ? f.follow === 'due' : (!f.follow && f.status === c[0]);
+            return '<button type="button" class="chip" data-st="' + c[0] + '" aria-pressed="' + on + '">' + esc(c[1]) + '</button>';
+          }).join('') + '</div><div id="q-list">' + loading() + '</div>';
+        $('q-search').addEventListener('input', debounce(function (e) { f.q = e.target.value; self.load(false); }, 350));
+        var chips = el.querySelectorAll('[data-st]');
+        chips.forEach(function (b) { b.addEventListener('click', function () { var v = b.dataset.st; if (v === 'due') { f.follow = 'due'; f.status = ''; } else { f.follow = ''; f.status = v; } chips.forEach(function (c) { c.setAttribute('aria-pressed', String(c === b)); }); self.load(false); }); });
+        $('q-export').addEventListener('click', function () { self.exportCsv(this); });
+      }
+    },
+    load: function (more) {
+      var f = S.f.quotes, self = this, box = $('q-list'), seq = self.seq = (self.seq || 0) + 1;
+      if (!more) box.innerHTML = loading();
+      api('GET', 'quotes', { status: f.status, follow: f.follow, q: f.q, today: todayStr(), limit: 40, offset: more ? this.rows.length : 0 }).then(function (j) {
+        if (seq !== self.seq || !document.body.contains(box)) return;
+        self.rows = more ? self.rows.concat(j.rows) : j.rows; self.total = j.total;
+        if (!self.rows.length) { box.innerHTML = '<div class="empty"><b>No quotes found</b><span>' + (f.q || f.status || f.follow ? 'Try another search or filter.' : 'Quote requests from the website will appear here. You can also add leads from calls or WhatsApp.') + '</span><a class="btn small" href="#/quotes/new">+ Add lead</a></div>'; return; }
+        var t = todayStr();
+        box.innerHTML = '<p class="muted" style="margin-bottom:0.5rem">' + self.total + ' quote' + (self.total === 1 ? '' : 's') + '</p><div class="list">' + self.rows.map(function (r) {
+          var due = r.follow_up && r.status !== 'won' && r.status !== 'lost';
+          return '<a class="item" href="#/quotes/' + r.id + '"><div class="item-top"><span class="ref">' + ref(r.id) + ' · ' + esc(timeTxt(r.created_at)) + (r.source && r.source !== 'website' ? ' · ' + esc(r.source) : '') + '</span><span class="pill st-' + r.status + '">' + esc(r.status) + '</span></div>' +
+            '<span class="item-title">' + esc(r.name) + (r.company ? ' · ' + esc(r.company) : '') + '</span>' +
+            '<span class="item-sub">' + esc(quoteProduct(r)) + (quoteQty(r) ? ' · qty ' + esc(quoteQty(r)) : '') + (r.country ? ' · ' + esc(r.country) : '') + '</span>' +
+            '<span class="item-meta">' + (r.quoted_price != null ? '<span>Quoted <b>' + esc(money(r.quoted_currency, r.quoted_price)) + '</b></span>' : '') + (due ? '<span class="' + (r.follow_up <= t ? 'tag-due' : '') + '">Follow-up ' + esc(dateTxt(r.follow_up)) + '</span>' : '') + (r.file_path ? '<span>Artwork attached</span>' : '') + (r.phone ? '<span>' + esc(r.phone) + '</span>' : '') + '</span></a>';
+        }).join('') + '</div>' + (self.rows.length < self.total ? '<div class="more"><button class="btn ghost" type="button" id="q-more">Show more</button></div>' : '');
+        var m = $('q-more'); if (m) m.addEventListener('click', function () { busy(m, true, 'Loading…'); self.load(true); });
+      }).catch(function (e) { box.innerHTML = errBox(e, true); });
+    },
+    exportCsv: function (btn) {
+      var f = S.f.quotes; busy(btn, true, 'Preparing…');
+      api('GET', 'quotes', { status: f.status, follow: f.follow, q: f.q, today: todayStr(), limit: 5000, full: 1 }).then(function (j) {
+        csvDownload('boxenza-quotes-' + todayStr() + '.csv', j.rows, [['Ref', function (r) { return ref(r.id); }], ['Date', function (r) { return r.created_at.slice(0, 10); }], ['Status', 'status'], ['Source', 'source'], ['Name', 'name'], ['Email', 'email'], ['Phone', 'phone'], ['Company', 'company'], ['Country', 'country'], ['Product', quoteProduct], ['Quantity', quoteQty], ['Size', 'size'], ['Quoted price', 'quoted_price'], ['Quoted currency', 'quoted_currency'], ['Follow-up', 'follow_up'], ['Notes', 'notes'], ['Details', 'details']]);
+        busy(btn, false); toast(j.rows.length + ' quotes exported');
+      }).catch(function (e) { busy(btn, false); toast(e.message, true); });
+    },
+    open: function (id) {
+      var back = '#/quotes';
+      if (id === 'new') return this.form(back);
+      drawerLoading('Quote ' + ref(id), back);
+      var self = this;
+      api('GET', 'quotes', { id: id }).then(function (j) { self.detail(j, back); }).catch(function (e) { openDrawer(head('', 'Quote', '', back) + '<div class="dr-body">' + errBox(e) + '</div>', back); });
+    },
+    form: function (back) {
+      openDrawer(head('New lead', 'Add a lead', 'From a call, WhatsApp, email or a visit', back) +
+        '<div class="dr-body"><form class="dr-sec" id="lead-form"><div class="fgrid">' +
+        '<label class="f">Name *<input name="name" required maxlength="120" autocomplete="off"></label>' +
+        '<label class="f">Company<input name="company" maxlength="200"></label>' +
+        '<label class="f">Email<input name="email" type="email" maxlength="200"></label>' +
+        '<label class="f">Phone / WhatsApp<input name="phone" type="tel" maxlength="40"></label>' +
+        '<label class="f">Country<input name="country" maxlength="60"></label>' +
+        '<label class="f">Came from<select name="source">' + opts([['manual', 'Added by hand'], ['whatsapp', 'WhatsApp'], ['call', 'Phone call'], ['email', 'Email'], ['outreach', 'Cold email reply'], ['referral', 'Referral'], ['visit', 'Visit']], 'manual') + '</select></label>' +
+        '<label class="f">Product<select name="product">' + opts(catNames().concat(['Not sure yet']), '', 'Choose…') + '</select></label>' +
+        '<label class="f">Quantity<input name="qty" maxlength="60" placeholder="e.g. 1,000"></label>' +
+        '<label class="f wide">Size<input name="size" maxlength="120" placeholder="e.g. 10 x 8 x 4 in"></label>' +
+        '<label class="f wide">Details<textarea name="details" maxlength="4000"></textarea></label>' +
+        '</div><div class="actions"><p class="form-msg err" id="lead-msg" role="alert"></p><button class="btn" type="submit">Save lead</button></div></form></div>', back);
+      $('lead-form').addEventListener('submit', function (e) {
+        e.preventDefault(); var btn = this.querySelector('[type=submit]'); busy(btn, true);
+        api('POST', 'quotes', null, formData(this)).then(function (j) { toast('Lead saved'); S.view === 'quotes' && V.quotes.list(); location.hash = '#/quotes/' + j.row.id; })
+          .catch(function (er) { busy(btn, false); $('lead-msg').textContent = er.message; });
+      });
+    },
+    detail: function (j, back) {
+      var r = j.row, self = this, order = j.orders[0];
+      var wa = r.phone ? digits(r.phone) : '';
+      var items = (r.items || []).map(function (it) {
+        var bits = [it.dims ? it.dims.join(' x ') + ' ' + (it.unit || '') : '', it.mat ? 'Material: ' + it.mat : '', it.print ? 'Print: ' + it.print : '', it.fin ? 'Finish: ' + it.fin : '', it.opts && it.opts.length ? 'Options: ' + it.opts.join(', ') : '', it.adds && it.adds.length ? 'Add-ons: ' + it.adds.join(', ') : ''].filter(Boolean);
+        return '<li><b>' + esc(it.name) + '</b> <span class="ref">' + esc(it.code || '') + '</span> · qty ' + esc(num(it.qty, 0)) + '<br><span class="muted">' + esc(bits.join(' · ')) + '</span></li>';
+      }).join('');
+      var kv = [['Email', r.email ? '<a href="mailto:' + esc(r.email) + '">' + esc(r.email) + '</a>' : ''], ['Phone', esc(r.phone)], ['Company', esc(r.company)], ['Country', esc(r.country)], ['Currency', esc(r.currency)],
+        ['Product', esc(r.product)], ['Quantity', esc(r.qty)], ['Size', r.size && r.size !== 'Not given' ? esc(r.size) : ''], ['Artwork', esc(r.artwork)], ['Style notes', esc(r.style_notes)], ['Details', esc(r.details)], ['Came from', esc(r.source)], ['Received', esc(stamp(r.created_at))]]
+        .filter(function (x) { return x[1]; }).map(function (x) { return '<dt>' + x[0] + '</dt><dd>' + x[1] + '</dd>'; }).join('');
+      openDrawer(head(ref(r.id) + ' · <span class="pill st-' + r.status + '">' + esc(r.status) + '</span>', r.name, esc([r.company, r.country].filter(Boolean).join(' · ')), back) +
+        '<div class="dr-body">' +
+        '<div class="quick">' + (r.email ? '<a class="btn ghost small" href="mailto:' + esc(r.email) + '?subject=' + encodeURIComponent('Your Boxenza quote ' + ref(r.id)) + '">Email</a>' : '') +
+        (wa ? '<a class="btn ghost small" href="https://wa.me/' + esc(wa) + '" target="_blank" rel="noopener">WhatsApp</a><a class="btn ghost small" href="tel:+' + esc(wa) + '">Call</a>' : '') +
+        (r.file_path ? '<button class="btn ghost small" type="button" id="dl-art">Download artwork</button>' : '') + '</div>' +
+        '<form class="dr-sec" id="qf"><h3>Your follow-up</h3><div class="fgrid">' +
+        '<label class="f">Status<select name="status">' + opts(STATUS.map(function (s) { return [s, cap(s)]; }), r.status) + '</select></label>' +
+        '<label class="f">Follow-up date<input type="date" name="follow_up" value="' + esc(r.follow_up || '') + '"></label>' +
+        '<label class="f wide">Price you sent (total)<span class="money"><select name="quoted_currency" aria-label="Currency">' + opts(CURRENCIES, r.quoted_currency || r.currency || 'USD') + '</select><input name="quoted_price" inputmode="decimal" value="' + esc(r.quoted_price == null ? '' : r.quoted_price) + '" placeholder="e.g. 1,250" aria-label="Price"></span></label>' +
+        '<label class="f wide">Private notes<textarea name="notes" maxlength="4000" placeholder="Only you can see this">' + esc(r.notes || '') + '</textarea></label>' +
+        '</div><div class="actions"><p class="form-msg" id="qf-msg" role="status"></p><button class="btn" type="submit">Save</button></div></form>' +
+        '<div class="dr-sec"><h3>Order</h3>' + (order ? '<a class="rowlink" href="#/orders/' + order.id + '"><div><b>Order #' + order.id + '</b><span class="muted">Open the order</span></div><span class="pill sg-' + order.stage + '">' + esc(order.stage) + '</span></a>' :
+          '<p class="muted">When the customer says yes, turn this quote into an order. The quote is marked as won.</p><div><button class="btn" type="button" id="mk-order">Create order</button></div>') + '</div>' +
+        '<div class="dr-sec"><h3>Request</h3>' + (items ? '<ul style="margin:0;padding-left:1.1rem;display:grid;gap:0.5rem">' + items + '</ul>' : '') + '<dl class="kv">' + kv + '</dl>' +
+        (r.summary ? '<details><summary class="muted" style="cursor:pointer;font-weight:700">Full request text</summary><pre class="sum" style="margin-top:0.5rem">' + esc(r.summary) + '</pre></details>' : '') + '</div>' +
+        timeline('quote', r.id, j.activity) +
+        '<div><button class="btn danger" type="button" id="del-q">Delete quote</button></div></div>', back);
+      $('qf').addEventListener('submit', function (e) {
+        e.preventDefault(); var btn = this.querySelector('[type=submit]'), msg = $('qf-msg'); busy(btn, true); msg.textContent = '';
+        var d = formData(this); d.id = r.id;
+        if (!d.quoted_price) d.quoted_currency = null;
+        api('PATCH', 'quotes', null, d).then(function () { toast('Saved'); refreshList('quotes'); self.open(r.id); })
+          .catch(function (er) { busy(btn, false); msg.className = 'form-msg err'; msg.textContent = er.message; });
+      });
+      var mk = $('mk-order'); if (mk) mk.addEventListener('click', function () {
+        busy(mk, true, 'Creating…');
+        api('POST', 'orders', null, { quote_id: r.id }).then(function (o) { toast('Order created'); refreshList('quotes'); location.hash = '#/orders/' + o.row.id; })
+          .catch(function (er) { busy(mk, false); toast(er.message, true); });
+      });
+      var dl = $('dl-art'); if (dl) dl.addEventListener('click', function () {
+        busy(dl, true, 'Opening…');
+        var w = window.open('', '_blank');
+        api('GET', 'file', { path: r.file_path }).then(function (x) { busy(dl, false); if (w) w.location = x.url; else location.href = x.url; })
+          .catch(function (er) { busy(dl, false); if (w) w.close(); toast(er.message, true); });
+      });
+      $('del-q').addEventListener('click', function () {
+        if (!confirm('Delete quote ' + ref(r.id) + ' from ' + r.name + '? This cannot be undone.')) return;
+        api('DELETE', 'quotes', { id: r.id }).then(function () { toast('Quote deleted'); refreshList('quotes'); location.hash = back; }).catch(function (er) { toast(er.message, true); });
+      });
+    }
+  };
+
+  // ===== Orders =====
+  function profitOf(o) {
+    var sale = parseFloat(String(o.sale_price == null ? '' : o.sale_price).replace(/,/g, '')), fx = parseFloat(String(o.fx_rate == null ? '' : o.fx_rate).replace(/,/g, ''));
+    if (o.currency === 'PKR' && !fx) fx = 1;
+    if (!isFinite(sale) || !isFinite(fx) || !fx) return null;
+    var c = ['supplier_cost_pkr', 'shipping_cost_pkr', 'other_cost_pkr'].reduce(function (a, k) { var v = parseFloat(String(o[k] == null ? '' : o[k]).replace(/,/g, '')); return a + (isFinite(v) ? v : 0); }, 0);
+    var rev = sale * fx; return { rev: rev, cost: c, profit: rev - c, margin: rev ? (rev - c) / rev * 100 : 0 };
+  }
+  V.orders = {
+    rows: [], total: 0,
+    list: function () { if (!$('o-list')) this.head(); this.load(false); },
+    head: function () {
+      var f = S.f.orders, el = $('view'), self = this;
+      {
+        el.innerHTML = '<div class="page-head"><div><p class="eyebrow">Production</p><h1>Orders</h1></div><div class="chips"><button class="btn ghost" type="button" id="o-export">Export to Excel</button><a class="btn" href="#/orders/new">+ New order</a></div></div>' +
+          '<div class="toolbar"><input class="search" type="search" id="o-search" placeholder="Search customer, product, tracking number" value="' + esc(f.q) + '" aria-label="Search orders"></div>' +
+          '<div class="chips scroll-x" style="margin-bottom:0.85rem" role="group" aria-label="Filter by stage">' +
+          [['open', 'Open'], ['all', 'All']].concat(STAGES.map(function (s) { return [s, cap(s)]; })).map(function (c) { return '<button type="button" class="chip" data-sg="' + c[0] + '" aria-pressed="' + (f.stage === c[0]) + '">' + esc(c[1]) + '</button>'; }).join('') + '</div><div id="o-list">' + loading() + '</div>';
+        $('o-search').addEventListener('input', debounce(function (e) { f.q = e.target.value; self.load(false); }, 350));
+        var chips = el.querySelectorAll('[data-sg]');
+        chips.forEach(function (b) { b.addEventListener('click', function () { f.stage = b.dataset.sg; chips.forEach(function (c) { c.setAttribute('aria-pressed', String(c === b)); }); self.load(false); }); });
+        $('o-export').addEventListener('click', function () { self.exportCsv(this); });
+      }
+    },
+    load: function (more) {
+      var f = S.f.orders, self = this, box = $('o-list'), seq = self.seq = (self.seq || 0) + 1;
+      if (!more) box.innerHTML = loading();
+      api('GET', 'orders', { stage: f.stage === 'all' ? '' : f.stage, q: f.q, limit: 40, offset: more ? this.rows.length : 0 }).then(function (j) {
+        if (seq !== self.seq || !document.body.contains(box)) return;
+        self.rows = more ? self.rows.concat(j.rows) : j.rows; self.total = j.total;
+        if (!self.rows.length) { box.innerHTML = '<div class="empty"><b>No orders here</b><span>' + (f.q ? 'Try another search.' : 'Open a won quote and press "Create order", or add one by hand.') + '</span><a class="btn small" href="#/orders/new">+ New order</a></div>'; return; }
+        var t = todayStr();
+        box.innerHTML = '<p class="muted" style="margin-bottom:0.5rem">' + self.total + ' order' + (self.total === 1 ? '' : 's') + '</p><div class="list">' + self.rows.map(function (r) {
+          var p = profitOf(r), open = r.stage !== 'delivered' && r.stage !== 'cancelled', owed = r.sale_price != null ? r.sale_price - (r.paid || 0) : 0;
+          return '<a class="item" href="#/orders/' + r.id + '"><div class="item-top"><span class="ref">#' + r.id + ' · ' + esc(timeTxt(r.created_at)) + (r.quote_id ? ' · ' + ref(r.quote_id) : '') + '</span><span class="pill sg-' + r.stage + '">' + esc(r.stage) + '</span></div>' +
+            '<span class="item-title">' + esc(r.customer_name) + (r.company ? ' · ' + esc(r.company) : '') + '</span><span class="item-sub">' + esc(r.product) + (r.qty ? ' · qty ' + esc(num(r.qty, 0)) : '') + '</span>' +
+            '<span class="item-meta">' + (r.sale_price != null ? '<span>Sale <b>' + esc(money(r.currency, r.sale_price)) + '</b></span>' : '') + (owed > 0 && r.stage !== 'cancelled' ? '<span class="tag-due">To collect ' + esc(money(r.currency, owed)) + '</span>' : (r.sale_price != null ? '<span class="tag-ok">Paid</span>' : '')) +
+            (p ? '<span>Profit <b>' + esc(pkr(p.profit)) + '</b></span>' : '') + (r.supplier ? '<span>' + esc(r.supplier.name) + '</span>' : '') +
+            (r.due_date && open ? '<span class="' + (r.due_date < t ? 'tag-due' : '') + '">Due ' + esc(dateTxt(r.due_date)) + '</span>' : '') + (r.tracking_no ? '<span>' + esc((r.carrier ? r.carrier + ' ' : '') + r.tracking_no) + '</span>' : '') + '</span></a>';
+        }).join('') + '</div>' + (self.rows.length < self.total ? '<div class="more"><button class="btn ghost" type="button" id="o-more">Show more</button></div>' : '');
+        var m = $('o-more'); if (m) m.addEventListener('click', function () { busy(m, true, 'Loading…'); self.load(true); });
+      }).catch(function (e) { box.innerHTML = errBox(e, true); });
+    },
+    exportCsv: function (btn) {
+      var f = S.f.orders; busy(btn, true, 'Preparing…');
+      api('GET', 'orders', { stage: f.stage === 'all' ? '' : f.stage, q: f.q, limit: 5000 }).then(function (j) {
+        csvDownload('boxenza-orders-' + todayStr() + '.csv', j.rows, [['Order', 'id'], ['Date', function (r) { return r.created_at.slice(0, 10); }], ['Quote', function (r) { return r.quote_id ? ref(r.quote_id) : ''; }], ['Stage', 'stage'], ['Customer', 'customer_name'], ['Email', 'customer_email'], ['Company', 'company'], ['Country', 'country'], ['Product', 'product'], ['Qty', 'qty'], ['Currency', 'currency'], ['Sale price', 'sale_price'], ['Paid', 'paid'], ['PKR rate', 'fx_rate'], ['Supplier', function (r) { return r.supplier ? r.supplier.name : ''; }], ['Supplier cost PKR', 'supplier_cost_pkr'], ['Shipping PKR', 'shipping_cost_pkr'], ['Other cost PKR', 'other_cost_pkr'], ['Profit PKR', function (r) { var p = profitOf(r); return p ? Math.round(p.profit) : ''; }], ['Carrier', 'carrier'], ['Tracking', 'tracking_no'], ['Due date', 'due_date'], ['Notes', 'notes']]);
+        busy(btn, false); toast(j.rows.length + ' orders exported');
+      }).catch(function (e) { busy(btn, false); toast(e.message, true); });
+    },
+    open: function (id) {
+      var back = '#/orders', self = this;
+      if (id === 'new') { suppliers().catch(function () { return []; }).then(function (sup) { self.form(null, [], sup, back); }); return; }
+      drawerLoading('Order #' + id, back);
+      Promise.all([api('GET', 'orders', { id: id }), suppliers().catch(function () { return []; })]).then(function (x) { self.form(x[0].row, x[0].activity, x[1], back); })
+        .catch(function (e) { openDrawer(head('', 'Order', '', back) + '<div class="dr-body">' + errBox(e) + '</div>', back); });
+    },
+    form: function (r, activity, sup, back) {
+      var isNew = !r; r = r || { stage: 'artwork', currency: 'USD', paid: 0 };
+      var v = function (k) { return esc(r[k] == null ? '' : r[k]); };
+      var supOpts = opts(sup.map(function (s) { return [s.id, s.name + (s.city ? ' · ' + s.city : '')]; }), r.supplier_id, 'Not chosen yet');
+      openDrawer(head(isNew ? 'New order' : '#' + r.id + (r.quote_id ? ' · from <a href="#/quotes/' + r.quote_id + '">' + ref(r.quote_id) + '</a>' : ''), isNew ? 'New order' : r.customer_name, isNew ? 'Add an order by hand' : esc(r.product), back) +
+        '<div class="dr-body"><form id="of" class="grid" style="gap:1rem">' +
+        '<div class="dr-sec"><h3>Stage</h3><div class="stepper" role="radiogroup" aria-label="Order stage">' + STAGES.map(function (s) { return '<label class="chip"><input type="radio" name="stage" value="' + s + '"' + (r.stage === s ? ' checked' : '') + '>' + cap(s) + '</label>'; }).join('') + '</div>' +
+        '<div class="fgrid"><label class="f">Due date<input type="date" name="due_date" value="' + v('due_date') + '"></label><label class="f">Supplier<select name="supplier_id">' + supOpts + '</select></label></div></div>' +
+        '<div class="dr-sec"><h3>Customer and product</h3><div class="fgrid">' +
+        '<label class="f">Customer name *<input name="customer_name" required maxlength="120" value="' + v('customer_name') + '"></label>' +
+        '<label class="f">Company<input name="company" maxlength="200" value="' + v('company') + '"></label>' +
+        '<label class="f">Email<input name="customer_email" type="email" maxlength="200" value="' + v('customer_email') + '"></label>' +
+        '<label class="f">Country<input name="country" maxlength="60" value="' + v('country') + '"></label>' +
+        '<label class="f wide">Product *<textarea name="product" required maxlength="400" style="min-height:64px">' + v('product') + '</textarea></label>' +
+        '<label class="f">Quantity<input name="qty" inputmode="numeric" value="' + v('qty') + '"></label></div></div>' +
+        '<div class="dr-sec"><h3>Money</h3><div class="fgrid">' +
+        '<label class="f">Customer pays (total)<span class="money"><select name="currency" aria-label="Currency">' + opts(CURRENCIES, r.currency) + '</select><input name="sale_price" inputmode="decimal" value="' + v('sale_price') + '" aria-label="Sale price"></span></label>' +
+        '<label class="f">Received so far<input name="paid" inputmode="decimal" value="' + v('paid') + '"></label>' +
+        '<label class="f"><span>PKR per 1 <span class="cur-l">' + esc(r.currency) + '</span></span><input name="fx_rate" inputmode="decimal" value="' + v('fx_rate') + '" placeholder="e.g. 280"></label>' +
+        '<label class="f">Supplier cost (PKR)<input name="supplier_cost_pkr" inputmode="decimal" value="' + v('supplier_cost_pkr') + '"></label>' +
+        '<label class="f">Shipping cost (PKR)<input name="shipping_cost_pkr" inputmode="decimal" value="' + v('shipping_cost_pkr') + '"></label>' +
+        '<label class="f">Other costs (PKR)<input name="other_cost_pkr" inputmode="decimal" value="' + v('other_cost_pkr') + '"></label></div>' +
+        '<div class="calc" id="calc" aria-live="polite"></div></div>' +
+        '<div class="dr-sec"><h3>Shipping</h3><div class="fgrid">' +
+        '<label class="f">Courier<input name="carrier" maxlength="60" list="carriers" value="' + v('carrier') + '"></label>' +
+        '<label class="f">Tracking number<input name="tracking_no" maxlength="80" value="' + v('tracking_no') + '"></label>' +
+        '<label class="f wide">Notes<textarea name="notes" maxlength="4000">' + v('notes') + '</textarea></label></div>' +
+        '<datalist id="carriers"><option>DHL</option><option>FedEx</option><option>UPS</option><option>TCS</option><option>Leopards</option><option>Aramex</option><option>Sea freight</option></datalist></div>' +
+        '<div class="actions"><p class="form-msg" id="of-msg" role="status"></p><button class="btn" type="submit">' + (isNew ? 'Create order' : 'Save order') + '</button></div></form>' +
+        (isNew ? '' : timeline('order', r.id, activity) + '<div><button class="btn danger" type="button" id="del-o">Delete order</button></div>') + '</div>', back);
+      var form = $('of');
+      var calc = function () {
+        var d = formData(form), p = profitOf(d), c = $('calc'), owed = parseFloat(d.sale_price.replace(/,/g, '')) - (parseFloat(d.paid.replace(/,/g, '')) || 0);
+        form.querySelector('.cur-l').textContent = d.currency;
+        c.innerHTML = '<div><span>Sale in PKR</span><b>' + (p ? esc(pkr(p.rev)) : '—') + '</b></div><div><span>Total cost</span><b>' + (p ? esc(pkr(p.cost)) : '—') + '</b></div>' +
+          '<div><span>Profit</span><b class="' + (p ? (p.profit < 0 ? 'neg' : 'pos') : '') + '">' + (p ? esc(pkr(p.profit)) + ' <small>(' + Math.round(p.margin) + '%)</small>' : 'Add price and PKR rate') + '</b></div>' +
+          '<div><span>Still to collect</span><b class="' + (owed > 0 ? 'neg' : '') + '">' + (isFinite(owed) ? esc(money(d.currency, Math.max(owed, 0))) : '—') + '</b></div>';
+      };
+      form.addEventListener('input', calc); form.addEventListener('change', calc); calc();
+      form.addEventListener('submit', function (e) {
+        e.preventDefault(); var btn = form.querySelector('[type=submit]'), msg = $('of-msg'); busy(btn, true); msg.textContent = '';
+        var d = formData(form); if (!isNew) d.id = r.id;
+        api(isNew ? 'POST' : 'PATCH', 'orders', null, d).then(function (j) {
+          toast(isNew ? 'Order created' : 'Order saved'); refreshList('orders');
+          if (isNew) location.hash = '#/orders/' + j.row.id; else V.orders.open(r.id);
+        }).catch(function (er) { busy(btn, false); msg.className = 'form-msg err'; msg.textContent = er.message; });
+      });
+      var del = $('del-o'); if (del) del.addEventListener('click', function () {
+        if (!confirm('Delete order #' + r.id + ' for ' + r.customer_name + '? This cannot be undone.')) return;
+        api('DELETE', 'orders', { id: r.id }).then(function () { toast('Order deleted'); refreshList('orders'); location.hash = back; }).catch(function (er) { toast(er.message, true); });
+      });
+    }
+  };
+
+  // ===== Suppliers =====
+  V.suppliers = {
+    list: function () {
+      var f = S.f.suppliers, el = $('view'), self = this;
+      if (!$('s-list')) {
+        el.innerHTML = '<div class="page-head"><div><p class="eyebrow">Factories</p><h1>Suppliers</h1></div><a class="btn" href="#/suppliers/new">+ Add supplier</a></div>' +
+          '<div class="toolbar"><input class="search" type="search" id="s-search" placeholder="Search name, city, contact" value="' + esc(f.q) + '" aria-label="Search suppliers"></div><div id="s-list">' + loading() + '</div>';
+        $('s-search').addEventListener('input', debounce(function (e) { f.q = e.target.value; self.list(); }, 300));
+      }
+      var box = $('s-list');
+      api('GET', 'suppliers', { q: f.q }).then(function (j) {
+        if (!f.q) S.suppliers = j.rows;
+        if (!j.rows.length) { box.innerHTML = '<div class="empty"><b>No suppliers yet</b><span>Add the factories you visit, then import their filled rate sheets.</span><a class="btn small" href="#/suppliers/new">+ Add supplier</a></div>'; return; }
+        box.innerHTML = '<div class="list">' + j.rows.map(function (s) {
+          var n = s.supplier_rates && s.supplier_rates[0] ? s.supplier_rates[0].count : 0;
+          return '<a class="item" href="#/suppliers/' + s.id + '"><div class="item-top"><span class="item-title">' + esc(s.name) + '</span>' + (s.active ? '' : '<span class="pill st-lost">Inactive</span>') + '</div>' +
+            '<span class="item-sub">' + esc([s.city, s.contact_person, s.phone || s.whatsapp].filter(Boolean).join(' · ') || 'No contact details yet') + '</span>' +
+            '<span class="item-meta"><span><b>' + num(n, 0) + '</b> rates</span>' + (s.rating ? '<span class="stars" aria-label="' + s.rating + ' of 5">' + '★★★★★'.slice(0, s.rating) + '<span style="color:var(--line)">' + '★★★★★'.slice(s.rating) + '</span></span>' : '') + (s.categories && s.categories.length ? '<span>' + esc(s.categories.join(', ')) + '</span>' : '') + '</span></a>';
+        }).join('') + '</div>';
+      }).catch(function (e) { box.innerHTML = errBox(e, true); });
+    },
+    open: function (id) {
+      var back = '#/suppliers', self = this;
+      if (id === 'new') return this.form(null, [], back);
+      drawerLoading('Supplier', back);
+      api('GET', 'suppliers', { id: id }).then(function (j) { self.form(j.row, j.activity, back); })
+        .catch(function (e) { openDrawer(head('', 'Supplier', '', back) + '<div class="dr-body">' + errBox(e) + '</div>', back); });
+    },
+    form: function (s, activity, back) {
+      var isNew = !s; s = s || { active: true, categories: [] };
+      var v = function (k) { return esc(s[k] == null ? '' : s[k]); };
+      var n = s.supplier_rates && s.supplier_rates[0] ? s.supplier_rates[0].count : 0;
+      var wa = digits(s.whatsapp || s.phone);
+      openDrawer(head(isNew ? 'New supplier' : esc(s.city || 'Supplier'), isNew ? 'Add a supplier' : s.name, isNew ? 'A factory or printer you buy from' : num(n, 0) + ' rates saved', back) +
+        '<div class="dr-body">' + (!isNew && wa ? '<div class="quick"><a class="btn ghost small" href="https://wa.me/' + esc(wa) + '" target="_blank" rel="noopener">WhatsApp</a><a class="btn ghost small" href="tel:+' + esc(wa) + '">Call</a>' + (s.email ? '<a class="btn ghost small" href="mailto:' + esc(s.email) + '">Email</a>' : '') + '</div>' : '') +
+        (isNew ? '' : '<div class="dr-sec"><h3>Rates</h3><p class="muted">Import the Excel rate sheet after the supplier fills the yellow cells. Each import can be removed later.</p><div class="chips"><button class="btn" type="button" id="imp-open">Import rate sheet</button><a class="btn ghost" href="#/rates" id="see-rates">See ' + num(n, 0) + ' rates</a></div><div id="imp-box"></div></div>') +
+        '<form class="dr-sec" id="sf"><h3>Details</h3><div class="fgrid">' +
+        '<label class="f">Name *<input name="name" required maxlength="160" value="' + v('name') + '"></label>' +
+        '<label class="f">City<input name="city" maxlength="60" value="' + v('city') + '" list="cities"></label>' +
+        '<label class="f">Contact person<input name="contact_person" maxlength="120" value="' + v('contact_person') + '"></label>' +
+        '<label class="f">Phone<input name="phone" type="tel" maxlength="40" value="' + v('phone') + '"></label>' +
+        '<label class="f">WhatsApp<input name="whatsapp" type="tel" maxlength="40" value="' + v('whatsapp') + '"></label>' +
+        '<label class="f">Email<input name="email" type="email" maxlength="200" value="' + v('email') + '"></label>' +
+        '<label class="f wide">Address<input name="address" maxlength="300" value="' + v('address') + '"></label>' +
+        '<label class="f">Rating<select name="rating">' + opts([['5', '★★★★★ Excellent'], ['4', '★★★★ Good'], ['3', '★★★ OK'], ['2', '★★ Weak'], ['1', '★ Poor']], s.rating, 'Not rated') + '</select></label>' +
+        '<label class="check" style="align-self:end;min-height:42px"><input type="checkbox" name="active"' + (s.active ? ' checked' : '') + '> Active supplier</label>' +
+        '<fieldset class="wide" style="border:0;padding:0;margin:0;display:grid;gap:0.4rem"><legend class="muted" style="font-weight:700;font-size:0.8rem;margin-bottom:0.4rem">What they make</legend><div class="chips">' +
+        catNames().map(function (c) { return '<label class="chip"><input type="checkbox" data-list="1" name="categories" value="' + esc(c) + '"' + ((s.categories || []).indexOf(c) >= 0 ? ' checked' : '') + '>' + esc(c) + '</label>'; }).join('') + '</div></fieldset>' +
+        '<label class="f wide">Notes<textarea name="notes" maxlength="4000" placeholder="MOQ, payment terms, quality, timings…">' + v('notes') + '</textarea></label></div>' +
+        '<datalist id="cities"><option>Lahore</option><option>Karachi</option><option>Sialkot</option><option>Faisalabad</option><option>Islamabad</option><option>Rawalpindi</option><option>Gujranwala</option><option>Multan</option></datalist>' +
+        '<div class="actions"><p class="form-msg" id="sf-msg" role="status"></p><button class="btn" type="submit">' + (isNew ? 'Save supplier' : 'Save changes') + '</button></div></form>' +
+        (isNew ? '' : timeline('supplier', s.id, activity) + '<div><button class="btn danger" type="button" id="del-s">Delete supplier</button></div>') + '</div>', back);
+      $('sf').addEventListener('submit', function (e) {
+        e.preventDefault(); var btn = this.querySelector('[type=submit]'), msg = $('sf-msg'); busy(btn, true); msg.textContent = '';
+        var d = formData(this); if (!isNew) d.id = s.id; if (!d.rating) d.rating = null;
+        api(isNew ? 'POST' : 'PATCH', 'suppliers', null, d).then(function (j) {
+          toast(isNew ? 'Supplier saved' : 'Saved'); S.suppliers = null; refreshList('suppliers');
+          if (isNew) location.hash = '#/suppliers/' + j.row.id; else V.suppliers.open(s.id);
+        }).catch(function (er) { busy(btn, false); msg.className = 'form-msg err'; msg.textContent = er.message; });
+      });
+      if (isNew) return;
+      $('see-rates').addEventListener('click', function () { S.f.rates = { supplier_id: String(s.id), category: '', qty: '', material: '', q: '' }; });
+      $('imp-open').addEventListener('click', function () { this.hidden = true; importer($('imp-box'), s.id, function () { V.suppliers.open(s.id); }); });
+      $('del-s').addEventListener('click', function () {
+        if (!confirm('Delete ' + s.name + ' and all ' + n + ' of its rates? Orders keep working but lose the supplier link.')) return;
+        api('DELETE', 'suppliers', { id: s.id }).then(function () { toast('Supplier deleted'); S.suppliers = null; refreshList('suppliers'); location.hash = back; }).catch(function (er) { toast(er.message, true); });
+      });
+    }
+  };
+
+  // ===== Rate sheet import (reads the Excel sheets we give suppliers) =====
+  var xlsxLoading = null;
+  function loadXlsx() {
+    if (window.XLSX) return Promise.resolve();
+    if (xlsxLoading) return xlsxLoading;
+    xlsxLoading = new Promise(function (ok, no) { var sc = document.createElement('script'); sc.src = '/assets/vendor/xlsx.full.min.js'; sc.onload = ok; sc.onerror = function () { xlsxLoading = null; no(new Error('Could not load the Excel reader. Check your connection.')); }; document.head.appendChild(sc); });
+    return xlsxLoading;
+  }
+  function toNum(v) { if (typeof v === 'number') return v; var m = String(v == null ? '' : v).replace(/,/g, '').match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : NaN; }
+  function parseWorkbook(wb) {
+    var out = [], sheets = [];
+    wb.SheetNames.forEach(function (name) {
+      var rows = XLSX.utils.sheet_to_json(wb.Sheets[name], { header: 1, raw: true, defval: null, blankrows: true });
+      var hi = -1;
+      for (var i = 0; i < Math.min(rows.length, 20); i++) { var r = (rows[i] || []).map(function (x) { return String(x == null ? '' : x).trim(); }); if (r.indexOf('Code') >= 0 && r.indexOf('Style') >= 0) { hi = i; break; } }
+      if (hi < 0) return;
+      var H = rows[hi].map(function (x) { return String(x == null ? '' : x).trim(); });
+      var col = function (test) { for (var k = 0; k < H.length; k++) if (test(H[k].toLowerCase())) return k; return -1; };
+      var c = { code: H.indexOf('Code'), style: H.indexOf('Style'), size: col(function (h) { return h === 'size'; }), L: col(function (h) { return /^length.*\(in\)/.test(h); }), W: col(function (h) { return /^width.*\(in\)/.test(h); }), D: col(function (h) { return /^(depth|height).*\(in\)/.test(h); }),
+        moq: col(function (h) { return h.indexOf('moq') >= 0; }), sample: col(function (h) { return h.indexOf('sample') >= 0; }), days: col(function (h) { return h.indexOf('din') >= 0 || h.indexOf('days') >= 0 || h.indexOf('production') >= 0; }), note: col(function (h) { return h.indexOf('note') >= 0; }) };
+      var rateCols = [];
+      H.forEach(function (h, k) { var m = h.match(/^(.*?)@\s*([\d,]+)/); if (m) { var mat = m[1].replace(/rate/i, '').trim(); rateCols.push({ k: k, qty: parseInt(m[2].replace(/,/g, ''), 10), material: mat }); } });
+      var t = rows[0] && rows[0][0] ? String(rows[0][0]) : '';
+      var category = t.indexOf(' – ') > 0 ? t.split(' – ')[0].trim() : (t.indexOf(' - ') > 0 ? t.split(' - ')[0].trim() : name);
+      var count = 0, filled = 0;
+      for (var j = hi + 1; j < rows.length; j++) {
+        var row = rows[j] || [], code = row[c.code];
+        if (code == null || String(code).trim() === '') break; // the options block starts after a blank row
+        count++;
+        rateCols.forEach(function (rc) {
+          var val = toNum(row[rc.k]);
+          if (!isFinite(val) || val <= 0) return;
+          filled++;
+          out.push({ category: category, style_code: String(code).trim(), style: row[c.style], size_name: c.size >= 0 ? row[c.size] : null,
+            length: c.L >= 0 && isFinite(toNum(row[c.L])) ? toNum(row[c.L]) : null, width: c.W >= 0 && isFinite(toNum(row[c.W])) ? toNum(row[c.W]) : null, depth: c.D >= 0 && isFinite(toNum(row[c.D])) ? toNum(row[c.D]) : null,
+            unit: 'in', material: rc.material || null, qty: rc.qty, rate_pkr: val,
+            moq: c.moq >= 0 && isFinite(toNum(row[c.moq])) ? Math.round(toNum(row[c.moq])) : null, sample_cost_pkr: c.sample >= 0 && isFinite(toNum(row[c.sample])) ? toNum(row[c.sample]) : null,
+            lead_days: c.days >= 0 && isFinite(toNum(row[c.days])) ? Math.round(toNum(row[c.days])) : null, note: c.note >= 0 && row[c.note] != null ? String(row[c.note]).slice(0, 300) : null });
+        });
+      }
+      sheets.push({ name: category, sizes: count, rates: filled, rateCols: rateCols.length });
+    });
+    return { rows: out, sheets: sheets };
+  }
+  function importer(box, supplierId, done) {
+    box.innerHTML = '<div class="grid" style="margin-top:0.25rem"><label class="f">Filled rate sheet (.xlsx)<input type="file" id="imp-file" accept=".xlsx,.xls,.xlsm"></label><p class="muted" id="imp-msg">Only the yellow rate cells with a number are imported. Empty cells are skipped.</p><div id="imp-prev"></div></div>';
+    $('imp-file').addEventListener('change', function () {
+      var file = this.files && this.files[0], msg = $('imp-msg'), prev = $('imp-prev'); prev.innerHTML = '';
+      if (!file) return;
+      if (file.size > 15 * 1024 * 1024) { msg.textContent = 'This file is too big (over 15 MB).'; return; }
+      msg.innerHTML = '<span class="spin"></span>Reading ' + esc(file.name) + '…';
+      loadXlsx().then(function () { return file.arrayBuffer(); }).then(function (buf) {
+        var wb = XLSX.read(buf, { type: 'array' }), res = parseWorkbook(wb);
+        if (!res.sheets.length) { msg.textContent = 'No rate sheet found in this file. Use one of the Boxenza supplier rate sheets.'; return; }
+        if (!res.rows.length) { msg.innerHTML = 'Found ' + res.sheets.length + ' tab(s), but no rates are filled in yet. Ask the supplier to fill the yellow cells, then import again.'; return; }
+        msg.innerHTML = '<b>' + num(res.rows.length, 0) + ' rates found</b> in ' + esc(file.name);
+        prev.innerHTML = '<div class="tbl-wrap scroll-x preview-tbl"><table class="t"><thead><tr><th>Tab</th><th class="num">Size rows</th><th class="num">Rates filled</th></tr></thead><tbody>' +
+          res.sheets.map(function (s) { return '<tr><td>' + esc(s.name) + '</td><td class="num">' + s.sizes + '</td><td class="num">' + s.rates + '</td></tr>'; }).join('') + '</tbody></table></div>' +
+          '<div class="tbl-wrap scroll-x preview-tbl" style="margin-top:0.6rem"><table class="t"><thead><tr><th>Style</th><th>Size</th><th>Material</th><th class="num">Qty</th><th class="num">Rate PKR</th></tr></thead><tbody>' +
+          res.rows.slice(0, 12).map(function (r) { return '<tr><td>' + esc(r.style_code + ' ' + r.style) + '</td><td>' + esc(r.size_name || '') + '</td><td>' + esc(r.material || 'Default') + '</td><td class="num">' + num(r.qty, 0) + '</td><td class="num">' + num(r.rate_pkr) + '</td></tr>'; }).join('') +
+          (res.rows.length > 12 ? '<tr><td colspan="5" class="muted">…and ' + (res.rows.length - 12) + ' more</td></tr>' : '') + '</tbody></table></div>' +
+          '<div class="actions" style="margin-top:0.6rem"><span class="muted">Saved as one import, so you can remove it later.</span><button class="btn" type="button" id="imp-save">Save ' + num(res.rows.length, 0) + ' rates</button></div>';
+        $('imp-save').addEventListener('click', function () {
+          var btn = this, batch = file.name.replace(/\.[^.]+$/, '').slice(0, 50) + ' · ' + todayStr() + ' ' + Date.now().toString(36).slice(-4);
+          var chunks = []; for (var i = 0; i < res.rows.length; i += 1000) chunks.push(res.rows.slice(i, i + 1000));
+          var saved = 0, skipped = 0; busy(btn, true);
+          chunks.reduce(function (p, ch) { return p.then(function () { return api('POST', 'rates', null, { supplier_id: supplierId, batch: batch, rows: ch }).then(function (j) { saved += j.saved; skipped += j.skipped; }); }); }, Promise.resolve())
+            .then(function () { S.suppliers = null; toast(saved + ' rates saved' + (skipped ? ', ' + skipped + ' skipped' : '')); done && done(); })
+            .catch(function (er) { busy(btn, false); toast(er.message + (saved ? ' (' + saved + ' were saved)' : ''), true); });
+        });
+      }).catch(function (er) { msg.textContent = er.message || 'Could not read this file.'; });
+    });
+  }
+
+  // ===== Rates (compare suppliers) =====
+  V.rates = {
+    list: function () {
+      var f = S.f.rates, el = $('view'), self = this;
+      suppliers().catch(function () { return []; }).then(function (sup) {
+        el.innerHTML = '<div class="page-head"><div><p class="eyebrow">Buying</p><h1>Supplier rates</h1></div><div class="chips"><button class="btn ghost" type="button" id="r-import">Import rate sheet</button><a class="btn" href="#/rates/new">+ Add rate</a></div></div>' +
+          '<div id="r-imp" class="card" hidden style="margin-bottom:1rem"><div class="fgrid"><label class="f">Supplier<select id="r-imp-sup">' + opts(sup.map(function (s) { return [s.id, s.name]; }), '', 'Choose supplier…') + '</select></label></div><div id="r-imp-box"></div></div>' +
+          '<div class="card" style="margin-bottom:0.85rem"><div class="fgrid tight">' +
+          '<label class="f">Supplier<select id="rf-sup">' + opts(sup.map(function (s) { return [s.id, s.name]; }), f.supplier_id, 'All suppliers') + '</select></label>' +
+          '<label class="f">Category<select id="rf-cat">' + opts(catNames(), f.category, 'All categories') + '</select></label>' +
+          '<label class="f">Quantity<select id="rf-qty">' + opts(QTYS.map(function (q) { return [q, num(q, 0)]; }), f.qty, 'All quantities') + '</select></label>' +
+          '<label class="f">Material<select id="rf-mat">' + opts(['3 ply', '5 ply'], f.material, 'All materials') + '</select></label>' +
+          '<label class="f wide">Style or size<input type="search" id="rf-q" placeholder="e.g. mailer, CB16, Medium" value="' + esc(f.q) + '"></label></div>' +
+          '</div>' +
+          '<div id="r-list">' + loading() + '</div><div id="r-batches" style="margin-top:1.25rem"></div>';
+        var upd = function () { f.supplier_id = $('rf-sup').value; f.category = $('rf-cat').value; f.qty = $('rf-qty').value; f.material = $('rf-mat').value; f.q = $('rf-q').value.trim(); self.load(); };
+        ['rf-sup', 'rf-cat', 'rf-qty', 'rf-mat'].forEach(function (id) { $(id).addEventListener('change', upd); }); $('rf-q').addEventListener('input', debounce(upd, 400));
+        $('r-import').addEventListener('click', function () { var b = $('r-imp'); b.hidden = !b.hidden; if (!sup.length) $('r-imp-box').innerHTML = '<p class="muted" style="margin-top:0.6rem">Add a supplier first, then import their sheet.</p>'; });
+        $('r-imp-sup').addEventListener('change', function () { var id = this.value; if (!id) { $('r-imp-box').innerHTML = ''; return; } importer($('r-imp-box'), +id, function () { S.suppliers = null; f.supplier_id = String(id); self.list(); }); });
+        self.load();
+      });
+    },
+    load: function () {
+      var f = S.f.rates, box = $('r-list'), self = this, seq = self.seq = (self.seq || 0) + 1; box.innerHTML = loading();
+      api('GET', 'rates', { supplier_id: f.supplier_id, category: f.category, qty: f.qty, material: f.material, q: f.q, limit: 2000 }).then(function (j) {
+        if (seq !== self.seq) return; // a newer filter change is already loading
+        if (!j.rows.length) { box.innerHTML = '<div class="empty"><b>No rates' + (f.supplier_id || f.category || f.qty || f.material || f.q ? ' match these filters' : ' yet') + '</b><span>Import a filled rate sheet from a supplier, or add a rate by hand.</span></div>'; return; }
+        var key = function (r) { return [r.category, r.style_code, r.size_name, r.material || '', r.qty].join('|'); };
+        var best = {}; j.rows.forEach(function (r) { var k = key(r); if (!(k in best) || Number(r.rate_pkr) < best[k]) best[k] = Number(r.rate_pkr); });
+        var cnt = {}; j.rows.forEach(function (r) { var k = key(r); cnt[k] = (cnt[k] || 0) + 1; });
+        var prev = '';
+        box.innerHTML = '<p class="muted" style="margin-bottom:0.5rem">' + num(j.total, 0) + ' rate' + (j.total === 1 ? '' : 's') + (j.total > j.rows.length ? ' (showing ' + j.rows.length + ', narrow the filters)' : '') + '. Green = cheapest for the same style, size, material and quantity.</p>' +
+          '<div class="tbl-wrap scroll-x"><table class="t"><thead><tr><th>Style</th><th>Size</th><th>Material</th><th class="num">Qty</th><th>Supplier</th><th class="num">Rate PKR / pc</th><th class="num">Total PKR</th><th class="num">MOQ</th><th class="num">Days</th><th></th></tr></thead><tbody>' +
+          j.rows.map(function (r) {
+            var k = key(r), g = [r.style_code, r.size_name].join('|'), isBest = cnt[k] > 1 && Number(r.rate_pkr) === best[k];
+            var dims = [r.length, r.width, r.depth].filter(function (x) { return x != null; }).map(function (x) { return num(x); }).join(' × ');
+            var row = '<tr class="' + (isBest ? 'best ' : '') + (g !== prev && prev ? 'grp' : '') + '"><td><span class="ref">' + esc(r.style_code || '') + '</span> ' + esc(r.style || '') + '<br><span class="muted">' + esc(r.category || '') + '</span></td>' +
+              '<td>' + esc(r.size_name || '') + (dims ? '<br><span class="muted">' + esc(dims) + ' ' + esc(r.unit) + '</span>' : '') + '</td><td>' + esc(r.material || 'Default') + '</td><td class="num">' + num(r.qty, 0) + '</td>' +
+              '<td>' + esc(r.supplier ? r.supplier.name : '') + '</td><td class="num"><b>' + num(r.rate_pkr) + '</b>' + (isBest ? '<span class="best-tag">Cheapest</span>' : '') + '</td><td class="num">' + num(r.rate_pkr * r.qty, 0) + '</td>' +
+              '<td class="num">' + (r.moq != null ? num(r.moq, 0) : '') + '</td><td class="num">' + (r.lead_days != null ? r.lead_days : '') + '</td><td><button class="btn ghost small" type="button" data-del-rate="' + r.id + '" aria-label="Delete this rate">Delete</button></td></tr>';
+            prev = g; return row;
+          }).join('') + '</tbody></table></div>';
+        box.querySelectorAll('[data-del-rate]').forEach(function (b) { b.addEventListener('click', function () {
+          if (!confirm('Delete this rate?')) return;
+          api('DELETE', 'rates', { id: b.dataset.delRate }).then(function () { toast('Rate deleted'); V.rates.load(); }).catch(function (er) { toast(er.message, true); });
+        }); });
+      }).catch(function (e) { box.innerHTML = errBox(e, true); });
+      this.batches();
+    },
+    batches: function () {
+      var box = $('r-batches');
+      api('GET', 'rates', { batches: 1 }).then(function (j) {
+        if (!j.rows.length) { box.innerHTML = ''; return; }
+        var names = {}; (S.suppliers || []).forEach(function (s) { names[s.id] = s.name; });
+        box.innerHTML = '<section class="card"><div class="sec-title"><h2>Imported sheets</h2><span class="muted">Remove an import to replace it with a newer sheet</span></div><div class="rows">' +
+          j.rows.map(function (b) { return '<div class="rowlink"><div><b>' + esc(b.batch) + '</b><span class="muted">' + esc(names[b.supplier_id] || 'Supplier #' + b.supplier_id) + ' · ' + num(b.rows, 0) + ' rates · ' + esc(b.categories.join(', ')) + '</span></div><button class="btn danger small" type="button" data-del-batch="' + esc(b.batch) + '">Remove</button></div>'; }).join('') + '</div></section>';
+        box.querySelectorAll('[data-del-batch]').forEach(function (btn) { btn.addEventListener('click', function () {
+          if (!confirm('Remove all rates from "' + btn.dataset.delBatch + '"?')) return;
+          api('DELETE', 'rates', { batch: btn.dataset.delBatch }).then(function () { toast('Import removed'); S.suppliers = null; V.rates.load(); }).catch(function (er) { toast(er.message, true); });
+        }); });
+      }).catch(function () { box.innerHTML = ''; });
+    },
+    open: function (id) {
+      var back = '#/rates';
+      if (id !== 'new') { location.hash = back; return; }
+      suppliers().catch(function () { return []; }).then(function (sup) {
+        var styleOpts = function (cat) { var c = CATS.filter(function (x) { return x.n === cat; })[0]; return opts(c ? c.st.map(function (s) { return [s[0], s[0] + ' · ' + s[1]]; }) : [], '', c ? 'Choose style…' : 'Choose a category first'); };
+        openDrawer(head('Supplier rates', 'Add a rate', 'One price for one size and quantity', back) +
+          '<div class="dr-body"><form class="dr-sec" id="rf">' + (sup.length ? '' : '<p class="form-msg err">Add a supplier first.</p>') + '<div class="fgrid">' +
+          '<label class="f wide">Supplier *<select name="supplier_id" required>' + opts(sup.map(function (s) { return [s.id, s.name]; }), S.f.rates.supplier_id, 'Choose…') + '</select></label>' +
+          '<label class="f">Category<select name="category" id="rf-c">' + opts(catNames(), '', 'Choose…') + '</select></label>' +
+          '<label class="f">Style<select name="style_code" id="rf-s">' + styleOpts('') + '</select></label>' +
+          '<label class="f">Size name<input name="size_name" placeholder="e.g. Medium" maxlength="60"></label>' +
+          '<label class="f">Material<input name="material" placeholder="e.g. 3 ply" list="mats2" maxlength="60"></label>' +
+          '<label class="f">Length (in)<input name="length" inputmode="decimal"></label><label class="f">Width (in)<input name="width" inputmode="decimal"></label><label class="f">Depth (in)<input name="depth" inputmode="decimal"></label>' +
+          '<label class="f">Quantity *<select name="qty" required>' + opts(QTYS.map(function (q) { return [q, num(q, 0)]; }), 1000) + '</select></label>' +
+          '<label class="f">Rate PKR per piece *<input name="rate_pkr" inputmode="decimal" required></label>' +
+          '<label class="f">MOQ<input name="moq" inputmode="numeric"></label><label class="f">Sample cost PKR<input name="sample_cost_pkr" inputmode="decimal"></label><label class="f">Production days<input name="lead_days" inputmode="numeric"></label>' +
+          '<label class="f wide">Note<input name="note" maxlength="300"></label></div><datalist id="mats2"><option>3 ply</option><option>5 ply</option></datalist>' +
+          '<div class="actions"><p class="form-msg" id="rf-msg" role="status"></p><button class="btn" type="submit">Save rate</button></div></form></div>', back);
+        $('rf-c').addEventListener('change', function () { $('rf-s').innerHTML = styleOpts(this.value); });
+        $('rf').addEventListener('submit', function (e) {
+          e.preventDefault(); var btn = this.querySelector('[type=submit]'), msg = $('rf-msg'), d = formData(this); busy(btn, true); msg.textContent = '';
+          var c = CATS.filter(function (x) { return x.n === d.category; })[0], st = c && c.st.filter(function (s) { return s[0] === d.style_code; })[0];
+          d.style = st ? st[1] : null;
+          api('POST', 'rates', null, { supplier_id: +d.supplier_id, rows: [d] }).then(function () { toast('Rate saved'); S.suppliers = null; location.hash = back; V.rates.list(); })
+            .catch(function (er) { busy(btn, false); msg.className = 'form-msg err'; msg.textContent = er.message; });
+        });
+      });
+    }
+  };
+
+  // ---------------- router ----------------
+  function debounce(fn, ms) { var t; return function () { var a = arguments, c = this; clearTimeout(t); t = setTimeout(function () { fn.apply(c, a); }, ms); }; }
+  function refreshList(v) { if (S.view === v) V[v].list(); if (S.view === 'home') V.home.list(); }
+  function route() {
+    if (!S.token) return showLogin();
+    var raw = location.hash.replace(/^#\/?/, ''), qi = raw.indexOf('?');
+    var path = (qi >= 0 ? raw.slice(0, qi) : raw).split('/'), params = {};
+    if (qi >= 0) raw.slice(qi + 1).split('&').forEach(function (p) { var kv = p.split('='); params[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1] || ''); });
+    var v = V[path[0]] ? path[0] : 'home', id = path[1];
+    if (qi >= 0) {
+      if (v === 'quotes') S.f.quotes = { status: params.status || '', follow: params.follow || '', q: '' };
+      if (v === 'orders') S.f.orders = { stage: params.stage || 'open', q: '' };
+      history.replaceState(null, '', '#/' + v); S.view = null; $('view').innerHTML = '';
+    }
+    document.querySelectorAll('#nav a').forEach(function (a) { if (a.dataset.v === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    if (S.view !== v) { S.view = v; window.scrollTo(0, 0); V[v].list(); }
+    if (id && V[v].open) V[v].open(id); else closeDrawer();
+  }
+  window.addEventListener('hashchange', route);
+  document.addEventListener('click', function (e) { var b = e.target.closest('[data-retry]'); if (b) { if (b.closest('#drawer')) route(); else { S.view = null; route(); } } });
+
+  // ---------------- login ----------------
+  function showLogin() {
+    $('login').hidden = false; $('view').innerHTML = ''; $('nav').hidden = true; $('top-links').hidden = true; closeDrawer();
+    setTimeout(function () { $('pw').focus(); }, 50);
+  }
+  function logout(expired) {
+    S.token = null; S.view = null; S.suppliers = null; storage.del('bx_admin_token');
+    showLogin(); if (expired) $('login-err').textContent = 'Your session ended. Please log in again.';
+  }
+  $('logout').addEventListener('click', function () { logout(false); });
+  $('login').addEventListener('submit', function (e) {
+    e.preventDefault(); var btn = $('login-btn'); busy(btn, true, 'Checking…'); $('login-err').textContent = '';
+    api('POST', 'login', null, { password: $('pw').value }).then(function (j) {
+      busy(btn, false); S.token = j.token; storage.set('bx_admin_token', j.token); $('pw').value = '';
+      start();
+    }).catch(function (er) { busy(btn, false); $('login-err').textContent = er.message; $('pw').select(); });
+  });
+  function start() {
+    $('login').hidden = true; $('nav').hidden = false; $('top-links').hidden = false; S.view = null;
+    if (!location.hash || location.hash === '#') history.replaceState(null, '', '#/home');
+    route();
+  }
+  S.token = storage.get('bx_admin_token');
+  if (S.token) {
+    try { var p = JSON.parse(atob(S.token.split('.')[0].replace(/-/g, '+').replace(/_/g, '/'))); if (!(p.exp > Date.now())) S.token = null; } catch (e) { S.token = null; }
+  }
+  if (S.token) start(); else showLogin();
+})();
+</script>
+</body>
+</html>

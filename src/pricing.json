@@ -1,0 +1,269 @@
+{
+  "_README": "PLACEHOLDER NUMBERS. Replace with your supplier's real rates before launch. All money values are in USD. 'unit' = price per piece at 1,000 pieces for the reference size. 'refDims' = reference size in inches (L, W, D). 'kg' = weight of one piece at the reference size. Country 'shipPerKg' = door-to-door freight per kg, 'minShip' = minimum freight charge, 'duty' and 'tax' = import duty and import tax/VAT as fractions (0.2 = 20%). 'rates' = how many units of each currency equal 1 USD. 'optDefault' = extra cost for any option not listed in 'options'. Packing tape uses mode 'tape': refDims = [tape width in inches, roll length in yards].",
+  "range": 0.12,
+  "rates": {
+    "USD": 1,
+    "EUR": 0.92,
+    "GBP": 0.79,
+    "AED": 3.6725,
+    "SAR": 3.75,
+    "AUD": 1.52,
+    "CAD": 1.37
+  },
+  "symbols": {
+    "USD": "$",
+    "EUR": "€",
+    "GBP": "£",
+    "AED": "AED ",
+    "SAR": "SAR ",
+    "AUD": "A$",
+    "CAD": "C$"
+  },
+  "qtyTiers": [
+    [
+      100,
+      2.6
+    ],
+    [
+      250,
+      1.85
+    ],
+    [
+      500,
+      1.35
+    ],
+    [
+      1000,
+      1
+    ],
+    [
+      2500,
+      0.82
+    ],
+    [
+      5000,
+      0.7
+    ],
+    [
+      10000,
+      0.6
+    ],
+    [
+      25000,
+      0.52
+    ]
+  ],
+  "options": {
+    "Foil Stamping": 0.12,
+    "Embossing": 0.1,
+    "Debossing": 0.1,
+    "Window Patching": 0.08
+  },
+  "addOn": 0.06,
+  "categories": {
+    "folding-cartons": {
+      "unit": 0.45,
+      "refDims": [
+        4,
+        2,
+        6
+      ],
+      "kg": 0.04
+    },
+    "corrugated-boxes": {
+      "unit": 1.1,
+      "refDims": [
+        10,
+        8,
+        4
+      ],
+      "kg": 0.22
+    },
+    "rigid-boxes": {
+      "unit": 2.8,
+      "refDims": [
+        8,
+        6,
+        3
+      ],
+      "kg": 0.35
+    },
+    "box-inserts": {
+      "unit": 0.35,
+      "refDims": [
+        8,
+        6,
+        2
+      ],
+      "kg": 0.05
+    },
+    "paper-bags": {
+      "unit": 0.7,
+      "refDims": [
+        10,
+        4,
+        12
+      ],
+      "kg": 0.09
+    },
+    "reusable-bags": {
+      "unit": 1.6,
+      "refDims": [
+        15,
+        4,
+        16
+      ],
+      "kg": 0.12
+    },
+    "mailer-bags": {
+      "unit": 0.22,
+      "refDims": [
+        10,
+        13,
+        0.2
+      ],
+      "kg": 0.02
+    },
+    "pouches": {
+      "unit": 0.3,
+      "refDims": [
+        6,
+        3,
+        9
+      ],
+      "kg": 0.02
+    },
+    "display-boxes": {
+      "unit": 2.4,
+      "refDims": [
+        12,
+        8,
+        6
+      ],
+      "kg": 0.4
+    },
+    "labels-stickers": {
+      "unit": 0.06,
+      "refDims": [
+        3,
+        3,
+        0.1
+      ],
+      "kg": 0.002
+    },
+    "corporate-packaging": {
+      "unit": 2.2,
+      "refDims": [
+        10,
+        8,
+        4
+      ],
+      "kg": 0.3
+    },
+    "eco-packaging": {
+      "unit": 1.0,
+      "refDims": [
+        10,
+        8,
+        4
+      ],
+      "kg": 0.2
+    },
+    "cup-sleeves": {
+      "unit": 0.08,
+      "refDims": [
+        10,
+        2,
+        0.1
+      ],
+      "kg": 0.005
+    },
+    "packing-tape": {
+      "unit": 2.2,
+      "refDims": [
+        2,
+        110,
+        0
+      ],
+      "kg": 0.25,
+      "mode": "tape"
+    },
+    "tissue-paper": {
+      "unit": 0.12,
+      "refDims": [
+        20,
+        30,
+        0.1
+      ],
+      "kg": 0.01
+    },
+    "card-inserts": {
+      "unit": 0.09,
+      "refDims": [
+        5,
+        7,
+        0.02
+      ],
+      "kg": 0.008
+    }
+  },
+  "countries": {
+    "US": {
+      "name": "United States",
+      "currency": "USD",
+      "shipPerKg": 3.4,
+      "minShip": 150,
+      "duty": 0.1,
+      "tax": 0.0
+    },
+    "GB": {
+      "name": "United Kingdom",
+      "currency": "GBP",
+      "shipPerKg": 3.1,
+      "minShip": 140,
+      "duty": 0.04,
+      "tax": 0.2
+    },
+    "EU": {
+      "name": "European Union",
+      "currency": "EUR",
+      "shipPerKg": 3.2,
+      "minShip": 140,
+      "duty": 0.05,
+      "tax": 0.21
+    },
+    "AE": {
+      "name": "United Arab Emirates",
+      "currency": "AED",
+      "shipPerKg": 2.2,
+      "minShip": 100,
+      "duty": 0.05,
+      "tax": 0.05
+    },
+    "SA": {
+      "name": "Saudi Arabia",
+      "currency": "SAR",
+      "shipPerKg": 2.5,
+      "minShip": 110,
+      "duty": 0.05,
+      "tax": 0.15
+    },
+    "AU": {
+      "name": "Australia",
+      "currency": "AUD",
+      "shipPerKg": 3.6,
+      "minShip": 160,
+      "duty": 0.05,
+      "tax": 0.1
+    },
+    "CA": {
+      "name": "Canada",
+      "currency": "CAD",
+      "shipPerKg": 3.5,
+      "minShip": 150,
+      "duty": 0.06,
+      "tax": 0.05
+    }
+  },
+  "optDefault": 0.06
+}

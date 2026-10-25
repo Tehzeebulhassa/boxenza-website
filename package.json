@@ -1,0 +1,11 @@
+{
+  "name": "boxenza",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Boxenza Packaging website: static pages + quote API",
+  "scripts": {
+    "build": "node build.js",
+    "preview": "node build.js && python3 -m http.server 8080 --directory dist"
+  },
+  "engines": { "node": ">=18" }
+}
