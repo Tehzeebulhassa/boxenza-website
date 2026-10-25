@@ -50,6 +50,9 @@ function pick(table, src, partial) {
   return out;
 }
 
+// error text for the admin, with the database's own reason so problems are easy to spot
+const dbFail = (r, msg) => [r.status === 401 || r.status === 403 ? 502 : 500, { ok: false,
+  error: msg + ' Database said: ' + (r.status || '') + ' ' + clean((r.data && (r.data.message || r.data.msg || r.data.error || r.data.hint)) || r.data || '', 200) }];
 const idOf = v => { const n = parseInt(v, 10); return n > 0 ? n : 0; };
 const lim = (v, d, max) => Math.min(Math.max(parseInt(v, 10) || d, 1), max);
 const off = v => Math.max(parseInt(v, 10) || 0, 0);
@@ -80,7 +83,8 @@ H.stats = async q => {
     sb('quotes?select=id,created_at,status,name,company,product,follow_up&order=created_at.desc&limit=5000'),
     sb('orders?select=id,created_at,stage,customer_name,product,currency,sale_price,paid,fx_rate,supplier_cost_pkr,shipping_cost_pkr,other_cost_pkr,due_date&limit=5000')
   ]);
-  if (!qs.ok || !os.ok) return [500, { ok: false, error: 'Could not load the dashboard.' }];
+  if (!qs.ok) return dbFail(qs, 'Could not load the dashboard.');
+  if (!os.ok) return dbFail(os, 'Could not load the dashboard.');
   const quotes = qs.data, orders = os.data;
   const since = new Date(Date.parse(t) - 29 * 864e5).toISOString().slice(0, 10);
   const byStatus = {}; QUOTE_STATUS.forEach(s => (byStatus[s] = 0));
@@ -130,7 +134,7 @@ H.quotes = {
     f += search(q.q, ['name', 'email', 'company', 'phone', 'product', 'country']);
     const cols = q.full ? '*' : 'id,created_at,status,name,email,phone,company,country,product,qty,items,quoted_price,quoted_currency,follow_up,source,file_path';
     const r = await sb(`quotes?select=${cols}${f}&order=created_at.desc&limit=${lim(q.limit, 50, 5000)}&offset=${off(q.offset)}`, { headers: { Prefer: 'count=exact' } });
-    if (!r.ok) return [500, { ok: false, error: 'Could not load quotes.' }];
+    if (!r.ok) return dbFail(r, 'Could not load quotes.');
     return [200, { ok: true, rows: r.data, total: r.total }];
   },
   POST: async (q, b) => {
@@ -232,7 +236,7 @@ H.orders = {
     if (q.stage === 'open') f += '&stage=not.in.(delivered,cancelled)';
     f += search(q.q, ['customer_name', 'customer_email', 'company', 'product', 'tracking_no', 'country']);
     const r = await sb(`orders?select=*,supplier:suppliers(id,name)${f}&order=created_at.desc&limit=${lim(q.limit, 50, 5000)}&offset=${off(q.offset)}`, { headers: { Prefer: 'count=exact' } });
-    if (!r.ok) return [500, { ok: false, error: 'Could not load orders.' }];
+    if (!r.ok) return dbFail(r, 'Could not load orders.');
     return [200, { ok: true, rows: r.data, total: r.total }];
   },
   POST: async (q, b) => {
@@ -304,7 +308,7 @@ H.suppliers = {
     }
     const f = search(q.q, ['name', 'city', 'contact_person', 'phone', 'email']);
     const r = await sb(`suppliers?select=*,supplier_rates(count)${f}&order=name.asc&limit=1000`);
-    if (!r.ok) return [500, { ok: false, error: 'Could not load suppliers.' }];
+    if (!r.ok) return dbFail(r, 'Could not load suppliers.');
     return [200, { ok: true, rows: r.data }];
   },
   POST: async (q, b) => {
@@ -339,7 +343,7 @@ H.rates = {
   GET: async q => {
     if (q.batches) {
       const r = await sb('supplier_rates?select=batch,supplier_id,category,created_at&batch=not.is.null&order=created_at.desc&limit=20000');
-      if (!r.ok) return [500, { ok: false, error: 'Could not load imports.' }];
+      if (!r.ok) return dbFail(r, 'Could not load imports.');
       const m = new Map();
       r.data.forEach(x => {
         const g = m.get(x.batch) || { batch: x.batch, supplier_id: x.supplier_id, created_at: x.created_at, rows: 0, categories: [] };
@@ -356,7 +360,7 @@ H.rates = {
     const s = String(q.q || '').replace(/[^\p{L}\p{N}.\-_ ]/gu, ' ').replace(/\s+/g, ' ').trim().slice(0, 60);
     if (s) f += '&or=' + enc(`(style.ilike."*${s}*",style_code.ilike."*${s}*",size_name.ilike."*${s}*")`);
     const r = await sb(`supplier_rates?select=*,supplier:suppliers(id,name,city)${f}&order=style_code.asc,size_name.asc,qty.asc,rate_pkr.asc&limit=${lim(q.limit, 500, 5000)}`, { headers: { Prefer: 'count=exact' } });
-    if (!r.ok) return [500, { ok: false, error: 'Could not load rates.' }];
+    if (!r.ok) return dbFail(r, 'Could not load rates.');
     return [200, { ok: true, rows: r.data, total: r.total }];
   },
   POST: async (q, b) => {
