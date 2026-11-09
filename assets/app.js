@@ -239,18 +239,45 @@
   }
   if (mega) {
     var hoverOK = !!(window.matchMedia && window.matchMedia('(hover: hover) and (min-width: 761px)').matches);
+    var closeTimer = null;
+    function cancelClose() { if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; } }
+    function scheduleClose() { if (closeTimer) return; closeTimer = setTimeout(function () { closeTimer = null; closeMenu(); }, 180); }
     navBtns.forEach(function (b) {
       var k = b.getAttribute('data-menu');
       b.addEventListener('click', function () { if (openMenu === k) closeMenu(); else openM(k); });
-      if (hoverOK) b.addEventListener('mouseenter', function () { openM(k); });
+      if (hoverOK) b.addEventListener('mouseenter', function () { cancelClose(); openM(k); });
     });
     if (hoverOK) {
-      $('site-top').addEventListener('mouseleave', closeMenu);
-      $$('.nav a').forEach(function (a) { a.addEventListener('mouseenter', closeMenu); });
+      mega.addEventListener('mouseenter', cancelClose);
+      mega.addEventListener('mouseleave', scheduleClose);
+      $('site-top').addEventListener('mouseleave', scheduleClose);
+      $$('.nav a').forEach(function (a) { a.addEventListener('mouseenter', scheduleClose); });
     }
     document.addEventListener('click', function (e) { if (!e.target.closest('.top')) closeMenu(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
   }
+
+  /* ---------- prefetch internal pages on hover/focus ---------- */
+  /* Makes the next page load near-instant: the browser fetches it while
+     the visitor is still deciding to click. Same-origin pages only. */
+  var prefetched = {};
+  function prefetchPage(href) {
+    if (!href || prefetched[href]) return;
+    if (href.charAt(0) !== '/' || href.indexOf('//') === 0) return;
+    if (href.indexOf('#') >= 0 || href === window.location.pathname) return;
+    prefetched[href] = true;
+    var l = document.createElement('link');
+    l.rel = 'prefetch'; l.href = href;
+    document.head.appendChild(l);
+  }
+  document.addEventListener('mouseover', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (a) prefetchPage(a.getAttribute('href'));
+  });
+  document.addEventListener('focusin', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (a) prefetchPage(a.getAttribute('href'));
+  });
 
   /* ---------- hero price card ---------- */
   var pcard = $('pcard');

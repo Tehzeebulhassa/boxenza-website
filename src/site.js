@@ -6,7 +6,7 @@ const { dielineFor } = require('./dielines');
 
 const BRAND = 'Boxenza';
 const SITE_URL = process.env.SITE_URL || 'https://www.boxenza.com';
-const CONTACT = { email: 'hello@boxenza.com', whatsapp: '+00 000 0000000', whatsappLink: '' }; // placeholders
+const CONTACT = { email: 'sales@boxenza.com', whatsapp: '+1 202 960 7921', whatsappLink: 'https://wa.me/12029607921' };
 
 /* ---------- helpers ---------- */
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -19,8 +19,11 @@ function imgSrc(shape, pal) {
   if (!IMAGES.has(key)) IMAGES.set(key, illus(shape, pal));
   return '/img/' + key + '.svg';
 }
-const img = (shape, pal, alt, extra) =>
-  `<img src="${imgSrc(shape, pal)}" alt="${esc(alt || '')}" width="300" height="300" loading="lazy" decoding="async"${extra || ''}>`;
+const img = (shape, pal, alt, extra) => {
+  const eager = extra && extra.indexOf('loading="eager"') >= 0;
+  const rest = eager ? extra.replace(' loading="eager"', '') : (extra || '');
+  return `<img src="${imgSrc(shape, pal)}" alt="${esc(alt || '')}" width="300" height="300" ${eager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy" decoding="async"'}${rest}>`;
+};
 
 // style slugs (unique inside each category)
 D.CATS.forEach(c => {
@@ -77,7 +80,7 @@ function megaPanels() {
     `<a class="mgi" href="${href}"><span class="tile">${src}</span><span><b>${esc(title)}</b>${sub ? `<span>${esc(sub)}</span>` : ''}</span></a>`;
   const prod = `<div class="mg" data-panel="products"><div><p class="eyebrow">Products</p><div class="mg-grid">` +
     D.CATS.map(c => mgi(catUrl(c), img(c.sh, c.tp, ''), c.n)).join('') +
-    `</div></div>` + ip(`<a class="mg-promo" href="/instant-price/"><b>Instant landed price</b><span>Pick a style, enter your size and country, and see the full price to your door.</span><span class="more">Get a price →</span></a>`, `<a class="mg-promo" href="/quote/"><b>Free quote in 24 hours</b><span>Send your size, quantity and country. We reply with the full price to your door and a free 3D mockup.</span><span class="more">Request a quote →</span></a>`) + `</div>`;
+    `</div></div>` + ip(`<a class="mg-promo" href="/instant-price/"><b>Instant landed price</b><span>Pick a style, enter your size and country, and see the full price to your door.</span><span class="more">Get a price →</span></a>`, `<a class="mg-promo" href="/quote/"><b>Free quote in one business day</b><span>Send your size, quantity and country. We reply with the full price to your door and a free 3D mockup.</span><span class="more">Request a quote →</span></a>`) + `</div>`;
   const ind = `<div class="mg" data-panel="industries" hidden><div><p class="eyebrow">Shop by industry</p><div class="mg-grid">` +
     D.IND.map(x => mgi(indUrl(x), img(x[3], x[4], ''), x[1])).join('') +
     `</div></div><a class="mg-promo" href="/industries/"><b>All industries</b><span>See the packaging that suits your kind of product.</span><span class="more">See all industries →</span></a></div>`;
@@ -92,7 +95,7 @@ const LOGO = `<svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3 24 8.5v
 function header() {
   return `<a class="skip" href="#main">Skip to content</a>
 <div class="topbar"><div class="wrap topbar-in">
-  <span class="tb-msg">${ip('Worldwide delivery. Shipping, duties and taxes included in every estimate.', 'Worldwide delivery. Free quote within 24 hours, with shipping and duties included.')}</span>
+  <span class="tb-msg">${ip('Worldwide delivery. Shipping, duties and taxes included in every estimate.', 'Worldwide delivery. Free quote within one business day, with shipping and duties included.')}</span>
   ${ip(`<div class="loc">
     <label>Ship to <select id="bx-country" aria-label="Ship to country">${countryOptions()}<option value="OTHER">Other country</option></select></label>
     <label>Currency <select id="bx-cur" aria-label="Currency">${currencyOptions()}</select></label>
@@ -151,7 +154,7 @@ function footer() {
         <li><a href="/quote/">Request a quote</a></li>
       </ul></div>
       <div><h3>Contact</h3><ul>
-        <li>${esc(CONTACT.email)}</li><li>WhatsApp: ${esc(CONTACT.whatsapp)}</li><li>Delivering worldwide</li>
+        <li><a href="mailto:${esc(CONTACT.email)}">${esc(CONTACT.email)}</a></li><li>WhatsApp: <a href="${CONTACT.whatsappLink}">${esc(CONTACT.whatsapp)}</a></li><li>Delivering worldwide</li>
       </ul></div>
     </div>
     <p class="legal">&copy; ${new Date().getFullYear()} ${BRAND} Packaging. <a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/shipping/">Shipping</a></p>
@@ -214,16 +217,16 @@ function crumbs(trail) {
 const band = (text, label, href) => `<div class="band"><h2>${esc(text)}</h2><a class="btn" href="${href || '/quote/'}">${esc(label || 'Get a free quote')}</a></div>`;
 const pageHead = (h, lede, extra) => `<div class="head pagehead"><div><h1>${esc(h)}</h1><p class="lede">${esc(lede)}</p></div>${extra === undefined ? '<a class="btn" href="/quote/">Request a quote</a>' : extra}</div>`;
 const infoCards = items => `<div class="why">${items.map(x => `<div><h3>${esc(x[0])}</h3><p>${esc(x[1])}</p></div>`).join('')}</div>`;
-const catCard = (c, small) => `<a class="cat" href="${catUrl(c)}"><span class="tile">${img(c.sh, c.tp, c.n)}</span><span class="ct"><h3>${esc(small ? c.n : (c.cn || c.n))}</h3><span>${esc(c.d)}</span></span></a>`;
+const catCard = (c, small, eager) => `<a class="cat" href="${catUrl(c)}"><span class="tile">${img(c.sh, c.tp, c.n, eager ? ' loading="eager"' : '')}</span><span class="ct"><h3>${esc(small ? c.n : (c.cn || c.n))}</h3><span>${esc(c.d)}</span></span></a>`;
 const styleCard = (c, s, i, hidden) =>
-  `<a class="style" href="${styleUrl(c, s)}" data-tabs="${s[3].join(' ')}"${hidden ? ' hidden' : ''}><span class="tile hv"><span class="v1">${img(s[2], palFor(c, i), s[1])}</span><span class="v2">${img(s[2], palFor(c, i) + 1, '')}</span></span><span class="code">${s[0]}</span><span class="name">${esc(s[1])}</span></a>`;
+  `<a class="style" href="${styleUrl(c, s)}" data-tabs="${s[3].join(' ')}"${hidden ? ' hidden' : ''}><span class="tile hv"><span class="v1">${img(s[2], palFor(c, i), s[1], i < 4 ? ' loading="eager"' : '')}</span><span class="v2">${img(s[2], palFor(c, i) + 1, '')}</span></span><span class="code">${s[0]}</span><span class="name">${esc(s[1])}</span></a>`;
 
 const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l4 4 10-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 /* ---------- shown instead of the estimator while INSTANT is off ---------- */
 function quoteBox() {
   return `<div class="est est-quote">
-  <div class="est-head"><b>Free quote in 24 hours</b></div>
+  <div class="est-head"><b>Free quote in one business day</b></div>
   <p class="est-empty">Add this style with your size and quantity, then send the quote form. We reply within one business day with the full price to your door (production, shipping, duty and tax), a free 3D mockup and the lead time.</p>
 </div>`;
 }
@@ -235,7 +238,7 @@ function estimatorBox(id) {
   <p class="est-note">Estimate includes production, door-to-door shipping, import duty and tax. Your quote confirms the final price.</p>
 </div>`;
 }
-const QTYS = [100, 250, 500, 1000, 2500, 5000, 10000, 25000];
+const QTYS = [250, 500, 1000, 2500, 5000, 10000, 25000];
 const qtySelect = (id, sel) => `<select id="${id}">${QTYS.map(q => `<option value="${q}"${q === sel ? ' selected' : ''}>${q.toLocaleString('en-US')}</option>`).join('')}</select>`;
 
 /* ---------- hero price examples (computed with the same formula as the site) ---------- */
@@ -286,7 +289,7 @@ P.home = () => {
     <div class="hero3-copy">
       <p class="eyebrow">Boxes, bags, mailers and pouches</p>
       <h1>Custom packaging, priced to your door.</h1>
-      <p class="lede">${ip('Pick a style, enter your size and country, and see the full landed price straight away, with shipping, duties and taxes included. Then we design, proof, print and deliver it anywhere in the world.', 'Pick a style, send your size and country, and get the full price to your door within 24 hours, with shipping, duties and taxes included. Then we design, proof, print and deliver it anywhere in the world.')}</p>
+      <p class="lede">${ip('Pick a style, enter your size and country, and see the full landed price straight away, with shipping, duties and taxes included. Then we design, proof, print and deliver it anywhere in the world.', 'Pick a style, send your size and country, and get the full price to your door within one business day, with shipping, duties and taxes included. Then we design, proof, print and deliver it anywhere in the world.')}</p>
       <div class="cta-row">
         ${ip('<a class="btn btn-light" href="/instant-price/">Get an instant price</a>', '<a class="btn btn-light" href="/quote/">Get a free quote</a>')}
         <a class="btn ghost" href="/#products">Browse packaging styles</a>
@@ -305,7 +308,7 @@ ${ip(`      <div class="pcard" id="pcard" aria-live="polite">
         <ul class="pc-legend"><li><i class="s1"></i>Production</li><li><i class="s2"></i>Shipping</li><li><i class="s3"></i>Duty</li><li><i class="s4"></i>Tax</li></ul>
         <a class="pc-link" href="/instant-price/">Price your own size</a>
       </div>`, `      <div class="pcard qcard">
-        <div class="pc-top"><span class="pc-label">Free quote in 24 hours</span></div>
+        <div class="pc-top"><span class="pc-label">Free quote in one business day</span></div>
         <ol class="qc-steps"><li><b>Send</b> your style, size, quantity and country</li><li><b>Get</b> the full price to your door, with shipping, duty and tax</li><li><b>See</b> a free 3D mockup before anything is printed</li></ol>
         <a class="pc-link" href="/quote/">Request a quote</a>
       </div>`)}
@@ -314,10 +317,10 @@ ${ip(`      <div class="pcard" id="pcard" aria-live="polite">
 </section>
 <div class="strip"><div class="strip-track">
   <div class="strip-in">
-    <span>${CHECK}${ip('Instant landed price', 'Free quote in 24 hours')}</span><span>${CHECK}No surprise customs bills</span><span>${CHECK}Free 3D mockup</span><span>${CHECK}Production photos before shipping</span>
+    <span>${CHECK}${ip('Instant landed price', 'Free quote in one business day')}</span><span>${CHECK}No surprise customs bills</span><span>${CHECK}Free 3D mockup</span><span>${CHECK}Production photos before shipping</span>
   </div>
   <div class="strip-in" aria-hidden="true">
-    <span>${CHECK}${ip('Instant landed price', 'Free quote in 24 hours')}</span><span>${CHECK}No surprise customs bills</span><span>${CHECK}Free 3D mockup</span><span>${CHECK}Production photos before shipping</span>
+    <span>${CHECK}${ip('Instant landed price', 'Free quote in one business day')}</span><span>${CHECK}No surprise customs bills</span><span>${CHECK}Free 3D mockup</span><span>${CHECK}Production photos before shipping</span>
   </div>
 </div></div>
 ${ip(`<script>window.BX_HERO=${JSON.stringify(HERO_EXAMPLES)};</script>`, '')}
@@ -325,7 +328,7 @@ ${ip(`<script>window.BX_HERO=${JSON.stringify(HERO_EXAMPLES)};</script>`, '')}
 <section class="sec alt" id="products">
   <div class="wrap">
     <div class="head"><div><p class="eyebrow">Products</p><h2>Custom printed packaging for every product</h2><p class="lede">Everything your brand needs to pack, ship and sell, from one place.</p></div><a class="btn ghost" href="/products/">See all products</a></div>
-    <div class="cats">${D.CATS.map(c => catCard(c)).join('')}</div>
+    <div class="cats">${D.CATS.map((c, i) => catCard(c, false, i < 4)).join('')}</div>
   </div>
 </section>
 
@@ -334,7 +337,7 @@ ${ip(`<script>window.BX_HERO=${JSON.stringify(HERO_EXAMPLES)};</script>`, '')}
     <div class="head"><div><p class="eyebrow">Why ${BRAND}</p><h2>The price you see is the price you pay</h2><p class="lede">Most packaging suppliers quote the boxes and leave you to find out about freight, duty and tax on delivery. We show it all up front.</p></div></div>
     <div class="why">
       <div><h3>Landed price, up front</h3><p>Production, door-to-door shipping, import duty and tax in one number, in your currency.</p></div>
-      ${ip('<div><h3>Instant estimate</h3><p>Enter size, quantity and country and see a price range in seconds. No waiting for a sales call.</p></div>', '<div><h3>Quote in 24 hours</h3><p>Send your size, quantity and country and get the full price within one business day. No waiting for a sales call.</p></div>')}
+      ${ip('<div><h3>Instant estimate</h3><p>Enter size, quantity and country and see a price range in seconds. No waiting for a sales call.</p></div>', '<div><h3>Quote in one business day</h3><p>Send your size, quantity and country and get the full price within one business day. No waiting for a sales call.</p></div>')}
       <div><h3>See it before it ships</h3><p>A free 3D mockup before print, and photos of your finished order before it leaves.</p></div>
       <div><h3>Made right, or made again</h3><p>If your order does not match the approved proof, we reprint it.</p></div>
     </div>
@@ -359,7 +362,7 @@ ${ip(`<script>window.BX_HERO=${JSON.stringify(HERO_EXAMPLES)};</script>`, '')}
   <div class="wrap">
     <div class="head"><div><p class="eyebrow">How it works</p><h2>From brief to doorstep in four steps</h2></div></div>
     <ol class="steps">
-      ${ip('<li><h3>Instant price</h3><p>Choose a style, size, quantity and country. See the landed price, then request your quote.</p></li>', '<li><h3>Free quote</h3><p>Send your style, size, quantity and country. Within 24 hours you get the full price to your door.</p></li>')}
+      ${ip('<li><h3>Instant price</h3><p>Choose a style, size, quantity and country. See the landed price, then request your quote.</p></li>', '<li><h3>Free quote</h3><p>Send your style, size, quantity and country. Within one business day you get the full price to your door.</p></li>')}
       <li><h3>Free 3D mockup</h3><p>We build a dieline to your exact size, place your artwork and send a 3D preview.</p></li>
       <li><h3>Approve the proof</h3><p>Production starts only when you are happy with the digital proof.</p></li>
       <li><h3>Photos, then delivery</h3><p>We send photos of your finished order, then deliver it to your door with duties paid.</p></li>
@@ -374,7 +377,7 @@ ${ip(`<script>window.BX_HERO=${JSON.stringify(HERO_EXAMPLES)};</script>`, '')}
   </div>
 </section>
 
-<section class="sec"><div class="wrap">${ip(band('Ready to see your landed price?', 'Get an instant price', '/instant-price/'), band('Ready to start? Get your free quote in 24 hours.', 'Request a quote', '/quote/'))}</div></section>`;
+<section class="sec"><div class="wrap">${ip(band('Ready to see your landed price?', 'Get an instant price', '/instant-price/'), band('Ready to start? Get your free quote in one business day.', 'Request a quote', '/quote/'))}</div></section>`;
   const ld = [{
     '@context': 'https://schema.org', '@type': 'Organization', name: BRAND + ' Packaging', url: SITE_URL,
     email: CONTACT.email, description: 'Custom printed packaging delivered worldwide with shipping, duties and taxes included.'
@@ -382,14 +385,14 @@ ${ip(`<script>window.BX_HERO=${JSON.stringify(HERO_EXAMPLES)};</script>`, '')}
     '@context': 'https://schema.org', '@type': 'FAQPage',
     mainEntity: faq.map(q => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1].replace(/<[^>]+>/g, '') } }))
   }];
-  return { path: '/', title: 'Home', desc: ip('Custom printed boxes, bags, mailers and pouches with an instant landed price: production, shipping, duties and taxes included. Free 3D mockup. Delivered worldwide.', 'Custom printed boxes, bags, mailers and pouches. Free quote in 24 hours with shipping, duties and taxes included. Free 3D mockup. Delivered worldwide.'), body, jsonld: ld };
+  return { path: '/', title: 'Home', desc: ip('Custom printed boxes, bags, mailers and pouches with an instant landed price: production, shipping, duties and taxes included. Free 3D mockup. Delivered worldwide.', 'Custom printed boxes, bags, mailers and pouches. Free quote in one business day with shipping, duties and taxes included. Free 3D mockup. Delivered worldwide.'), body, jsonld: ld };
 };
 
 P.products = () => {
   const cr = crumbs([['Products']]);
   return { path: '/products/', title: 'Custom Packaging Products', desc: 'Browse every custom packaging product: folding cartons, mailer boxes, rigid boxes, paper bags, pouches, labels and more. Delivered worldwide.',
     jsonld: [cr.ld],
-    body: `<div class="wrap">${cr.html}${pageHead('All packaging products', ip('Pick a product to see every style, then get an instant landed price for your size and country.', 'Pick a product to see every style, then request a free quote for your size and country.'))}<div class="cats">${D.CATS.map(c => catCard(c)).join('')}</div><div class="pad">${band('Not sure which one fits? Ask us.')}</div></div>` };
+    body: `<div class="wrap">${cr.html}${pageHead('All packaging products', ip('Pick a product to see every style, then get an instant landed price for your size and country.', 'Pick a product to see every style, then request a free quote for your size and country.'))}<div class="cats">${D.CATS.map((c, i) => catCard(c, false, i < 4)).join('')}</div><div class="pad">${band('Not sure which one fits? Ask us.')}</div></div>` };
 };
 
 P.category = c => {
@@ -406,7 +409,7 @@ P.category = c => {
   <dl class="specs">${c.specs.map(s => `<div><dt>${esc(s[0])}</dt><dd>${esc(s[1])}</dd></div>`).join('')}</dl></div></section>
 <section class="sec"><div class="wrap"><div class="head"><div><h2>More packaging</h2></div></div><div class="mini">${more}</div>
   <div style="margin-top:2.5rem">${band('Not seeing your style? We make custom structures.', 'Request a quote')}</div></div></section>`;
-  return { path: catUrl(c), title: 'Custom ' + c.n, desc: `${c.i} ${c.st.length} styles, made to your size, ${ip('with an instant landed price to your country', 'with a free quote in 24 hours')}.`, body, jsonld: [cr.ld] };
+  return { path: catUrl(c), title: 'Custom ' + c.n, desc: `${c.i} ${c.st.length} styles, made to your size, ${ip('with an instant landed price to your country', 'with a free quote in one business day')}.`, body, jsonld: [cr.ld] };
 };
 
 P.style = (c, i) => {
@@ -499,7 +502,7 @@ P.quote = () => {
     <div style="display:grid;gap:0.7rem"><p class="eyebrow">Free quote</p><h1 style="font-size:clamp(1.9rem,4.4vw,2.8rem)">Tell us what you need</h1>
     <p class="lede">A rough size and quantity is enough to start. We reply with your landed price, a free 3D mockup and the lead time.</p></div>
     <ul class="checks"><li>Landed price: shipping, duty and tax included</li><li>Free 3D mockup and digital proof</li><li>Production photos before shipping</li><li>Delivery worldwide</li></ul>
-    <div class="contact"><b>Contact</b><span>Email: ${esc(CONTACT.email)}</span><span>WhatsApp: ${esc(CONTACT.whatsapp)}</span></div>
+    <div class="contact"><b>Contact</b><span>Email: <a href="mailto:${esc(CONTACT.email)}">${esc(CONTACT.email)}</a></span><span>WhatsApp: <a href="${CONTACT.whatsappLink}">${esc(CONTACT.whatsapp)}</a></span></div>
   </div>
   <div style="display:grid;gap:1rem;min-width:0">
     <div id="basket" class="basket" hidden></div>
@@ -517,8 +520,9 @@ P.quote = () => {
       </div>
       <div class="row manual">
         <div class="field"><label for="product">Product</label><select id="product" name="product"><option value="">Select…</option>${D.CATS.map(c => `<option>${esc(c.n)}</option>`).join('')}<option>Not sure yet</option></select></div>
-        <div class="field"><label for="qty">Quantity</label><select id="qty" name="qty"><option value="">Approx. quantity…</option><option>100 – 250</option><option>250 – 500</option><option>500 – 1,000</option><option>1,000 – 5,000</option><option>5,000 – 25,000</option><option>25,000+</option><option>Not sure yet</option></select></div>
+        <div class="field"><label for="qty">Quantity</label><select id="qty" name="qty"><option value="">Approx. quantity…</option><option>250 – 500</option><option>500 – 1,000</option><option>1,000 – 5,000</option><option>5,000 – 25,000</option><option>25,000+</option><option>Not sure yet</option></select></div>
       </div>
+      <p class="note" style="margin:0">Minimum order starts at 250 pieces. <a href="/minimum-order-quantities/">See minimums for every product</a>.</p>
       <p class="note" id="from-basket" hidden style="margin:0">Product, size and quantity come from the styles in your quote above. Remove them to enter these by hand.</p>
       <fieldset class="field manual"><legend>Size (optional)</legend>
         <div class="dims"><label for="dl">LENGTH<input id="dl" name="dl" type="number" min="0" step="any" inputmode="decimal"></label><label for="dw">WIDTH<input id="dw" name="dw" type="number" min="0" step="any" inputmode="decimal"></label><label for="dh">HEIGHT<input id="dh" name="dh" type="number" min="0" step="any" inputmode="decimal"></label></div>
@@ -546,12 +550,12 @@ P.industries = () => {
   const cr = crumbs([['Industries']]);
   return { path: '/industries/', title: 'Packaging by Industry', desc: 'Custom packaging for cosmetics, food, coffee, candles, apparel, jewelry, electronics, supplements and e-commerce brands worldwide.', jsonld: [cr.ld],
     body: `<div class="wrap">${cr.html}${pageHead('Packaging by industry', 'Every industry has its own rules for protection, labelling and shelf appeal. Pick yours to see the packaging that suits it.')}
-<div class="cats small">${D.IND.map(x => `<a class="cat" href="${indUrl(x)}"><span class="tile">${img(x[3], x[4], x[1])}</span><span class="ct"><h3>${esc(x[1])}</h3><span>${esc(x[2])}</span></span></a>`).join('')}</div>
+<div class="cats small">${D.IND.map((x, i) => `<a class="cat" href="${indUrl(x)}"><span class="tile">${img(x[3], x[4], x[1], i < 4 ? ' loading="eager"' : '')}</span><span class="ct"><h3>${esc(x[1])}</h3><span>${esc(x[2])}</span></span></a>`).join('')}</div>
 <div class="pad">${band('Your industry is not listed? Tell us what you sell.')}</div></div>` };
 };
 P.industry = x => {
   const cr = crumbs([['Industries', '/industries/'], [x[1]]]);
-  return { path: indUrl(x), title: `Custom Packaging for ${x[1]}`, desc: `${x[6]} Custom packaging for ${x[1].toLowerCase()} brands, delivered worldwide ${ip('with an instant landed price', 'with a free quote in 24 hours')}.`, jsonld: [cr.ld],
+  return { path: indUrl(x), title: `Custom Packaging for ${x[1]}`, desc: `${x[6]} Custom packaging for ${x[1].toLowerCase()} brands, delivered worldwide ${ip('with an instant landed price', 'with a free quote in one business day')}.`, jsonld: [cr.ld],
     body: `<div class="wrap">${cr.html}${pageHead('Custom packaging for ' + x[1].toLowerCase(), x[6])}
 <h2 class="sub">Popular packaging</h2><div class="cats small">${x[5].map(sl => catCard(D.BY[sl], true)).join('')}</div>
 <h2 class="sub">Things to consider</h2>${infoCards(x[7])}
@@ -577,8 +581,8 @@ P.why = () => {
   const cr = crumbs([['Why us']]);
   return { path: '/why-us/', title: 'Why Brands Choose Us', desc: 'Landed prices up front, a free 3D mockup, production photos before shipping and a reprint guarantee. Custom packaging delivered worldwide.', jsonld: [cr.ld],
     body: `<div class="wrap">${cr.html}${pageHead('Why brands choose ' + BRAND, 'Custom packaging should be simple to price, simple to order and reliable to receive. This is how we work.')}
-${infoCards([['Landed price, up front', 'Production, shipping, import duty and tax in one number, in your currency. No surprise bills on delivery.'], ip(['Instant estimate', 'Enter size, quantity and country and see a price in seconds.'], ['Quote in 24 hours', 'Send size, quantity and country and get the full price within one business day.']), ['Free 3D mockup', 'See your design on the real structure before anything is printed.'], ['Production photos', 'We send photos of your finished order before it ships.'], ['Reprint guarantee', 'If the order does not match the approved proof, we reprint it.'], ['Clear minimums', 'See the minimum order for every product on our MOQ page before you ask for a quote.'], ['Sustainable options', 'Recycled and FSC-certified stock, soy and water-based inks, right-sized structures.'], ['Worldwide delivery', 'Door-to-door delivery with duties paid to the US, UK, EU, Gulf, Australia, Canada and more.']])}
-<div class="pad">${ip(band('Ready to see your landed price?', 'Get an instant price', '/instant-price/'), band('Ready to start? Get your free quote in 24 hours.', 'Request a quote', '/quote/'))}</div></div>` };
+${infoCards([['Landed price, up front', 'Production, shipping, import duty and tax in one number, in your currency. No surprise bills on delivery.'], ip(['Instant estimate', 'Enter size, quantity and country and see a price in seconds.'], ['Quote in one business day', 'Send size, quantity and country and get the full price within one business day.']), ['Free 3D mockup', 'See your design on the real structure before anything is printed.'], ['Production photos', 'We send photos of your finished order before it ships.'], ['Reprint guarantee', 'If the order does not match the approved proof, we reprint it.'], ['Clear minimums', 'See the minimum order for every product on our MOQ page before you ask for a quote.'], ['Sustainable options', 'Recycled and FSC-certified stock, soy and water-based inks, right-sized structures.'], ['Worldwide delivery', 'Door-to-door delivery with duties paid to the US, UK, EU, Gulf, Australia, Canada and more.']])}
+<div class="pad">${ip(band('Ready to see your landed price?', 'Get an instant price', '/instant-price/'), band('Ready to start? Get your free quote in one business day.', 'Request a quote', '/quote/'))}</div></div>` };
 };
 P.moq = () => {
   const cr = crumbs([['Minimum order quantities']]);
@@ -602,7 +606,7 @@ P.ptimes = () => {
 P.blog = () => {
   const cr = crumbs([['Blog']]);
   return { path: '/blog/', title: 'Packaging Guides', desc: 'Short, practical guides for choosing and ordering custom packaging.', jsonld: [cr.ld],
-    body: `<div class="wrap">${cr.html}${pageHead('Packaging guides', 'Short, practical guides for choosing and ordering custom packaging.')}<div class="svcs">${D.BLOG.map(b => `<a class="scard" href="/blog/${b[0]}/"><h3>${esc(b[1])}</h3><p>${esc(b[2])}</p><span class="more">Read more →</span></a>`).join('')}</div><div class="pad">${ip(band('Ready to see your landed price?', 'Get an instant price', '/instant-price/'), band('Ready to start? Get your free quote in 24 hours.', 'Request a quote', '/quote/'))}</div></div>` };
+    body: `<div class="wrap">${cr.html}${pageHead('Packaging guides', 'Short, practical guides for choosing and ordering custom packaging.')}<div class="svcs">${D.BLOG.map(b => `<a class="scard" href="/blog/${b[0]}/"><h3>${esc(b[1])}</h3><p>${esc(b[2])}</p><span class="more">Read more →</span></a>`).join('')}</div><div class="pad">${ip(band('Ready to see your landed price?', 'Get an instant price', '/instant-price/'), band('Ready to start? Get your free quote in one business day.', 'Request a quote', '/quote/'))}</div></div>` };
 };
 P.article = b => {
   const cr = crumbs([['Blog', '/blog/'], [b[1]]]);
@@ -618,14 +622,14 @@ P.about = () => {
   const cr = crumbs([['About us']]);
   return { path: '/about/', title: 'About Us', desc: `About ${BRAND}: custom packaging with landed prices up front, delivered worldwide.`, jsonld: [cr.ld],
     body: `<div class="wrap">${cr.html}${pageHead('About ' + BRAND, 'We started ' + BRAND + ' because ordering custom packaging from abroad meant guesswork: unclear prices, surprise customs bills and no idea what would arrive. We fixed that.')}
-${infoCards([['What we do', 'Custom boxes, bags, mailers, pouches, labels and more, made to your size.'], ['Who we serve', 'Growing brands worldwide, from first runs to repeat orders in the tens of thousands.'], ['How we work', ip('Instant landed price, free 3D mockup, proof approval, production photos, then delivery with duties paid.', 'Free quote in 24 hours, free 3D mockup, proof approval, production photos, then delivery with duties paid.')]])}
+${infoCards([['What we do', 'Custom boxes, bags, mailers, pouches, labels and more, made to your size.'], ['Who we serve', 'Growing brands worldwide, from first runs to repeat orders in the tens of thousands.'], ['How we work', ip('Instant landed price, free 3D mockup, proof approval, production photos, then delivery with duties paid.', 'Free quote in one business day, free 3D mockup, proof approval, production photos, then delivery with duties paid.')]])}
 <div class="pad">${band('Let us price your packaging.')}</div></div>` };
 };
 P.contact = () => {
   const cr = crumbs([['Contact us']]);
   return { path: '/contact/', title: 'Contact Us', desc: `Contact ${BRAND} about custom packaging styles, materials or orders.`, jsonld: [cr.ld],
-    body: `<div class="wrap">${cr.html}${pageHead('Contact us', 'Questions about a style, a material or an order? Send a message or request a quote.')}
-<div class="why"><div><h3>Email</h3><p class="mono">${esc(CONTACT.email)}</p></div><div><h3>WhatsApp</h3><p class="mono">${esc(CONTACT.whatsapp)}</p></div><div><h3>Hours</h3><p>Monday to Friday, 9:00 to 18:00 (GMT+5)</p></div><div><h3>Delivery</h3><p>Worldwide, door to door</p></div></div>
+    body: `<div class="wrap">${cr.html}${pageHead('Contact us', 'Email us, message us on WhatsApp, or request a quote.')}
+<div class="why"><div><h3>Email</h3><p class="mono"><a href="mailto:${esc(CONTACT.email)}">${esc(CONTACT.email)}</a></p></div><div><h3>WhatsApp</h3><p class="mono"><a href="${CONTACT.whatsappLink}">${esc(CONTACT.whatsapp)}</a></p></div><div><h3>Hours</h3><p>Monday to Friday, 9:00 to 18:00 (GMT+5)</p></div><div><h3>Delivery</h3><p>Worldwide, door to door</p></div></div>
 <div class="pad">${ip(band('The fastest way to start is an instant price.', 'Get an instant price', '/instant-price/'), band('The fastest way to start is a free quote.', 'Request a quote', '/quote/'))}</div></div>` };
 };
 P.notFound = () => ({ path: '/404', title: 'Page not found', desc: 'Page not found.',
