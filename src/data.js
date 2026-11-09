@@ -282,45 +282,45 @@
       "Privacy policy",
       [
         "What we collect",
-        "Describe what information you collect, such as names, emails and project details from the quote form."
+        "When you request a quote, we collect your name, email address, phone or WhatsApp number, company name, country and the details of your packaging project, including any artwork files you upload. We also keep the emails and messages you send us about your order."
       ],
       [
         "How we use it",
-        "Explain how you use that information, for example to prepare quotes and contact customers."
+        "We use your information only to prepare your quote, confirm your order, produce and deliver your packaging, and reply to your questions. We never sell your information. We share it only where needed to fulfil your order, for example with the payment provider you pay through or the courier delivering your boxes."
       ],
       [
         "Your choices",
-        "Explain how people can ask to see, correct or delete their information."
+        "You can ask us at any time to see, correct or delete the information we hold about you. Email sales@boxenza.com and we will action your request. We keep quote and order records only as long as needed for the order, for accounting and for legal reasons."
       ]
     ],
     "terms": [
       "Terms & conditions",
       [
         "Quotes and orders",
-        "Explain how quotes work, how long they are valid and how an order is confirmed."
+        "Request a quote and we will reply within one business day with your landed price, a free 3D mockup and the lead time. Quotes are valid for 30 days. Your order is confirmed once you approve the artwork proof and pay the 50% advance. The minimum order is 250 pieces."
       ],
       [
         "Payment",
-        "State your payment methods and terms, such as deposits and balance on shipping."
+        "We accept payment by Payoneer and by bank transfer. You pay 50% in advance before production starts and the remaining 50% after production is complete and before we ship your order. For large orders split into batches, each batch is paid for in the same way before it ships. Your quoted price is the full landed price, including production, shipping, duties and taxes, unless your quote says otherwise."
       ],
       [
         "Returns and claims",
-        "Explain what happens if goods arrive damaged or do not match the approved proof."
+        "Because every order is custom-made to your specifications, we do not accept returns or give refunds once your order is printed, unless the product is defective. If your boxes arrive damaged or with a manufacturing defect, email sales@boxenza.com within 5 business days of delivery with your order number, a description of the problem and clear photos. We will review it and arrange a reprint, replacement, refund or credit. A product is defective when it has a structural or printing error from manufacturing. Small colour differences, and differences in size or specification within 2.5%, are normal in printing and are not defects. Errors that were visible in the artwork proof you approved are not manufacturing defects, and any reprint for those is charged as a new order."
       ]
     ],
     "shipping": [
       "Shipping policy",
       [
         "Where we ship",
-        "List the countries you deliver to, such as the US and the UK."
+        "We deliver worldwide, door to door, to the address you give us with your order."
       ],
       [
         "Carriers and timing",
-        "State the couriers or freight options and how delivery estimates are given."
+        "Your quote confirms the delivery time and the carrier for your order. Production starts only after your artwork proof is approved and your advance is received, so the delivery date in your quote counts from those two steps. Delivery times are estimates; delays outside our control, such as customs holds or courier disruption, do not change your order."
       ],
       [
         "Duties and taxes",
-        "Explain who pays import duties and taxes, and how that appears on a quote."
+        "Your quoted price is the full landed price, so import duties and taxes are included unless your quote says otherwise. You will not receive a separate customs bill for the items in your quote."
       ]
     ]
   };

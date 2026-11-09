@@ -616,7 +616,7 @@ P.article = b => {
 P.legal = (k, L) => {
   const cr = crumbs([[L[0]]]);
   return { path: '/' + k + '/', title: L[0], desc: `${BRAND} ${L[0].toLowerCase()}.`, jsonld: [cr.ld],
-    body: `<div class="wrap">${cr.html}<article class="article"><h1>${esc(L[0])}</h1><p class="note-box">Placeholder text. Replace this page with your own policy before launch.</p>${L.slice(1).map(x => `<h2>${esc(x[0])}</h2><p>${esc(x[1])}</p>`).join('')}</article><div class="pad"></div></div>` };
+    body: `<div class="wrap">${cr.html}<article class="article"><h1>${esc(L[0])}</h1>${L.slice(1).map(x => `<h2>${esc(x[0])}</h2><p>${esc(x[1])}</p>`).join('')}</article><div class="pad"></div></div>` };
 };
 P.about = () => {
   const cr = crumbs([['About us']]);
