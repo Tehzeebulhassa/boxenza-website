@@ -79,14 +79,24 @@ function currencyOptions() {
 function megaPanels() {
   const mgi = (href, src, title, sub) =>
     `<a class="mgi" href="${href}"><span class="tile">${src}</span><span><b>${esc(title)}</b>${sub ? `<span>${esc(sub)}</span>` : ''}</span></a>`;
-  const prod = `<div class="mg" data-panel="products"><div><p class="eyebrow">Products</p><div class="mg-grid">` +
-    D.CATS.map(c => mgi(catUrl(c), img(c.sh, c.tp, ''), c.n)).join('') +
+  const catByName = n => D.CATS.find(c => c.n === n);
+  const prodGroup = (heading, names) =>
+    `<div class="mg-group"><p class="mg-head">${esc(heading)}</p><div class="mg-list">` +
+    names.map(n => { const c = catByName(n); return mgi(catUrl(c), img(c.sh, c.tp, ''), c.n, c.d); }).join('') +
+    `</div></div>`;
+  const prod = `<div class="mg" data-panel="products"><div><p class="eyebrow">Products</p><div class="mg-groups">` +
+    prodGroup('Products', ['Product Packaging', 'Corrugated Boxes', 'Rigid Boxes', 'POP Displays', 'Corporate Packaging']) +
+    prodGroup('Custom Bags', ['Paper Shopping Bags', 'Reusable Shopping Bags', 'Mailer Shipping Bags', 'Flexible Pouches']) +
+    prodGroup('Others', ['Box Inserts', 'Stickers and Labels', 'Tissue Paper and Liners', 'Packing Tape', 'Card Inserts', 'Eco-friendly Packaging', 'Cup Sleeves']) +
     `</div></div>` + ip(`<a class="mg-promo" href="/instant-price/"><b>Instant landed price</b><span>Pick a style, enter your size and country, and see the full price to your door.</span><span class="more">Get a price →</span></a>`, `<a class="mg-promo" href="/quote/"><b>Free quote in one business day</b><span>Send your size, quantity and country. We reply with the full price to your door and a free 3D mockup.</span><span class="more">Request a quote →</span></a>`) + `</div>`;
-  const ind = `<div class="mg" data-panel="industries" hidden><div><p class="eyebrow">Shop by industry</p><div class="mg-grid">` +
+  const gridIcon = `<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></g></svg>`;
+  const ind = `<div class="mg" data-panel="industries" hidden><div><p class="eyebrow">Shop by industry</p><div class="mg-grid ind">` +
     D.IND.map(x => mgi(indUrl(x), img(x[3], x[4], ''), x[1])).join('') +
+    mgi('/industries/', gridIcon, 'See all industries') +
     `</div></div><a class="mg-promo" href="/industries/"><b>All industries</b><span>See the packaging that suits your kind of product.</span><span class="more">See all industries →</span></a></div>`;
-  const svc = `<div class="mg" data-panel="services" hidden><div><p class="eyebrow">Services</p><div class="mg-grid">` +
-    D.SVC.map(x => mgi(svcUrl(x), img(x[3], x[4], ''), x[1], x[2])).join('') +
+  const svcCard = x => `<a class="svc-card" href="${svcUrl(x)}"><span class="tile">${img(x[3], x[4], '')}</span><span class="svc-body"><b>${esc(x[1])}</b><span>${esc(x[2])}</span><span class="more">Explore →</span></span></a>`;
+  const svc = `<div class="mg" data-panel="services" hidden><div><p class="eyebrow">Services</p><div class="svc-grid">` +
+    D.SVC.map(svcCard).join('') +
     `</div></div><a class="mg-promo" href="/quote/"><b>Free 3D mockup</b><span>Send a rough idea and we turn it into a dieline and a 3D preview.</span><span class="more">Request a quote →</span></a></div>`;
   return prod + ind + svc;
 }
