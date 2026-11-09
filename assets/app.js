@@ -397,7 +397,7 @@
       var showFallback = function (why) {
         $('summary').textContent = text;
         $('result-note').textContent = why || '';
-        $('mailto').href = 'mailto:hello@boxenza.com?subject=' + encodeURIComponent('Quote request from ' + val('name')) + '&body=' + encodeURIComponent(text);
+        $('mailto').href = 'mailto:sales@boxenza.com?subject=' + encodeURIComponent('Quote request from ' + val('name')) + '&body=' + encodeURIComponent(text);
         $('copy-note').textContent = '';
         $('result').hidden = false;
         $('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
