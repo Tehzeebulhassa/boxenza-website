@@ -10,6 +10,7 @@ const CONTACT = { email: 'sales@boxenza.com', whatsapp: '+1 202 960 7921', whats
 
 /* ---------- helpers ---------- */
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const linkEmails = s => s.replace(/([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})/g, '<a href="mailto:$1">$1</a>');
 const slugify = s => String(s).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
 // illustration files: shape + palette -> /img/<shape>-<pal>.svg
@@ -616,7 +617,7 @@ P.article = b => {
 P.legal = (k, L) => {
   const cr = crumbs([[L[0]]]);
   return { path: '/' + k + '/', title: L[0], desc: `${BRAND} ${L[0].toLowerCase()}.`, jsonld: [cr.ld],
-    body: `<div class="wrap">${cr.html}<article class="article"><h1>${esc(L[0])}</h1>${L.slice(1).map(x => `<h2>${esc(x[0])}</h2><p>${esc(x[1])}</p>`).join('')}</article><div class="pad"></div></div>` };
+    body: `<div class="wrap">${cr.html}<article class="article"><h1>${esc(L[0])}</h1>${L.slice(1).map(x => `<h2>${esc(x[0])}</h2><p>${linkEmails(esc(x[1]))}</p>`).join('')}</article><div class="pad"></div></div>` };
 };
 P.about = () => {
   const cr = crumbs([['About us']]);
