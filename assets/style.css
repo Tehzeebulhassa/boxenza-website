@@ -234,6 +234,7 @@ textarea { min-height: 6.5rem; resize: vertical; }
 .rm:hover { border-color: var(--ink); }
 .article { max-width: 46rem; display: grid; gap: 1rem; padding-top: 1.5rem; }
 .article p { color: var(--ink-2); font-size: 1.05rem; }
+.article p a { color: #1a73e8; }
 .article h2 { font-size: 1.3rem; margin-top: 0.75rem; }
 .note-box { background: var(--accent-soft); color: var(--ink) !important; padding: 0.8rem 1rem; border-radius: 6px; font-size: 0.93rem !important; }
 .mono { font: 400 0.92rem/1.5 var(--f-mono); }
