@@ -202,6 +202,8 @@ function layout({ path, title, desc, body, jsonld, bodyClass }) {
 <meta property="og:url" content="${canon}">
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#16224A">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JVGN36JLMT"></script>
+<script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-JVGN36JLMT');</script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
