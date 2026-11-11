@@ -245,25 +245,52 @@
   var BLOG = [
     [
       "what-is-a-dieline",
-      "What is a dieline, and why does your packaging need one?",
+      "What is a dieline and why your packaging needs one",
       "The flat template behind every box and bag.",
       [
         "A dieline is the flat template of a package. It shows where the material is cut, where it is folded and how much extra artwork needs to run past the edge so nothing shows white after trimming.",
-        "Artwork is placed on the dieline so the print lines up once the box is folded and glued. A logo that looks centred on a flat file can end up across a fold if it is not placed on the real template.",
+        { h: "What is on a dieline?" },
+        "A dieline is a technical drawing of the finished package laid flat. It marks the cut lines where the board is trimmed, the fold lines where it bends, and the glue flaps that hold the box together. It also shows the bleed area, the strip of artwork that runs past the cut edge, and the safe area, the space inside the edges where logos and text stay clear of folds and trimming. Without these marks, the printer is guessing where your design ends and the box begins. Most dielines are drawn as a vector file, so the printer can scale them exactly and cut them on a plotter or a die, and when you approve the proof, that same file guides the cutting and creasing of every box in your order.",
+        "Every style has its own dieline. A tuck end carton, a mailer box, a sleeve and a rigid lid box all fold differently, so a template for one cannot be reused for another. Even the same style needs a new dieline when the size changes, because the fold positions and glue flaps move with the dimensions. That is why a dieline is always built to your exact size, not picked from a shelf of standard sizes.",
+        "The dieline also notes the material and the grain direction of the board. Paperboard has a grain, like wood, and it folds cleanly along the grain but can crack across it, so the fold lines are planned around how the board bends. The dieline may also mark where a window is cut, where a handle is attached, or where an insert sits, so every part of the pack is made from the same plan.",
+        { h: "Why the dieline decides the fit" },
         "Always ask for a dieline built to the inside size of your product, not a stock size that is close. A few millimetres of difference decides whether the product rattles or fits snugly.",
-        "Before anything is printed, check a proof of the artwork on the dieline. It is much cheaper to move a logo on a screen than on ten thousand boxes."
-      ]
+        "Board thickness also takes up space. The inside of a box is always a few millimetres smaller than the outside, because the board itself has thickness, and folded flaps add layers at the corners. When you measure your product, the dieline is built from those inside dimensions, so the finished box fits the way you expect. If the product is fragile or heavy, the dieline can also include space for an insert that holds it still.",
+        "A snug fit is the goal, but too tight is as bad as too loose. A box that is too small can crush a corner or tear at the fold when the product is pushed in, while a box that is too large lets the product rattle and arrive scuffed. The right dieline leaves just enough room to slide the product in and out without force, and a physical sample is the best way to check that before a full run.",
+        { h: "Bleed, safe areas and folds" },
+        "Bleed is the extra artwork that runs past the cut edge, usually a few millimetres on every side. Cutting is never exact to the fraction of a millimetre, so without bleed a tiny shift would leave a white hairline along the edge of your box. Keep anything important, like logos, text and barcodes, inside the safe area, well away from cut lines and folds, where it will never be trimmed off or hidden in a crease.",
+        "Artwork is placed on the dieline so the print lines up once the box is folded and glued. A logo that looks centred on a flat file can end up across a fold if it is not placed on the real template.",
+        { h: "How to check a dieline before printing" },
+        "Before anything is printed, check a proof of the artwork on the dieline. It is much cheaper to move a logo on a screen than on ten thousand boxes.",
+        "On the proof, check the dimensions against your real product, not against the size you guessed at the start. Check that fold lines sit where the box should bend, that artwork does not cross a fold, and that text is spelled correctly. If the pack has a window, check that the product shows through it. A 3D mockup helps you see the finished box before anything is printed, and for a first order a physical sample lets you hold it in your hands.",
+        "At Boxenza, your dieline is built from the dimensions you send with your quote. We place your artwork on it, send you a free 3D mockup and a digital proof, and production only starts after you approve it. If you already have a dieline from another supplier, send it with your artwork and we will check it against your product size before we print."
+      ],
+      "What a dieline is, how artwork is placed on it, and why the right size and a checked proof save costly reprints."
     ],
     [
       "digital-vs-offset",
-      "Digital or offset printing: which suits your order?",
+      "Digital or offset printing: which suits you?",
       "Two ways to print, and when each one makes sense.",
       [
         "Digital printing uses no plates. The file goes straight to the press, which makes it a good fit for short runs, several versions of one design and quick samples.",
+        { h: "How digital printing works" },
+        "Digital printing works like a very large, very precise office printer. The artwork file goes straight to the press, so there is almost no setup: no plates to make, no long calibration. That makes it fast to start and cheap for small quantities, and it makes it easy to print several versions of one design in a single run, for example different flavours, languages or seasonal artwork. It is also the natural choice for samples and prototypes, because you can print a handful of boxes to check the design before you commit to a full order.",
+        "Digital presses also handle variable data, so every box in a run can carry a different code, name or design without slowing the press down. That is useful for personalised gift boxes, numbered editions and QR codes that link each box to a different page. The print quality of modern digital presses is close to offset for most packaging, though very large areas of flat colour can show a slight banding that offset avoids.",
+        { h: "How offset printing works" },
         "Offset printing uses a plate for each colour. Setting it up costs more, but the price per unit drops as the quantity grows, and it gives very consistent colour, including exact Pantone matches.",
+        "Offset is the traditional press method. Each colour gets its own plate, and the ink is transferred from plate to blanket to board. Setting up takes longer and costs more, but once the press is running it prints fast and the colour stays the same from the first box to the ten-thousandth. That consistency is why offset is the standard for large runs of retail packaging, where every box on the shelf should look identical.",
+        { h: "Cost: when each one wins" },
         "A common approach is to start with digital while you test a design and a market, then move to offset once the quantity justifies it.",
-        "If colour accuracy is critical to your brand, check the digital proof carefully before you approve it."
-      ]
+        "The trade-off is simple. Digital has almost no setup cost, so the price is mostly the cost of printing each box, which makes short runs affordable. Offset has a real setup cost, for plates and press time, which is spread across the whole order, so the more boxes you print, the less each one costs. For a few hundred boxes, digital is usually the cheaper choice. For several thousand, offset usually wins. If you are not sure where your quantity falls, ask for a quote both ways and compare the landed price, not just the print price.",
+        "Changing the design is also cheaper with digital. Because there are no plates, a new version is just a new file. With offset, every change means new plates and a new setup. That matters if you test new artwork often, run limited editions, or sell the same product under several brands.",
+        "Many brands use digital for a first run and offset for the reorders. A short digital run lets you test the design on a real shelf, gather feedback, and fix anything that does not work, before you pay for plates. Once the design is settled and the quantity grows, the same artwork moves to offset without being redrawn, because the dieline and the print file stay the same and only the press changes, so nothing is lost in the move.",
+        "Lead time is part of the cost too. Digital runs can often start within days of approval, because there is no plate-making step. Offset needs plates made and the press set up, so it takes longer to start, though it prints faster once it is running. If you have a launch date, tell your supplier early so the method fits the deadline.",
+        { h: "Colour, quality and finishes" },
+        "If colour accuracy is critical to your brand, check the digital proof carefully before you approve it.",
+        "Offset can print exact Pantone spot colours, which is how brands keep their colour identical across every product and every print run. Digital prints in CMYK, which can match most Pantone colours closely, but not exactly, and the match can shift slightly between runs. If your brand colour is sacred, offset is the safer choice. If it is close enough, digital will do. Either way, finishes like foil stamping, embossing and spot UV are added after printing and work with both methods.",
+        "The simplest way to decide is to look at your order. Small quantity, several versions, a tight deadline or a design you are still testing: digital. Large quantity, one design, exact brand colour, and a product that will sit on shelves for months: offset. And whichever you choose, check the proof before you approve it, because a proof catches mistakes that no press can fix."
+      ],
+      "Digital printing suits short runs and several versions; offset suits large runs and exact Pantone colour. How to choose for your order."
     ],
     [
       "measure-for-a-box",
@@ -271,10 +298,24 @@
       "Three numbers and a little room to spare.",
       [
         "Measure the product at its longest, widest and tallest points. Write the numbers in the same order every time: length, width, height. Length and width describe the opening of the box.",
+        { h: "Measure in the right order" },
+        "Use a ruler or a tape measure, and measure the product itself, not the retail pack it came in. For round items, measure the diameter and the height. For bottles and jars, measure the widest point, including the cap, and the height to the top of the closure. Note which way the product will sit in the box, because a bottle lying down needs a different box from one standing up.",
+        "Write the numbers down in the same order every time: length, width, height. Length and width describe the opening of the box, and height is how deep the product sits. If you send measurements in a different order, the box can come out the wrong shape, so keep one order and use it on every product. If you are measuring in inches, keep the same unit all the way through, and tell your supplier which unit you used. Mixing inches and millimetres in one order is an easy way to get a box in the wrong size.",
+        { h: "Add room for the product to slide in" },
         "Add a small allowance so the product slides in without force. How much depends on the material and style, so ask your packaging supplier what they recommend.",
+        "Board thickness takes up space too. The inside of a box is always a few millimetres smaller than the outside, because the board itself has thickness, and folded flaps add layers at the corners. That is why the dieline is built from the inside dimensions of your product, not the outside of the box. A sample is the best way to check the fit before you order thousands.",
+        "A snug fit looks good and protects the product, but too tight is a problem of its own. A box that is too small can crush a corner, tear at a fold, or make packing slow and frustrating. A box that is too large lets the product rattle and arrive scuffed, and wastes material and shipping space. Aim for a fit that lets the product slide in without force and stay still once it is in.",
+        "Weight matters as much as size. A heavy product needs a stronger board and a base that will not split under it, while a light product can use a thinner board and a simpler structure. Weigh the product on a kitchen scale and write the weight down with the dimensions, because the weight decides the board grade, the wall strength and, in the end, the shipping cost. A box that is right for the weight arrives intact instead of arriving crushed, and a crushed box is a wasted box.",
+        { h: "Measure with inserts and extras included" },
         "If the product ships with an insert, tissue or a second item, include that in the measurement. Packaging that is too tight is as much of a problem as one that is too loose.",
-        "Check the digital proof before a full run. Compare the dimensions with your real product before you approve."
-      ]
+        "Tissue paper, dividers, a second item, a thank-you card or a care leaflet all take up space, and they change the shape of the packed product. Measure the full set together, as it will actually go into the box, not the product on its own. If the box has a window, check that the best part of the product shows through it once everything is inside.",
+        "Think about how the customer opens the box as well. A tight lid, a sleeve that slides off, or a magnetic flap all need their own clearance. If the box will be opened and closed more than once, for example a gift box or a storage box, leave a little more room than you would for a box that is opened once and thrown away.",
+        { h: "Check the proof before the full run" },
+        "Check the digital proof before a full run. Compare the dimensions with your real product before you approve.",
+        "On the proof, compare the dimensions with your real product, not with the numbers you guessed at the start. Check that the fold lines sit where the box should bend, that the window shows the right part of the product, and that there is space for a barcode and any required text. If the fit is critical, order a physical sample first and test it with your real product before the full run.",
+        "At Boxenza, you send the measurements with your quote and we build the dieline to your size. We send a free 3D mockup and a digital proof, and production only starts after you approve it. If you are unsure about an allowance or a measurement, tell us what the product is and how it will be packed, and we will recommend a size."
+      ],
+      "How to measure your product for a custom box: length, width and height, the allowance to add, and what to check on the proof."
     ]
   ];
   var LEGAL = {

@@ -12,6 +12,15 @@ const CONTACT = { email: 'sales@boxenza.com', whatsapp: '+1 202 960 7921', whats
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const linkEmails = s => s.replace(/([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})/g, '<a href="mailto:$1">$1</a>');
 const slugify = s => String(s).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+// SEO: keep meta descriptions within 155 chars, cutting at a word boundary.
+const cutAtWord = (s, n) => {
+  if (s.length <= n) return s;
+  const cut = s.slice(0, n);
+  const sp = cut.lastIndexOf(' ');
+  return (sp > 40 ? cut.slice(0, sp) : cut).trim();
+};
+const trimDesc = d => cutAtWord(d, 155);
+const firstSentence = s => { const i = s.indexOf('. '); return i === -1 ? s : s.slice(0, i + 1); };
 
 // illustration files: shape + palette -> /img/<shape>-<pal>.svg
 const IMAGES = new Map();
@@ -176,6 +185,7 @@ function footer() {
 function layout({ path, title, desc, body, jsonld, bodyClass }) {
   const full = path === '/' && title === 'Home' ? `${BRAND} | Custom Packaging, Priced to Your Door` : `${title} | ${BRAND}`;
   const canon = SITE_URL + path;
+  const d = trimDesc(desc);
   const ld = (jsonld || []).map(j => `<script type="application/ld+json">${JSON.stringify(j)}</script>`).join('');
   return `<!doctype html>
 <html lang="en">
@@ -183,12 +193,12 @@ function layout({ path, title, desc, body, jsonld, bodyClass }) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(full)}</title>
-<meta name="description" content="${esc(desc)}">${title === 'Page not found' ? '\n<meta name="robots" content="noindex">' : ''}
+<meta name="description" content="${esc(d)}">${title === 'Page not found' ? '\n<meta name="robots" content="noindex">' : ''}
 <link rel="canonical" href="${canon}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="${BRAND}">
 <meta property="og:title" content="${esc(full)}">
-<meta property="og:description" content="${esc(desc)}">
+<meta property="og:description" content="${esc(d)}">
 <meta property="og:url" content="${canon}">
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#16224A">
@@ -396,7 +406,7 @@ ${ip(`<script>window.BX_HERO=${JSON.stringify(HERO_EXAMPLES)};</script>`, '')}
     '@context': 'https://schema.org', '@type': 'FAQPage',
     mainEntity: faq.map(q => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1].replace(/<[^>]+>/g, '') } }))
   }];
-  return { path: '/', title: 'Home', desc: ip('Custom printed boxes, bags, mailers and pouches with an instant landed price: production, shipping, duties and taxes included. Free 3D mockup. Delivered worldwide.', 'Custom printed boxes, bags, mailers and pouches. Free quote in one business day with shipping, duties and taxes included. Free 3D mockup. Delivered worldwide.'), body, jsonld: ld };
+  return { path: '/', title: 'Home', desc: ip('Custom printed boxes, bags, mailers and pouches with an instant landed price, delivered worldwide. Free 3D mockup.', 'Custom printed boxes, bags, mailers and pouches, delivered worldwide. Free 3D mockup, free quote in one business day.'), body, jsonld: ld };
 };
 
 P.products = () => {
@@ -420,7 +430,7 @@ P.category = c => {
   <dl class="specs">${c.specs.map(s => `<div><dt>${esc(s[0])}</dt><dd>${esc(s[1])}</dd></div>`).join('')}</dl></div></section>
 <section class="sec"><div class="wrap"><div class="head"><div><h2>More packaging</h2></div></div><div class="mini">${more}</div>
   <div style="margin-top:2.5rem">${band('Not seeing your style? We make custom structures.', 'Request a quote')}</div></div></section>`;
-  return { path: catUrl(c), title: 'Custom ' + c.n, desc: `${c.i} ${c.st.length} styles, made to your size, ${ip('with an instant landed price to your country', 'with a free quote in one business day')}.`, body, jsonld: [cr.ld] };
+  return { path: catUrl(c), title: 'Custom ' + c.n, desc: `${firstSentence(c.i)} ${c.st.length} styles, made to your size.`, body, jsonld: [cr.ld] };
 };
 
 P.style = (c, i) => {
@@ -470,7 +480,9 @@ P.style = (c, i) => {
 <p style="margin-top:1rem"><a class="more" href="/option-library/">Browse the full option library →</a></p>
 <h2 class="sub">More ${esc(c.n.toLowerCase())} styles</h2>
 <div class="styles">${rel}</div></div>`;
-  return { path: styleUrl(c, s), title: `${s[1]} | Custom ${c.n}`, desc: `${s[4]} Custom ${s[1].toLowerCase()} made to your size, ${ip('with an instant landed price including shipping and duties', 'with a free quote including shipping and duties')}.`, body, jsonld: [cr.ld] };
+  const sdFull = `${s[4]} ${/^custom /i.test(s[1]) ? '' : 'Custom '}${s[1].toLowerCase()} made to your size, ${ip('with an instant landed price', 'free quote in one business day')}.`;
+  const sd = sdFull.length > 155 ? `${s[4]} ${/^custom /i.test(s[1]) ? '' : 'Custom '}${s[1].toLowerCase()} made to your size.` : sdFull;
+  return { path: styleUrl(c, s), title: s[1], desc: sd, body, jsonld: [cr.ld] };
 };
 
 P.instantPrice = () => {
@@ -566,7 +578,7 @@ P.industries = () => {
 };
 P.industry = x => {
   const cr = crumbs([['Industries', '/industries/'], [x[1]]]);
-  return { path: indUrl(x), title: `Custom Packaging for ${x[1]}`, desc: `${x[6]} Custom packaging for ${x[1].toLowerCase()} brands, delivered worldwide ${ip('with an instant landed price', 'with a free quote in one business day')}.`, jsonld: [cr.ld],
+  return { path: indUrl(x), title: `Custom Packaging for ${x[1]}`, desc: `Custom packaging for ${x[1].toLowerCase()} brands. ${x[6]}`, jsonld: [cr.ld],
     body: `<div class="wrap">${cr.html}${pageHead('Custom packaging for ' + x[1].toLowerCase(), x[6])}
 <h2 class="sub">Popular packaging</h2><div class="cats small">${x[5].map(sl => catCard(D.BY[sl], true)).join('')}</div>
 <h2 class="sub">Things to consider</h2>${infoCards(x[7])}
@@ -621,8 +633,11 @@ P.blog = () => {
 };
 P.article = b => {
   const cr = crumbs([['Blog', '/blog/'], [b[1]]]);
-  return { path: '/blog/' + b[0] + '/', title: b[1], desc: b[2] + ' ' + b[3][0].slice(0, 110), jsonld: [cr.ld, { '@context': 'https://schema.org', '@type': 'Article', headline: b[1], publisher: { '@type': 'Organization', name: BRAND } }],
-    body: `<div class="wrap">${cr.html}<article class="article"><h1>${esc(b[1])}</h1>${b[3].map(p => `<p>${esc(p)}</p>`).join('')}</article><div class="pad">${band('Have a packaging question? Ask us.', 'Request a quote')}</div></div>` };
+  const firstPara = b[3].find(x => typeof x === 'string') || '';
+  const articleDesc = b[4] || (b[2] + ' ' + cutAtWord(firstPara, 110));
+  const blocks = b[3].map(x => typeof x === 'string' ? `<p>${esc(x)}</p>` : `<h2>${esc(x.h)}</h2>`).join('');
+  return { path: '/blog/' + b[0] + '/', title: b[1], desc: articleDesc, jsonld: [cr.ld, { '@context': 'https://schema.org', '@type': 'Article', headline: b[1], publisher: { '@type': 'Organization', name: BRAND } }],
+    body: `<div class="wrap">${cr.html}<article class="article"><h1>${esc(b[1])}</h1>${blocks}</article><div class="pad">${band('Have a packaging question? Ask us.', 'Request a quote')}</div></div>` };
 };
 P.legal = (k, L) => {
   const cr = crumbs([[L[0]]]);
