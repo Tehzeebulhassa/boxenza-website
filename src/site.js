@@ -94,7 +94,7 @@ function megaPanels() {
     names.map(n => { const c = catByName(n); return mgi(catUrl(c), img(c.sh, c.tp, ''), c.n, c.d); }).join('') +
     `</div></div>`;
   const prod = `<div class="mg" data-panel="products"><div><p class="eyebrow">Products</p><div class="mg-groups">` +
-    prodGroup('Products', ['Product Packaging', 'Corrugated Boxes', 'Rigid Boxes', 'POP Displays', 'Corporate Packaging']) +
+    prodGroup('Products', ['Folding Cartons', 'Corrugated Boxes', 'Rigid Boxes', 'POP Displays', 'Corporate Packaging']) +
     prodGroup('Custom Bags', ['Paper Shopping Bags', 'Reusable Shopping Bags', 'Mailer Shipping Bags', 'Flexible Pouches']) +
     prodGroup('Others', ['Box Inserts', 'Stickers and Labels', 'Tissue Paper and Liners', 'Packing Tape', 'Card Inserts', 'Eco-friendly Packaging', 'Cup Sleeves']) +
     `</div></div>` + ip(`<a class="mg-promo" href="/instant-price/"><b>Instant landed price</b><span>Pick a style, enter your size and country, and see the full price to your door.</span><span class="more">Get a price →</span></a>`, `<a class="mg-promo" href="/quote/"><b>Free quote in one business day</b><span>Send your size, quantity and country. We reply with the full price to your door and a free 3D mockup.</span><span class="more">Request a quote →</span></a>`) + `</div>`;
@@ -432,7 +432,7 @@ P.category = c => {
   <dl class="specs">${c.specs.map(s => `<div><dt>${esc(s[0])}</dt><dd>${esc(s[1])}</dd></div>`).join('')}</dl></div></section>
 <section class="sec"><div class="wrap"><div class="head"><div><h2>More packaging</h2></div></div><div class="mini">${more}</div>
   <div style="margin-top:2.5rem">${band('Not seeing your style? We make custom structures.', 'Request a quote')}</div></div></section>`;
-  return { path: catUrl(c), title: 'Custom ' + c.n, desc: `${firstSentence(c.i)} ${c.st.length} styles, made to your size.`, body, jsonld: [cr.ld] };
+  return { path: catUrl(c), title: c.ct || ('Custom ' + c.n), desc: `${firstSentence(c.i)} ${c.st.length} styles, made to your size.`, body, jsonld: [cr.ld] };
 };
 
 P.style = (c, i) => {
@@ -484,7 +484,13 @@ P.style = (c, i) => {
 <div class="styles">${rel}</div></div>`;
   const sdFull = `${s[4]} ${/^custom /i.test(s[1]) ? '' : 'Custom '}${s[1].toLowerCase()} made to your size, ${ip('with an instant landed price', 'free quote in one business day')}.`;
   const sd = sdFull.length > 155 ? `${s[4]} ${/^custom /i.test(s[1]) ? '' : 'Custom '}${s[1].toLowerCase()} made to your size.` : sdFull;
-  return { path: styleUrl(c, s), title: s[1], desc: sd, body, jsonld: [cr.ld] };
+  const productLd = {
+    '@context': 'https://schema.org', '@type': 'Product',
+    name: s[1], description: s[4], category: c.n,
+    brand: { '@type': 'Brand', name: BRAND },
+    url: SITE_URL + styleUrl(c, s)
+  };
+  return { path: styleUrl(c, s), title: s[1], desc: sd, body, jsonld: [cr.ld, productLd] };
 };
 
 P.instantPrice = () => {
