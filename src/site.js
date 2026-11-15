@@ -110,7 +110,10 @@ function megaPanels() {
   return prod + ind + svc;
 }
 
-const LOGO = `<svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3 24 8.5v11L14 25 4 19.5v-11Z" fill="var(--accent)"/><path d="M4 8.5 14 14l10-5.5M14 14v11" fill="none" stroke="var(--card)" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+// Header/footer mark: open-box cube from boxenza-logo-light.svg (Option 1 final, 2026-11-15).
+// Cube polygons copied verbatim from the logo file; site header/footer are white (--card),
+// so the light version's cube is correct here. Wordmark stays as HTML text ("Boxenza Packaging").
+const LOGO = `<svg viewBox="14 7 112 126" aria-hidden="true"><g transform="translate(14,14) scale(1.12)"><polygon points="6.70,51.00 50.00,26.00 93.30,51.00 50.00,76.00" fill="#FAD9E4"/><polygon points="6.70,25.00 50.00,0.00 50.00,26.00 6.70,51.00" fill="#F4B8CC"/><polygon points="50.00,0.00 93.30,25.00 93.30,51.00 50.00,26.00" fill="#E98AAB"/><polygon points="6.70,25.00 50.00,50.00 50.00,100.00 6.70,75.00" fill="#1C2140"/><polygon points="50.00,50.00 93.30,25.00 93.30,75.00 50.00,100.00" fill="#D9336E"/><polyline points="6.70,25.00 50.00,50.00 93.30,25.00" fill="none" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="1.4" stroke-linejoin="round"/></g></svg>`;
 
 function header() {
   return `<a class="skip" href="#main">Skip to content</a>
@@ -204,6 +207,7 @@ function layout({ path, title, desc, body, jsonld, bodyClass }) {
 <meta name="theme-color" content="#16224A">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-JVGN36JLMT"></script>
 <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-JVGN36JLMT');</script>
+<link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

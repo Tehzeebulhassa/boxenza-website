@@ -47,7 +47,9 @@ const adminCats = D.CATS.map(c => ({ s: c.s, n: c.n, st: c.st.map(x => [x[0], x[
 write('admin/index.html', fs.readFileSync(path.join(__dirname, 'assets/admin.html'), 'utf8').replace('/*BX_CATS*/[]', () => JSON.stringify(adminCats).replace(/</g, '\\u003c')));
 write('assets/vendor/xlsx.full.min.js', fs.readFileSync(path.join(__dirname, 'assets/vendor/xlsx.full.min.js')));
 write('assets/pricing.js', 'window.BX_PRICING=' + JSON.stringify(PRICING) + ';');
-write('favicon.svg', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><path d="M14 3 24 8.5v11L14 25 4 19.5v-11Z" fill="#D21F66"/><path d="M4 8.5 14 14l10-5.5M14 14v11" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>');
+write('favicon.svg', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><polygon points="32,6 58,20 32,34 6,20" fill="#F9CFDD"/><polygon points="58,20 32,34 32,60 58,46" fill="#D21F66"/><polygon points="6,20 32,34 32,60 6,46" fill="#FFFFFF"/><path d="M32,6 L6,20 L32,34" fill="none" stroke="#141A33" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/><path d="M6,20 L6,46 L32,60" fill="none" stroke="#141A33" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/><path d="M32,6 L58,20 L32,34 L32,60" fill="none" stroke="#D21F66" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/></svg>');
+const favIco = path.join(__dirname, 'favicon.ico');
+if (fs.existsSync(favIco)) write('favicon.ico', fs.readFileSync(favIco));
 
 const today = new Date().toISOString().slice(0, 10);
 write('sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
