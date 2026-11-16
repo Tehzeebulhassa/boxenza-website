@@ -685,4 +685,4 @@ a.style:hover .tile.hv .v1, a.style:focus-visible .tile.hv .v1 { opacity: 1; tra
 .dl-wrap svg.dl { flex: 1 1 auto; min-height: 0; height: auto; width: 100%; }
 .dl-note { margin: 0; font-size: 0.8rem; line-height: 1.4; color: var(--ink-2); text-align: center; max-width: 34ch; }
 .thumb .dl-note { display: none; }
-.pp-main .pp-view:has(.dl-wrap) { padding-bottom: 3.2rem; }
+.pp-main .pp-view:has(.dl-wrap) { padding-bottom: 6rem; } /* note (3 lines) clears the expand pill */
