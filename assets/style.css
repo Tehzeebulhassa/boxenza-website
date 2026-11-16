@@ -61,6 +61,8 @@ button { font: inherit; color: inherit; }
 
 /* illustrations */
 .tile { display: block; background: var(--tile); border-radius: 10px; padding: 0.9rem; }
+.cat-hero { margin: 0 0 1.5rem; }
+.cat-hero img { display: block; width: 100%; height: auto; border-radius: 12px; }
 .tile svg { display: block; width: 100%; height: auto; max-width: 100%; }
 
 /* home hero */

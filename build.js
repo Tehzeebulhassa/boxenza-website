@@ -41,6 +41,16 @@ write('404.html', render(Object.assign({}, nf, { path: '/' })));
 
 for (const [key, svg] of IMAGES) write('img/' + key + '.svg', svg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" '));
 
+// Real product photos: copy photos/ -> dist/photos/ (549 views + 183 dielines + 16 covers)
+(function copyDir(src, dst) {
+  if (!fs.existsSync(src)) return;
+  fs.mkdirSync(dst, { recursive: true });
+  for (const e of fs.readdirSync(src, { withFileTypes: true })) {
+    const s = path.join(src, e.name), d = path.join(dst, e.name);
+    if (e.isDirectory()) copyDir(s, d); else fs.copyFileSync(s, d);
+  }
+})(path.join(__dirname, 'photos'), path.join(OUT, 'photos'));
+
 write('assets/style.css', fs.readFileSync(path.join(__dirname, 'assets/style.css')));
 write('assets/app.js', fs.readFileSync(path.join(__dirname, 'assets/app.js')));
 const adminCats = D.CATS.map(c => ({ s: c.s, n: c.n, st: c.st.map(x => [x[0], x[1]]) }));

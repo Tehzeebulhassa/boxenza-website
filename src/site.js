@@ -35,6 +35,18 @@ const img = (shape, pal, alt, extra) => {
   return `<img src="${imgSrc(shape, pal)}" alt="${esc(alt || '')}" width="300" height="300" ${eager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy" decoding="async"'}${rest}>`;
 };
 
+// Real product photos (installed 2026-11-16): /photos/<CODE>-<n>.jpg (1080x1080),
+// dielines /photos/<CODE>-d.jpg, category covers /photos/covers/cover-<slug>.jpg (1200x896)
+const photo = (src, w, h, alt, extra) => {
+  const eager = extra && extra.indexOf('loading="eager"') >= 0;
+  const rest = eager ? extra.replace(' loading="eager"', '') : (extra || '');
+  return `<img src="${src}" alt="${esc(alt || '')}" width="${w}" height="${h}" ${eager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy" decoding="async"'}${rest}>`;
+};
+const viewPhoto = (code, n, alt, extra) => photo('/photos/' + code + '-' + n + '.jpg', 1080, 1080, alt, extra);
+const coverPhoto = (slug, alt, extra) => photo('/photos/covers/cover-' + slug + '.jpg', 1200, 896, alt, extra);
+// Real product photo per industry (style code, View 1) — replaces the generated illustrations on the homepage and /industries/ page.
+const IND_PHOTO = { apparel: 'MB01', bakery: 'FC05', 'beer-liquor': 'RB04', beverage: 'CS01', candles: 'RB02', 'candy-sweets': 'FC07', cannabis: 'FC02', chocolate: 'RB03', coffee: 'CS02', cosmetics: 'RB01', ecommerce: 'CB01', electronics: 'BI01', food: 'PO01', gift: 'CP03', jewelry: 'RB05', pets: 'PO02', pharmaceutical: 'FC03', presentation: 'FC04', restaurant: 'PB02', retail: 'DB01', 'shipping-mailer': 'CB02', soap: 'FC06', toy: 'FC08', tea: 'PO03', window: 'FC36', wine: 'RB10', automotive: 'CB03', supplements: 'PO04' };
+
 // style slugs (unique inside each category)
 D.CATS.forEach(c => {
   const used = new Set();
@@ -244,9 +256,9 @@ function crumbs(trail) {
 const band = (text, label, href) => `<div class="band"><h2>${esc(text)}</h2><a class="btn" href="${href || '/quote/'}">${esc(label || 'Get a free quote')}</a></div>`;
 const pageHead = (h, lede, extra) => `<div class="head pagehead"><div><h1>${esc(h)}</h1><p class="lede">${esc(lede)}</p></div>${extra === undefined ? '<a class="btn" href="/quote/">Request a quote</a>' : extra}</div>`;
 const infoCards = items => `<div class="why">${items.map(x => `<div><h3>${esc(x[0])}</h3><p>${esc(x[1])}</p></div>`).join('')}</div>`;
-const catCard = (c, small, eager) => `<a class="cat" href="${catUrl(c)}"><span class="tile">${img(c.sh, c.tp, c.n, eager ? ' loading="eager"' : '')}</span><span class="ct"><h3>${esc(small ? c.n : (c.cn || c.n))}</h3><span>${esc(c.d)}</span></span></a>`;
+const catCard = (c, small, eager) => `<a class="cat" href="${catUrl(c)}"><span class="tile">${coverPhoto(c.s, c.n, eager ? ' loading="eager"' : '')}</span><span class="ct"><h3>${esc(small ? c.n : (c.cn || c.n))}</h3><span>${esc(c.d)}</span></span></a>`;
 const styleCard = (c, s, i, hidden) =>
-  `<a class="style" href="${styleUrl(c, s)}" data-tabs="${s[3].join(' ')}"${hidden ? ' hidden' : ''}><span class="tile hv"><span class="v1">${img(s[2], palFor(c, i), s[1], i < 4 ? ' loading="eager"' : '')}</span><span class="v2">${img(s[2], palFor(c, i) + 1, '')}</span></span><span class="code">${s[0]}</span><span class="name">${esc(s[1])}</span></a>`;
+  `<a class="style" href="${styleUrl(c, s)}" data-tabs="${s[3].join(' ')}"${hidden ? ' hidden' : ''}><span class="tile hv"><span class="v1">${viewPhoto(s[0], 1, s[1], i < 4 ? ' loading="eager"' : '')}</span><span class="v2">${viewPhoto(s[0], 2, '')}</span></span><span class="code">${s[0]}</span><span class="name">${esc(s[1])}</span></a>`;
 
 const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l4 4 10-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
@@ -374,7 +386,7 @@ ${ip(`<script>window.BX_HERO=${JSON.stringify(HERO_EXAMPLES)};</script>`, '')}
 <section class="sec alt" id="industries">
   <div class="wrap">
     <div class="head"><div><p class="eyebrow">Industries</p><h2>Packaging for your industry</h2><p class="lede">Every industry has its own rules for protection, labelling and shelf appeal.</p></div><a class="btn ghost" href="/industries/">See all industries</a></div>
-    <div class="cats small four">${['cosmetics', 'food', 'coffee', 'candles', 'apparel', 'ecommerce', 'jewelry', 'bakery'].map(k => D.IND.find(x => x[0] === k)).map(x => `<a class="cat" href="${indUrl(x)}"><span class="tile">${img(x[3], x[4], x[1])}</span><span class="ct"><h3>${esc(x[1])}</h3></span></a>`).join('')}</div>
+    <div class="cats small four">${['cosmetics', 'food', 'coffee', 'candles', 'apparel', 'ecommerce', 'jewelry', 'bakery'].map(k => D.IND.find(x => x[0] === k)).map(x => `<a class="cat" href="${indUrl(x)}"><span class="tile">${viewPhoto(IND_PHOTO[x[0]] || 'FC05', 1, x[1])}</span><span class="ct"><h3>${esc(x[1])}</h3></span></a>`).join('')}</div>
   </div>
 </section>
 
@@ -426,8 +438,9 @@ P.category = c => {
   const cr = crumbs([['Products', '/products/'], [c.n]]);
   const tabs = [['all', `All styles (${c.st.length})`]].concat(c.tabs).map((t, i) => `<button type="button" class="tab" role="tab" data-tab="${t[0]}" aria-selected="${i === 0}">${esc(t[1])}</button>`).join('');
   const grid = c.st.map((s, i) => styleCard(c, s, i, false)).join('');
-  const more = D.CATS.filter(x => x.s !== c.s).map(x => `<a href="${catUrl(x)}"><span class="tile">${img(x.sh, x.tp, x.n)}</span><span>${esc(x.n)}</span></a>`).join('');
+  const more = D.CATS.filter(x => x.s !== c.s).map(x => `<a href="${catUrl(x)}"><span class="tile">${coverPhoto(x.s, x.n)}</span><span>${esc(x.n)}</span></a>`).join('');
   const body = `<div class="wrap">${cr.html}
+  <p class="cat-hero">${coverPhoto(c.s, c.n, ' loading="eager"')}</p>
   ${pageHead(c.h, c.i)}
   <div class="tabs" role="tablist" aria-label="Styles">${tabs}</div>
   <div class="styles" id="cat-grid">${grid}</div>
@@ -443,12 +456,12 @@ P.style = (c, i) => {
   const s = c.st[i], p0 = palFor(c, i);
   const cr = crumbs([['Products', '/products/'], [c.n, catUrl(c)], [s[1]]]);
   const views = [
-    img(s[2], p0, s[1] + ' illustration', ' loading="eager"'),
-    `<div class="view-flip">${img(s[2], p0, s[1] + ' reverse view')}</div>`,
-    `<div class="view-zoom">${img(s[2], p0 + 1, s[1] + ' alternative design')}</div>`,
-    `<div class="dl-wrap">${dielineFor(c.s, s)}<p class="dl-note">Illustrative dieline. Your exact dieline is made to your size after your quote.</p></div>`
+    viewPhoto(s[0], 1, s[1] + ' photo', ' loading="eager"'),
+    viewPhoto(s[0], 2, s[1] + ' photo, view 2'),
+    viewPhoto(s[0], 3, s[1] + ' photo, view 3'),
+    `<div class="dl-wrap">${photo('/photos/' + s[0] + '-d.jpg', 1080, 1080, s[1] + ' dieline')}<p class="dl-note">Free dieline for this style. <a href="/photos/${s[0]}-d.jpg" download>Download the dieline (JPG)</a> Your exact dieline is made to your size after your quote.</p></div>`
   ];
-  const labels = ['Design 1', 'Design 2', 'Design 3', 'Dieline'];
+  const labels = ['View 1', 'View 2', 'View 3', 'Dieline'];
   const sel = list => '<option>Need consultation</option>' + list.map(o => `<option>${esc(o[0])}</option>`).join('');
   const chips = (list, kind) => list.map(o => `<button type="button" class="opt" data-kind="${kind}" data-val="${esc(o)}" aria-pressed="false">${esc(o)}</button>`).join('');
   const adds = D.ADDS[c.s] || [];
@@ -492,7 +505,8 @@ P.style = (c, i) => {
     '@context': 'https://schema.org', '@type': 'Product',
     name: s[1], description: s[4], category: c.n,
     brand: { '@type': 'Brand', name: BRAND },
-    url: SITE_URL + styleUrl(c, s)
+    url: SITE_URL + styleUrl(c, s),
+    image: SITE_URL + '/photos/' + s[0] + '-1.jpg'
   };
   return { path: styleUrl(c, s), title: s[1], desc: sd, body, jsonld: [cr.ld, productLd] };
 };
@@ -585,7 +599,7 @@ P.industries = () => {
   const cr = crumbs([['Industries']]);
   return { path: '/industries/', title: 'Packaging by Industry', desc: 'Custom packaging for cosmetics, food, coffee, candles, apparel, jewelry, electronics, supplements and e-commerce brands worldwide.', jsonld: [cr.ld],
     body: `<div class="wrap">${cr.html}${pageHead('Packaging by industry', 'Every industry has its own rules for protection, labelling and shelf appeal. Pick yours to see the packaging that suits it.')}
-<div class="cats small">${D.IND.map((x, i) => `<a class="cat" href="${indUrl(x)}"><span class="tile">${img(x[3], x[4], x[1], i < 4 ? ' loading="eager"' : '')}</span><span class="ct"><h3>${esc(x[1])}</h3><span>${esc(x[2])}</span></span></a>`).join('')}</div>
+<div class="cats small">${D.IND.map((x, i) => `<a class="cat" href="${indUrl(x)}"><span class="tile">${viewPhoto(IND_PHOTO[x[0]] || 'FC05', 1, x[1], i < 4 ? ' loading="eager"' : '')}</span><span class="ct"><h3>${esc(x[1])}</h3><span>${esc(x[2])}</span></span></a>`).join('')}</div>
 <div class="pad">${band('Your industry is not listed? Tell us what you sell.')}</div></div>` };
 };
 P.industry = x => {
