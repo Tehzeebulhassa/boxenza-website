@@ -403,6 +403,7 @@ footer { border-top: 1px solid var(--line); background: var(--card); padding-blo
 .stage .it img { display: block; width: 100%; height: auto; }
 a.style { text-decoration: none; color: inherit; }
 .mgi .tile img { width: 100%; }
+.mgi .tile svg { display: block; width: 100%; height: auto; }
 .pp-view img, .pp-view svg { display: block; width: 100%; height: auto; }
 .view-flip img { transform: scaleX(-1); }
 .view-zoom { overflow: hidden; }
