@@ -672,7 +672,7 @@ P.industry = x => {
 <div class="wrap">
 <h2 class="sub">Popular packaging</h2><div class="cats small">${popCards}</div>
 <h2 class="sub">Recommended packaging styles</h2>
-  <div class="tabs" role="tablist" aria-label="Styles">${tabs}</div>
+  <div class="tabs wrap" role="tablist" aria-label="Styles">${tabs}</div>
   <div class="styles" id="cat-grid">${grid}</div>
 <h2 class="sub">Things to consider</h2>${infoCards(x[7])}
 </div>
