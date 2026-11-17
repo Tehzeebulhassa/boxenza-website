@@ -44,6 +44,8 @@ const photo = (src, w, h, alt, extra) => {
 };
 const viewPhoto = (code, n, alt, extra) => photo('/photos/' + code + '-' + n + '.jpg', 1080, 1080, alt, extra);
 const coverPhoto = (slug, alt, extra) => photo('/photos/covers/cover-' + slug + '.jpg', 1200, 896, alt, extra);
+// Menu tiles (installed 2026-11-17): /photos/menu/menu-<slug>.jpg (800x800), no logo (brief v9)
+const menuTilePhoto = (slug, alt, extra) => photo('/photos/menu/menu-' + slug + '.jpg', 800, 800, alt, extra);
 // Real product photo per industry (style code, View 1) — replaces the generated illustrations on the homepage and /industries/ page.
 const IND_PHOTO = { apparel: 'MB01', bakery: 'FC05', 'beer-liquor': 'RB04', beverage: 'CS01', candles: 'RB02', 'candy-sweets': 'FC07', cannabis: 'FC02', chocolate: 'RB03', coffee: 'CS02', cosmetics: 'RB01', ecommerce: 'CB01', electronics: 'BI01', food: 'PO01', gift: 'CP03', jewelry: 'RB05', pets: 'PO02', pharmaceutical: 'FC03', presentation: 'FC04', restaurant: 'PB02', retail: 'DB01', 'shipping-mailer': 'CB02', soap: 'FC06', toy: 'FC08', tea: 'PO03', window: 'FC36', wine: 'RB10', automotive: 'CB03', supplements: 'PO04' };
 
@@ -98,12 +100,12 @@ function currencyOptions() {
 }
 
 function megaPanels() {
-  const mgi = (href, src, title, sub) =>
-    `<a class="mgi" href="${href}"><span class="tile">${src}</span><span><b>${esc(title)}</b>${sub ? `<span>${esc(sub)}</span>` : ''}</span></a>`;
+  const mgi = (href, src, title, sub, cls) =>
+    `<a class="mgi" href="${href}"><span class="tile${cls ? ' ' + cls : ''}">${src}</span><span><b>${esc(title)}</b>${sub ? `<span>${esc(sub)}</span>` : ''}</span></a>`;
   const catByName = n => D.CATS.find(c => c.n === n);
   const prodGroup = (heading, names) =>
     `<div class="mg-group"><p class="mg-head">${esc(heading)}</p><div class="mg-list">` +
-    names.map(n => { const c = catByName(n); return mgi(catUrl(c), img(c.sh, c.tp, ''), c.n, c.d); }).join('') +
+    names.map(n => { const c = catByName(n); return mgi(catUrl(c), menuTilePhoto(c.s, c.n), c.n, c.d, 'photo'); }).join('') +
     `</div></div>`;
   const prod = `<div class="mg" data-panel="products"><div><p class="eyebrow">Products</p><div class="mg-groups">` +
     prodGroup('Products', ['Folding Cartons', 'Corrugated Boxes', 'Rigid Boxes', 'POP Displays', 'Corporate Packaging']) +
