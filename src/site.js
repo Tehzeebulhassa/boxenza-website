@@ -644,11 +644,48 @@ P.industries = () => {
 };
 P.industry = x => {
   const cr = crumbs([['Industries', '/industries/'], [x[1]]]);
-  return { path: indUrl(x), title: `Custom Packaging for ${x[1]}`, desc: `Custom packaging for ${x[1].toLowerCase()} brands. ${x[6]}`, jsonld: [cr.ld],
-    body: `<div class="wrap">${cr.html}${pageHead('Custom packaging for ' + x[1].toLowerCase(), x[6])}
-<h2 class="sub">Popular packaging</h2><div class="cats small">${x[5].map(sl => catCard(D.BY[sl], true)).join('')}</div>
+  const indName = x[1].toLowerCase();
+  const cats = x[5].map(sl => D.BY[sl]);
+  const heroCat = cats[0];
+  // Popular packaging: real category group photos (category heroes) instead of the invented-brand covers
+  const popCards = cats.map(c => `<a class="cat" href="${catUrl(c)}"><span class="tile">${photo('/photos/category-hero-' + c.s + '.jpg', 1200, 800, c.n)}</span><span class="ct"><h3>${esc(c.n)}</h3><span>${esc(c.d)}</span></span></a>`).join('');
+  // Recommended styles: the popular styles of the related categories, with a tab per category
+  const popStyles = cats.flatMap(c => c.st.filter(s => s[3].includes('pop')).map(s => [c, s]));
+  const tabs = [['all', `All styles (${popStyles.length})`]].concat(cats.map(c => [c.s, c.n + ` (${c.st.filter(s => s[3].includes('pop')).length})`])).map((t, i) => `<button type="button" class="tab" role="tab" data-tab="${t[0]}" aria-selected="${i === 0}">${esc(t[1])}</button>`).join('');
+  const grid = popStyles.map(([c, s], i) => { const s2 = [...s]; s2.slug = s.slug; s2[3] = [c.s]; return styleCard(c, s2, i, false); }).join('');
+  // Materials & finishes per related category (from the quote-form data)
+  const mats = cats.map(c => { const f = formFor(c.s); return `<div><dt>${esc(c.n)}</dt><dd>Materials: ${esc(f.mat.join(', '))}. Options: ${esc(f.opts.join(', '))}.</dd></div>`; }).join('');
+  // FAQ: one industry-specific question (from the industry's own description) + the site's generic questions
+  const faq = [
+    [`What ${indName} packaging do you make?`, esc(x[6])],
+    ['How do I get a price?', 'Send your style, size, quantity and delivery country with the quote form. Within one business day we reply with the full price to your door: production, door-to-door shipping, import duty and tax, so there are no surprise bills on delivery.'],
+    ['Which countries do you deliver to?', 'We deliver worldwide, door to door, including the United States, the United Kingdom, the European Union, the UAE, Saudi Arabia, Australia and Canada. Every quote includes shipping, duty and tax to your country.'],
+    ['What is your minimum order quantity (MOQ)?', 'Minimums depend on the product and print method. Offset printing gets cheaper per unit as quantities grow. See the <a href="/minimum-order-quantities/">minimum order quantities page</a> for a guide by product.'],
+    ['Will I see my packaging before it is printed?', 'Yes. We send a free 3D mockup and a digital proof. Production starts only after you approve it, and we send photos of your finished order before it ships.']
+  ];
+  const ld = [cr.ld, { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(q => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1].replace(/<[^>]+>/g, '') } })) }];
+  const body = `<div class="wrap">${cr.html}</div>
+  <section class="cat-hero2" style="background: ${catHeroBg(heroCat)}"><div class="wrap cat-hero2-in">
+    <div class="cat-hero2-copy"><h1>${esc('Custom packaging for ' + indName)}</h1><p class="lede">${esc(x[6])}</p>
+    <div class="cta-row"><a class="btn" href="/quote/">Request a quote</a><a class="btn ghost" href="#cat-grid">See styles</a></div></div>
+  </div></section>
+<div class="wrap">
+<h2 class="sub">Popular packaging</h2><div class="cats small">${popCards}</div>
+<h2 class="sub">Recommended packaging styles</h2>
+  <div class="tabs" role="tablist" aria-label="Styles">${tabs}</div>
+  <div class="styles" id="cat-grid">${grid}</div>
 <h2 class="sub">Things to consider</h2>${infoCards(x[7])}
-<div class="pad">${band('Tell us about your ' + x[1].toLowerCase() + ' product.')}</div></div>` };
+</div>
+<section class="sec alt"><div class="wrap"><div class="head"><div><p class="eyebrow">Materials & finishes</p><h2>${esc(x[1])}: what to expect</h2></div></div>
+  <dl class="specs">${mats}</dl></div></section>
+<section class="sec" id="faq">
+  <div class="wrap">
+    <div class="head"><div><p class="eyebrow">FAQ</p><h2>Questions, answered</h2></div></div>
+    <div class="faq">${faq.map(q => `<details><summary>${esc(q[0])}</summary><p>${q[1]}</p></details>`).join('')}</div>
+  </div>
+</section>
+<div class="wrap"><div class="pad">${band('Tell us about your ' + indName + ' product.')}</div></div>`;
+  return { path: indUrl(x), title: `Custom Packaging for ${x[1]}`, desc: `Custom packaging for ${indName} brands. ${x[6]}`, jsonld: ld, body, preload: '<link rel="preload" as="image" href="/photos/category-hero-' + heroCat.s + '.jpg" fetchpriority="high">' };
 };
 P.service = x => {
   const cr = crumbs([['Services', '/#services'], [x[1]]]);
