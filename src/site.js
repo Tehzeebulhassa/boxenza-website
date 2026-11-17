@@ -337,7 +337,6 @@ P.home = () => {
       </div>
       <ul class="hero-facts">${ip('<li><b>7</b> currencies</li>', '<li><b>24 h</b> quote</li>')}<li><b>Free</b> 3D mockup</li></ul>
     </div>
-    <div class="hero3-photo">${photo('/photos/hero-group-alt.jpg', 1920, 1080, 'Custom printed packaging — folding cartons, rigid boxes, paper bags, pouches, cup sleeves and packing tape', ' loading="eager"')}</div>
   </div>
 </section>
 <div class="strip"><div class="strip-track">
