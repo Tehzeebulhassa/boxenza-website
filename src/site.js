@@ -337,23 +337,7 @@ P.home = () => {
       </div>
       <ul class="hero-facts">${ip('<li><b>7</b> currencies</li>', '<li><b>24 h</b> quote</li>')}<li><b>Free</b> 3D mockup</li></ul>
     </div>
-    <div class="hero3-stage">
-      <div class="stage-floor" aria-hidden="true"></div>
-      <div class="hits" aria-hidden="true">${collage}</div>
-${ip(`      <div class="pcard" id="pcard" aria-live="polite">
-        <div class="pc-top"><span class="pc-label">Example landed price</span><span class="pc-flag" data-pc-flag>${esc(ex.flag)}</span></div>
-        <p class="pc-route" data-pc-route>${esc(ex.label)} to ${esc(PRICING.countries[ex.country].name)}</p>
-        <p class="pc-total" data-pc-total>${moneyNode(e.total, ex.country)}</p>
-        <p class="pc-unit" data-pc-unit>${moneyNode(e.total / ex.qty, ex.country)} per piece, everything included</p>
-        <div class="pc-bar" data-pc-bar><span class="s1" style="width:${pct(e.goods)}"></span><span class="s2" style="width:${pct(e.ship)}"></span><span class="s3" style="width:${pct(e.duty)}"></span><span class="s4" style="width:${pct(e.tax)}"></span></div>
-        <ul class="pc-legend"><li><i class="s1"></i>Production</li><li><i class="s2"></i>Shipping</li><li><i class="s3"></i>Duty</li><li><i class="s4"></i>Tax</li></ul>
-        <a class="pc-link" href="/instant-price/">Price your own size</a>
-      </div>`, `      <div class="pcard qcard">
-        <div class="pc-top"><span class="pc-label">Free quote in one business day</span></div>
-        <ol class="qc-steps"><li><b>Send</b> your style, size, quantity and country</li><li><b>Get</b> the full price to your door, with shipping, duty and tax</li><li><b>See</b> a free 3D mockup before anything is printed</li></ol>
-        <a class="pc-link" href="/quote/">Request a quote</a>
-      </div>`)}
-    </div>
+    <div class="hero3-photo">${photo('/photos/hero-group-alt.jpg', 1920, 1080, 'Custom printed packaging — folding cartons, rigid boxes, paper bags, pouches, cup sleeves and packing tape', ' loading="eager"')}</div>
   </div>
 </section>
 <div class="strip"><div class="strip-track">
