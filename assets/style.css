@@ -228,6 +228,10 @@ textarea { min-height: 6.5rem; resize: vertical; }
 .svc-card:hover { background: var(--bg); transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 20px rgba(20, 26, 51, 0.12); }
 .svc-card .tile { display: grid; place-items: center; padding: 0.6rem; }
 .svc-card .tile img { width: auto; height: 8rem; max-width: 100%; }
+.svc-card .tile.photo { padding: 0; }
+.svc-card .tile.photo img { width: 100%; height: auto; border-radius: 6px; }
+.svc-hero { margin: 0 0 1.75rem; }
+.svc-hero img { display: block; width: 100%; height: auto; border-radius: 12px; }
 .svc-card .svc-body { display: grid; gap: 0.25rem; align-content: start; }
 .svc-card b { font-size: 1rem; line-height: 1.3; }
 .svc-card .svc-body span { font-size: 0.88rem; color: var(--ink-2); line-height: 1.4; }
@@ -688,6 +692,7 @@ a.style:hover .tile .v1 img, a.style:focus-visible .tile .v1 img {
 }
 .tabs::-webkit-scrollbar{display:none}
 @media (min-width: 900px) { .cats.small.four { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 900px) { .cats.small.pop { grid-template-columns: repeat(var(--n, 6), minmax(0, 1fr)); } }
 /* free-quote card (shown while the instant price is switched off) */
 .qcard .qc-steps { margin: 0.35rem 0 0.6rem; padding-left: 1.25rem; display: grid; gap: 0.45rem; font-size: 0.92rem; color: var(--ink-2); line-height: 1.45; }
 .qcard .qc-steps b { color: var(--ink); }
