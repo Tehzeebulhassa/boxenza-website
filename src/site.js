@@ -215,7 +215,7 @@ function footer() {
 </footer>`;
 }
 
-function layout({ path, title, desc, body, jsonld, bodyClass }) {
+function layout({ path, title, desc, body, jsonld, bodyClass, preload }) {
   const full = path === '/' && title === 'Home' ? `${BRAND} | Custom Packaging, Priced to Your Door` : `${title} | ${BRAND}`;
   const canon = SITE_URL + path;
   const d = trimDesc(desc);
@@ -235,6 +235,7 @@ function layout({ path, title, desc, body, jsonld, bodyClass }) {
 <meta property="og:url" content="${canon}">
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#16224A">
+${preload || ''}
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-JVGN36JLMT"></script>
 <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-JVGN36JLMT');</script>
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -425,7 +426,7 @@ ${ip(`<script>window.BX_HERO=${JSON.stringify(HERO_EXAMPLES)};</script>`, '')}
     '@context': 'https://schema.org', '@type': 'FAQPage',
     mainEntity: faq.map(q => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1].replace(/<[^>]+>/g, '') } }))
   }];
-  return { path: '/', title: 'Home', desc: ip('Custom printed boxes, bags, mailers and pouches with an instant landed price, delivered worldwide. Free 3D mockup.', 'Custom printed boxes, bags, mailers and pouches, delivered worldwide. Free 3D mockup, free quote in one business day.'), body, jsonld: ld };
+  return { path: '/', title: 'Home', desc: ip('Custom printed boxes, bags, mailers and pouches with an instant landed price, delivered worldwide. Free 3D mockup.', 'Custom printed boxes, bags, mailers and pouches, delivered worldwide. Free 3D mockup, free quote in one business day.'), body, jsonld: ld, preload: '<link rel="preload" as="image" href="/photos/hero-group-alt.jpg" fetchpriority="high">' };
 };
 
 P.products = () => {
@@ -453,7 +454,7 @@ P.category = c => {
   <dl class="specs">${c.specs.map(s => `<div><dt>${esc(s[0])}</dt><dd>${esc(s[1])}</dd></div>`).join('')}</dl></div></section>
 <section class="sec"><div class="wrap"><div class="head"><div><h2>More packaging</h2></div></div><div class="mini">${more}</div>
   <div style="margin-top:2.5rem">${band('Not seeing your style? We make custom structures.', 'Request a quote')}</div></div></section>`;
-  return { path: catUrl(c), title: c.ct || ('Custom ' + c.n), desc: `${firstSentence(c.i)} ${c.st.length} styles, made to your size.`, body, jsonld: [cr.ld] };
+  return { path: catUrl(c), title: c.ct || ('Custom ' + c.n), desc: `${firstSentence(c.i)} ${c.st.length} styles, made to your size.`, body, jsonld: [cr.ld], preload: '<link rel="preload" as="image" href="/photos/category-hero-' + c.s + '.jpg" fetchpriority="high">' };
 };
 
 P.style = (c, i) => {
