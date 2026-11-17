@@ -200,6 +200,9 @@ textarea { min-height: 6.5rem; resize: vertical; }
 .mg-promo { background: var(--accent-soft); border-radius: 8px; padding: 1.25rem; display: grid; gap: 0.5rem; align-content: start; text-decoration: none; }
 .mg-promo span { color: var(--ink-2); font-size: 0.9rem; }
 .more, .mg-promo .more { color: var(--accent-ink); font-weight: 700; text-decoration: none; }
+.mg-promo.photo { padding: 0; overflow: hidden; gap: 0; }
+.mg-promo.photo img { display: block; width: 100%; height: auto; }
+.mg-promo.photo .promo-body { display: grid; gap: 0.5rem; padding: 1.25rem; }
 .more:hover { text-decoration: underline; }
 
 /* PakFactory-style mega menus: grouped products, 3-col industries, large service cards */

@@ -116,7 +116,7 @@ function megaPanels() {
   const ind = `<div class="mg" data-panel="industries" hidden><div><p class="eyebrow">Shop by industry</p><div class="mg-grid ind">` +
     D.IND.map(x => mgi(indUrl(x), img(x[3], x[4], ''), x[1])).join('') +
     mgi('/industries/', gridIcon, 'See all industries') +
-    `</div></div><a class="mg-promo" href="/industries/"><b>All industries</b><span>See the packaging that suits your kind of product.</span><span class="more">See all industries →</span></a></div>`;
+    `</div></div><a class="mg-promo photo" href="/industries/">${photo('/photos/hero-group-alt.jpg', 1920, 1080, 'Custom packaging for every industry')}<div class="promo-body"><b>All industries</b><span>See the packaging that suits your kind of product.</span><span class="more">See all industries →</span></div></a></div>`;
   const svcCard = x => `<a class="svc-card" href="${svcUrl(x)}"><span class="tile">${img(x[3], x[4], '')}</span><span class="svc-body"><b>${esc(x[1])}</b><span>${esc(x[2])}</span><span class="more">Explore →</span></span></a>`;
   const svc = `<div class="mg" data-panel="services" hidden><div><p class="eyebrow">Services</p><div class="svc-grid">` +
     D.SVC.map(svcCard).join('') +
