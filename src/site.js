@@ -44,6 +44,8 @@ const photo = (src, w, h, alt, extra) => {
 };
 const viewPhoto = (code, n, alt, extra) => photo('/photos/' + code + '-' + n + '.jpg', 1080, 1080, alt, extra);
 const coverPhoto = (slug, alt, extra) => photo('/photos/covers/cover-' + slug + '.jpg', 1200, 896, alt, extra);
+// Category hero photos (installed 2026-11-17): /photos/category-hero-<slug>.jpg (1200x800), group shot per category
+const catHeroPhoto = (slug, alt, extra) => photo('/photos/category-hero-' + slug + '.jpg', 1200, 800, alt, extra);
 // Menu tiles (installed 2026-11-17): /photos/menu/menu-<slug>.jpg (800x800), no logo (brief v9)
 const menuTilePhoto = (slug, alt, extra) => photo('/photos/menu/menu-' + slug + '.jpg', 800, 800, alt, extra);
 // Real product photo per industry (style code, View 1) — replaces the generated illustrations on the homepage and /industries/ page.
@@ -425,8 +427,11 @@ P.category = c => {
   const grid = c.st.map((s, i) => styleCard(c, s, i, false)).join('');
   const more = D.CATS.filter(x => x.s !== c.s).map(x => `<a href="${catUrl(x)}"><span class="tile">${coverPhoto(x.s, x.n)}</span><span>${esc(x.n)}</span></a>`).join('');
   const body = `<div class="wrap">${cr.html}
-  <p class="cat-hero">${coverPhoto(c.s, c.n, ' loading="eager"')}</p>
-  ${pageHead(c.h, c.i)}
+  <section class="cat-hero2">
+    <div class="cat-hero2-copy"><h1>${esc(c.h)}</h1><p class="lede">${esc(c.i)}</p>
+    <div class="cta-row"><a class="btn" href="/quote/">Request a quote</a><a class="btn ghost" href="#cat-grid">See styles</a></div></div>
+    <p class="cat-hero2-photo">${catHeroPhoto(c.s, c.n, ' loading="eager"')}</p>
+  </section>
   <div class="tabs" role="tablist" aria-label="Styles">${tabs}</div>
   <div class="styles" id="cat-grid">${grid}</div>
 </div>
