@@ -44,8 +44,22 @@ const photo = (src, w, h, alt, extra) => {
 };
 const viewPhoto = (code, n, alt, extra) => photo('/photos/' + code + '-' + n + '.jpg', 1080, 1080, alt, extra);
 const coverPhoto = (slug, alt, extra) => photo('/photos/covers/cover-' + slug + '.jpg', 1200, 896, alt, extra);
-// Category hero photos (installed 2026-11-17): /photos/category-hero-<slug>.jpg (1200x800), group shot per category
-const catHeroPhoto = (slug, alt, extra) => photo('/photos/category-hero-' + slug + '.jpg', 1200, 800, alt, extra);
+// Category hero themes (2026-11-17): every category gets its OWN colour theme.
+// The scrim tint is the dark version of the wall colour Claude renders in the
+// photo (see category-heroes-bg-theme-brief-for-claude.md) — same hue family,
+// so the tint and the future themed photo harmonise.
+const HERO_TINT = {
+  'folding-cartons': '#6B4E12', 'corrugated-boxes': '#2F5D3A', 'rigid-boxes': '#16224A',
+  'box-inserts': '#7A1040', 'paper-bags': '#6E4A1F', 'reusable-bags': '#0E4A4A',
+  'mailer-bags': '#1D4E6E', 'pouches': '#4E2A5E', 'corporate-packaging': '#24466E',
+  'display-boxes': '#6E1F3C', 'labels-stickers': '#4A5A1E', 'tissue-paper': '#0F4C5C',
+  'packing-tape': '#7A6210', 'card-inserts': '#3D2A6E', 'eco-packaging': '#8A2A3C',
+  'cup-sleeves': '#7C3A12'
+};
+const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; };
+// Full-bleed category hero (like the homepage hero): the group photo is the
+// background, the tinted scrim gives the theme colour, text sits on top.
+const catHeroBg = c => { const t = HERO_TINT[c.s] || '#16224A'; return 'linear-gradient(90deg, ' + rgba(t, 0.93) + ' 0%, ' + rgba(t, 0.82) + ' 42%, ' + rgba(t, 0.45) + ' 70%, ' + rgba(t, 0.28) + ' 100%), url(\'/photos/category-hero-' + c.s + '.jpg\') center 40% / cover no-repeat'; };
 // Menu tiles (installed 2026-11-17): /photos/menu/menu-<slug>.jpg (800x800), no logo (brief v9)
 const menuTilePhoto = (slug, alt, extra) => photo('/photos/menu/menu-' + slug + '.jpg', 800, 800, alt, extra);
 // Real product photo per industry (style code, View 1) — replaces the generated illustrations on the homepage and /industries/ page.
@@ -427,10 +441,9 @@ P.category = c => {
   const grid = c.st.map((s, i) => styleCard(c, s, i, false)).join('');
   const more = D.CATS.filter(x => x.s !== c.s).map(x => `<a href="${catUrl(x)}"><span class="tile">${coverPhoto(x.s, x.n)}</span><span>${esc(x.n)}</span></a>`).join('');
   const body = `<div class="wrap">${cr.html}</div>
-  <section class="cat-hero2"><div class="wrap cat-hero2-in">
+  <section class="cat-hero2" style="background: ${catHeroBg(c)}"><div class="wrap cat-hero2-in">
     <div class="cat-hero2-copy"><h1>${esc(c.h)}</h1><p class="lede">${esc(c.i)}</p>
     <div class="cta-row"><a class="btn" href="/quote/">Request a quote</a><a class="btn ghost" href="#cat-grid">See styles</a></div></div>
-    <p class="cat-hero2-photo">${catHeroPhoto(c.s, c.n, ' loading="eager"')}</p>
   </div></section>
 <div class="wrap">
   <div class="tabs" role="tablist" aria-label="Styles">${tabs}</div>

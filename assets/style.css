@@ -64,13 +64,17 @@ button { font: inherit; color: inherit; }
 .cat-hero { margin: 0 0 1.5rem; }
 .cat-hero img { display: block; width: 100%; height: auto; border-radius: 12px; }
 /* category hero: full-width PakFactory-style band (installed 2026-11-17) */
-.cat-hero2 { background: #F7E9C6; margin: 0 0 2rem; }
-.cat-hero2-in { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(1.5rem, 4vw, 3rem); align-items: center; padding-block: 0.5rem; }
-.cat-hero2-copy { display: grid; gap: 1rem; justify-items: start; }
-.cat-hero2-copy h1 { font-size: clamp(1.9rem, 4.6vw, 3rem); line-height: 1.05; }
-.cat-hero2-photo { margin: 0; }
-.cat-hero2-photo img { display: block; width: 100%; height: auto; }
-@media (max-width: 860px) { .cat-hero2-in { grid-template-columns: minmax(0, 1fr); } }
+/* category hero: full-bleed photo background like the homepage hero (2026-11-17) —
+   photo + per-category tinted scrim come from the inline style; text sits on top */
+.cat-hero2 { position: relative; margin: 0 0 2rem; min-height: clamp(28rem, 38vw, 36rem); display: flex; align-items: center; }
+.cat-hero2-in { flex: 1; padding-block: 2.5rem; }
+.cat-hero2-copy { display: grid; gap: 1rem; justify-items: start; max-width: 40rem; position: relative; z-index: 1; }
+.cat-hero2-copy h1 { font-size: clamp(1.9rem, 4.6vw, 3rem); line-height: 1.05; color: #fff; }
+.cat-hero2-copy .lede { color: #D9DFF5; }
+.cat-hero2 .btn.ghost { border-color: #fff; color: #fff; background: transparent; }
+/* mobile: extra dark overlay so white text stays readable over the photo */
+.cat-hero2::after { content: ""; position: absolute; inset: 0; background: rgba(20, 26, 51, 0.45); opacity: 0; pointer-events: none; }
+@media (max-width: 860px) { .cat-hero2 { min-height: 26rem; } .cat-hero2::after { opacity: 1; } }
 .tile svg { display: block; width: 100%; height: auto; max-width: 100%; }
 
 /* home hero */
