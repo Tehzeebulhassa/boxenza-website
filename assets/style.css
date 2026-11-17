@@ -73,7 +73,7 @@ button { font: inherit; color: inherit; }
 .cat-hero2-copy .lede { color: #D9DFF5; }
 .cat-hero2 .btn.ghost { border-color: #fff; color: #fff; background: transparent; }
 /* mobile: extra dark overlay so white text stays readable over the photo */
-.cat-hero2::after { content: ""; position: absolute; inset: 0; background: rgba(20, 26, 51, 0.45); opacity: 0; pointer-events: none; }
+.cat-hero2::after { content: ""; position: absolute; inset: 0; background: rgba(20, 26, 51, 0.35); opacity: 0; pointer-events: none; }
 @media (max-width: 860px) { .cat-hero2 { min-height: 26rem; } .cat-hero2::after { opacity: 1; } }
 .tile svg { display: block; width: 100%; height: auto; max-width: 100%; }
 

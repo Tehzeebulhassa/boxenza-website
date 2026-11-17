@@ -59,7 +59,7 @@ const HERO_TINT = {
 const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; };
 // Full-bleed category hero (like the homepage hero): the group photo is the
 // background, the tinted scrim gives the theme colour, text sits on top.
-const catHeroBg = c => { const t = HERO_TINT[c.s] || '#16224A'; return 'linear-gradient(90deg, ' + rgba(t, 0.93) + ' 0%, ' + rgba(t, 0.82) + ' 42%, ' + rgba(t, 0.45) + ' 70%, ' + rgba(t, 0.28) + ' 100%), url(\'/photos/category-hero-' + c.s + '.jpg\') center 40% / cover no-repeat'; };
+const catHeroBg = c => { const t = HERO_TINT[c.s] || '#16224A'; return 'linear-gradient(90deg, ' + rgba(t, 0.85) + ' 0%, ' + rgba(t, 0.70) + ' 42%, ' + rgba(t, 0.35) + ' 70%, ' + rgba(t, 0.20) + ' 100%), url(\'/photos/category-hero-' + c.s + '.jpg\') center 40% / cover no-repeat'; };
 // Menu tiles (installed 2026-11-17): /photos/menu/menu-<slug>.jpg (800x800), no logo (brief v9)
 const menuTilePhoto = (slug, alt, extra) => photo('/photos/menu/menu-' + slug + '.jpg', 800, 800, alt, extra);
 // Real product photo per industry (style code, View 1) — replaces the generated illustrations on the homepage and /industries/ page.
