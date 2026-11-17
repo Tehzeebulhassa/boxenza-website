@@ -439,7 +439,7 @@ P.products = () => {
 P.category = c => {
   const cr = crumbs([['Products', '/products/'], [c.n]]);
   const tabs = c.tabs.concat([['all', `All styles (${c.st.length})`]]).map((t, i) => `<button type="button" class="tab" role="tab" data-tab="${t[0]}" aria-selected="${i === 0}">${esc(t[1])}</button>`).join('');
-  const grid = c.st.map((s, i) => styleCard(c, s, i, false)).join('');
+  const grid = c.st.map((s, i) => styleCard(c, s, i, !s[3].includes(c.tabs[0][0]))).join('');
   const more = D.CATS.filter(x => x.s !== c.s).map(x => `<a href="${catUrl(x)}"><span class="tile">${coverPhoto(x.s, x.n)}</span><span>${esc(x.n)}</span></a>`).join('');
   const body = `<div class="wrap">${cr.html}</div>
   <section class="cat-hero2" style="background: ${catHeroBg(c)}"><div class="wrap cat-hero2-in">
