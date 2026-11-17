@@ -362,6 +362,8 @@ textarea { min-height: 6.5rem; resize: vertical; }
 .thumb .tile { padding: 0; }
 .thumb .dl-note { display: none; }
 .style .tile { padding: 0; }
+.cat .tile { padding: 0; overflow: hidden; }
+.cat .tile img { display: block; width: 100%; height: auto; }
 .tile.hv .v2 { inset: 0; }
 .pp-main .tile:has(.dl-wrap) { background: #fff; }
 .view-flip svg { transform: scaleX(-1); }
