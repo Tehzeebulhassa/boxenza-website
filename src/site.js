@@ -642,6 +642,8 @@ P.industries = () => {
 <div class="cats small">${D.IND.map((x, i) => `<a class="cat" href="${indUrl(x)}"><span class="tile">${viewPhoto(IND_PHOTO[x[0]] || 'FC05', 1, x[1], i < 4 ? ' loading="eager"' : '')}</span><span class="ct"><h3>${esc(x[1])}</h3><span>${esc(x[2])}</span></span></a>`).join('')}</div>
 <div class="pad">${band('Your industry is not listed? Tell us what you sell.')}</div></div>` };
 };
+// Industry tab labels: short single names (PakFactory style) so the tab row stays on one line
+const IND_TAB = { 'folding-cartons': 'Cartons', 'corrugated-boxes': 'Corrugated', 'rigid-boxes': 'Rigid', 'box-inserts': 'Inserts', 'paper-bags': 'Bags', 'reusable-bags': 'Reusable', 'mailer-bags': 'Mailers', 'pouches': 'Pouches', 'corporate-packaging': 'Corporate', 'display-boxes': 'Displays', 'labels-stickers': 'Labels', 'tissue-paper': 'Tissue', 'packing-tape': 'Tape', 'card-inserts': 'Cards', 'eco-packaging': 'Eco', 'cup-sleeves': 'Sleeves' };
 P.industry = x => {
   const cr = crumbs([['Industries', '/industries/'], [x[1]]]);
   const indName = x[1].toLowerCase();
@@ -651,7 +653,7 @@ P.industry = x => {
   const popCards = cats.map(c => `<a class="cat" href="${catUrl(c)}"><span class="tile">${photo('/photos/category-hero-' + c.s + '.jpg', 1200, 800, c.n)}</span><span class="ct"><h3>${esc(c.n)}</h3><span>${esc(c.d)}</span></span></a>`).join('');
   // Recommended styles: the popular styles of the related categories, with a tab per category
   const popStyles = cats.flatMap(c => c.st.filter(s => s[3].includes('pop')).map(s => [c, s]));
-  const tabs = [['all', `All styles (${popStyles.length})`]].concat(cats.map(c => [c.s, c.n + ` (${c.st.filter(s => s[3].includes('pop')).length})`])).map((t, i) => `<button type="button" class="tab" role="tab" data-tab="${t[0]}" aria-selected="${i === 0}">${esc(t[1])}</button>`).join('');
+  const tabs = [['all', `All styles (${popStyles.length})`]].concat(cats.map(c => [c.s, (IND_TAB[c.s] || c.n) + ` (${c.st.filter(s => s[3].includes('pop')).length})`])).map((t, i) => `<button type="button" class="tab" role="tab" data-tab="${t[0]}" aria-selected="${i === 0}">${esc(t[1])}</button>`).join('');
   const grid = popStyles.map(([c, s], i) => { const s2 = [...s]; s2.slug = s.slug; s2[3] = [c.s]; return styleCard(c, s2, i, false); }).join('');
   // Materials & finishes per related category (from the quote-form data)
   const mats = cats.map(c => { const f = formFor(c.s); return `<div><dt>${esc(c.n)}</dt><dd>Materials: ${esc(f.mat.join(', '))}. Options: ${esc(f.opts.join(', '))}.</dd></div>`; }).join('');
@@ -672,7 +674,7 @@ P.industry = x => {
 <div class="wrap">
 <h2 class="sub">Popular packaging</h2><div class="cats small">${popCards}</div>
 <h2 class="sub">Recommended packaging styles</h2>
-  <div class="tabs wrap" role="tablist" aria-label="Styles">${tabs}</div>
+  <div class="tabs" role="tablist" aria-label="Styles">${tabs}</div>
   <div class="styles" id="cat-grid">${grid}</div>
 <h2 class="sub">Things to consider</h2>${infoCards(x[7])}
 </div>
