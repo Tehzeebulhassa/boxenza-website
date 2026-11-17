@@ -426,12 +426,13 @@ P.category = c => {
   const tabs = [['all', `All styles (${c.st.length})`]].concat(c.tabs).map((t, i) => `<button type="button" class="tab" role="tab" data-tab="${t[0]}" aria-selected="${i === 0}">${esc(t[1])}</button>`).join('');
   const grid = c.st.map((s, i) => styleCard(c, s, i, false)).join('');
   const more = D.CATS.filter(x => x.s !== c.s).map(x => `<a href="${catUrl(x)}"><span class="tile">${coverPhoto(x.s, x.n)}</span><span>${esc(x.n)}</span></a>`).join('');
-  const body = `<div class="wrap">${cr.html}
-  <section class="cat-hero2">
+  const body = `<div class="wrap">${cr.html}</div>
+  <section class="cat-hero2"><div class="wrap cat-hero2-in">
     <div class="cat-hero2-copy"><h1>${esc(c.h)}</h1><p class="lede">${esc(c.i)}</p>
     <div class="cta-row"><a class="btn" href="/quote/">Request a quote</a><a class="btn ghost" href="#cat-grid">See styles</a></div></div>
     <p class="cat-hero2-photo">${catHeroPhoto(c.s, c.n, ' loading="eager"')}</p>
-  </section>
+  </div></section>
+<div class="wrap">
   <div class="tabs" role="tablist" aria-label="Styles">${tabs}</div>
   <div class="styles" id="cat-grid">${grid}</div>
 </div>
