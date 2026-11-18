@@ -168,7 +168,7 @@ function megaPanels() {
     D.IND.map(x => mgi(indUrl(x), indIcon(x[0]) || img(x[3], x[4], ''), x[1])).join('') +
     mgi('/industries/', gridIcon, 'See all industries') +
     `</div></div><a class="mg-promo photo" href="/industries/">${photo('/photos/menu/menu-panel-industries.jpg', 1200, 800, 'Custom packaging for every industry')}<div class="promo-body"><b>All industries</b><span>See the packaging that suits your kind of product.</span><span class="more">See all industries →</span></div></a></div>`;
-  const svcCard = x => `<a class="svc-card" href="${svcUrl(x)}"><span class="tile photo">${photo('/photos/menu/menu-service-' + x[0] + '.jpg', 1200, 800, x[1])}</span><span class="svc-body"><b>${esc(x[1])}</b><span>${esc(x[2])}</span><span class="more">Explore →</span></span></a>`;
+  const svcCard = x => `<a class="svc-card" href="${svcUrl(x)}"><span class="tile photo">${photo('/photos/menu/menu-service-' + x[0] + '.jpg', 1200, x[0] === 'structural-design' ? 680 : 800, x[1])}</span><span class="svc-body"><b>${esc(x[1])}</b><span>${esc(x[2])}</span><span class="more">Explore →</span></span></a>`;
   const svc = `<div class="mg" data-panel="services" hidden><div><p class="eyebrow">Services</p><div class="svc-grid">` +
     D.SVC.map(svcCard).join('') +
     `</div></div><a class="mg-promo photo" href="/quote/">${photo('/photos/menu/menu-panel-services.jpg', 1200, 900, 'Free 3D mockup')}<div class="promo-body"><b>Free 3D mockup</b><span>Send a rough idea and we turn it into a dieline and a 3D preview.</span><span class="more">Request a quote →</span></div></a></div>`;
@@ -281,7 +281,7 @@ ${preload || ''}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=8">
+<link rel="stylesheet" href="/assets/style.css?v=9">
 ${ld}
 </head>
 <body${bodyClass ? ` class="${bodyClass}"` : ''}>
@@ -721,7 +721,7 @@ P.industry = x => {
 P.service = x => {
   const cr = crumbs([['Services', '/#services'], [x[1]]]);
   return { path: svcUrl(x), title: x[1].length < 18 ? x[1] + ' — Custom Packaging Services' : x[1], desc: x[5] + ' Free 3D mockup and digital proof included.', jsonld: [cr.ld],
-    body: `<div class="wrap">${cr.html}${pageHead(x[1], x[5])}<div class="svc-hero">${photo('/photos/menu/menu-service-' + x[0] + '.jpg', 1200, 800, x[1])}</div><h2 class="sub">What you get</h2>${infoCards(x[6])}
+    body: `<div class="wrap">${cr.html}${pageHead(x[1], x[5])}<div class="svc-hero">${photo('/photos/menu/menu-service-' + x[0] + '.jpg', 1200, x[0] === 'structural-design' ? 680 : 800, x[1])}</div><h2 class="sub">What you get</h2>${infoCards(x[6])}
 <h2 class="sub">Other services</h2><div class="svcs">${D.SVC.filter(y => y[0] !== x[0]).map(y => `<a class="scard" href="${svcUrl(y)}"><h3>${esc(y[1])}</h3><p>${esc(y[2])}</p><span class="more">Learn more →</span></a>`).join('')}</div>
 <div class="pad">${band('Start with a free quote.')}</div></div>` };
 };

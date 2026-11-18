@@ -229,7 +229,7 @@ textarea { min-height: 6.5rem; resize: vertical; }
 .svc-card .tile { display: grid; place-items: center; padding: 0.6rem; }
 .svc-card .tile img { width: auto; height: 8rem; max-width: 100%; }
 .svc-card .tile.photo { padding: 0; }
-.svc-card .tile.photo img { width: 100%; height: auto; border-radius: 6px; }
+.svc-card .tile.photo img { width: 100%; height: auto; border-radius: 6px; aspect-ratio: 3 / 2; object-fit: cover; }
 .svc-hero { margin: 0 0 1.75rem; }
 .svc-hero img { display: block; width: 100%; height: auto; border-radius: 12px; }
 .svc-card .svc-body { display: grid; gap: 0.25rem; align-content: start; }
