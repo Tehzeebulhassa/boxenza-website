@@ -125,32 +125,38 @@
         [
           "Digital print",
           "No plates, so short runs stay affordable.",
-          0
+          0,
+          "linear-gradient(90deg, #00aeef 0 25%, #ec008c 25% 50%, #fff200 50% 75%, #1a1a1a 75%)"
         ],
         [
           "Offset print",
           "Best colour consistency and unit price on large runs.",
-          0
+          0,
+          "linear-gradient(90deg, #f43f5e, #f59e0b, #10b981, #3b82f6)"
         ],
         [
           "Pantone matching",
           "Exact brand colours from specific ink formulas.",
-          0
+          0,
+          "#d21f66"
         ],
         [
           "Pantone metallic",
           "Metallic spot colours for a rich shine.",
-          0
+          0,
+          "linear-gradient(135deg, #b8860b, #ffd700 45%, #8b6508)"
         ],
         [
           "Soy-based ink",
           "Vegetable-oil ink with vivid colour.",
-          1
+          1,
+          "#7c9a3d"
         ],
         [
           "Water-based ink",
           "Low-VOC ink with a lighter footprint.",
-          1
+          1,
+          "#8ecae6"
         ]
       ]
     ],
@@ -160,32 +166,38 @@
         [
           "Hot foil stamping",
           "Metallic foil pressed on with heat, for logos and accents.",
-          0
+          0,
+          "linear-gradient(135deg, #d4af37, #f9e08a 45%, #b8860b)"
         ],
         [
           "Cold foil",
           "Foil applied with UV adhesive, good for fine detail.",
-          0
+          0,
+          "linear-gradient(135deg, #cfcfcf, #f2f2f2 45%, #a9a9a9)"
         ],
         [
           "Blind emboss",
           "Raised detail pressed from behind.",
-          0
+          0,
+          "linear-gradient(180deg, #ffffff, #e9e9e9)"
         ],
         [
           "Blind deboss",
           "Pressed-in detail you can feel.",
-          0
+          0,
+          "linear-gradient(180deg, #c9c9c9, #ececec)"
         ],
         [
           "Spot UV",
           "Gloss on selected areas against a matte ground.",
-          0
+          0,
+          "linear-gradient(90deg, #d8d8d8 50%, #ffffff 50%)"
         ],
         [
           "Window patch",
           "A film-covered cut-out that shows the product.",
-          0
+          0,
+          "linear-gradient(135deg, #eef4f8, #c9dce9)"
         ]
       ]
     ],
@@ -195,32 +207,38 @@
         [
           "Aqueous coating",
           "Water-based, fast-drying, gloss or matte.",
-          1
+          1,
+          "#a8cfe3"
         ],
         [
           "UV coating",
           "Cured with ultraviolet light for a hard, glossy finish.",
-          0
+          0,
+          "linear-gradient(115deg, #ffffff 30%, #e3eef5 50%, #ffffff 70%)"
         ],
         [
           "Soft-touch lamination",
           "A velvety surface that resists fingerprints.",
-          0
+          0,
+          "#d3cfc7"
         ],
         [
           "Anti-scratch lamination",
           "Protects dark, heavy-ink designs from scuffs.",
-          0
+          0,
+          "#262626"
         ],
         [
           "Varnish",
           "Gloss, satin or matte clear coat.",
-          0
+          0,
+          "linear-gradient(115deg, #efefef, #d5d5d5)"
         ],
         [
           "Matte or gloss lamination",
           "A film layer that adds strength and shine or calm.",
-          0
+          0,
+          "linear-gradient(115deg, #c4c4c4 0 48%, #ffffff 48% 62%, #e8e8e8 62%)"
         ]
       ]
     ]
