@@ -60,52 +60,62 @@
         [
           "SBS C1S",
           "Bleached white paperboard, coated on one side for high-quality print.",
-          0
+          0,
+          "#ffffff"
         ],
         [
           "SBS C2S",
           "Bleached white paperboard, coated on both sides.",
-          0
+          0,
+          "#ffffff"
         ],
         [
           "CCNB duplex",
           "Recycled board with a white printing surface.",
-          1
+          1,
+          "#efede7"
         ],
         [
           "Natural kraft",
           "Brown kraft board, an earthy look that prints well in dark inks.",
-          1
+          1,
+          "#c9a876"
         ],
         [
           "White kraft",
           "Bleached kraft with a clean surface for colour print.",
-          1
+          1,
+          "#faf7f0"
         ],
         [
           "Black kraft",
           "Dyed kraft for bold, premium looks.",
-          1
+          1,
+          "#1a1a1a"
         ],
         [
           "Corrugated E-flute",
           "Thin flute for retail-ready boxes with fine print.",
-          1
+          1,
+          "#d6bd8f"
         ],
         [
           "Corrugated B-flute",
           "Thicker flute for shipping strength.",
-          1
+          1,
+          "#c9ab7c"
         ],
         [
           "Textured paper",
           "Wrapping paper with a tactile surface for rigid boxes.",
-          0
+          0,
+          "#efe8d8"
         ],
         [
           "Metallic paper",
           "A reflective, laminated surface for standout packs.",
-          0
+          0,
+          "linear-gradient(135deg, #cfcfcf, #f2f2f2 45%, #a9a9a9)"
         ]
       ]
     ],

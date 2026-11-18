@@ -281,7 +281,7 @@ ${preload || ''}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=7">
+<link rel="stylesheet" href="/assets/style.css?v=8">
 ${ld}
 </head>
 <body${bodyClass ? ` class="${bodyClass}"` : ''}>
@@ -729,7 +729,7 @@ P.options = () => {
   const cr = crumbs([['Option library']]);
   const keys = ['mat', 'print', 'fin', 'coat'];
   const tabs = keys.map((k, i) => `<button type="button" class="tab" role="tab" data-otab="${k}" aria-selected="${i === 0}">${esc(D.OPTS[k][0])}</button>`).join('');
-  const groups = keys.map((k, i) => `<div class="ogrid" data-ogroup="${k}"${i ? ' hidden' : ''}>${D.OPTS[k][1].map(o => `<div class="ocard"><h3>${esc(o[0])}</h3><p>${esc(o[1])}</p>${o[2] ? '<span class="chip eco">Recyclable option</span>' : ''}</div>`).join('')}</div>`).join('');
+  const groups = keys.map((k, i) => `<div class="ogrid" data-ogroup="${k}"${i ? ' hidden' : ''}>${D.OPTS[k][1].map(o => `<div class="ocard">${o[3] ? `<span class="swatch" style="background:${o[3]}"></span>` : ''}<h3>${esc(o[0])}</h3><p>${esc(o[1])}</p>${o[2] ? '<span class="chip eco">Recyclable option</span>' : ''}</div>`).join('')}</div>`).join('');
   return { path: '/option-library/', title: 'Packaging Materials, Printing & Finishes', desc: 'Every stock, print method, finish and coating for custom packaging: kraft, SBS, corrugated, foil, emboss, spot UV, soft-touch and more.', jsonld: [cr.ld],
     body: `<div class="wrap">${cr.html}${pageHead('Option library', 'Every stock, print method, finish and coating you can choose from. Not sure what to pick? Describe your product and we will recommend a combination.')}
 <div class="tabs" role="tablist" aria-label="Option groups">${tabs}</div>${groups}<div class="pad">${band('Want help choosing? We will recommend options.', 'Ask for advice')}</div></div>` };
