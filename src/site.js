@@ -281,7 +281,7 @@ ${preload || ''}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=3">
+<link rel="stylesheet" href="/assets/style.css?v=4">
 ${ld}
 </head>
 <body${bodyClass ? ` class="${bodyClass}"` : ''}>
@@ -315,7 +315,7 @@ const pageHead = (h, lede, extra) => `<div class="head pagehead"><div><h1>${esc(
 const infoCards = items => `<div class="why">${items.map(x => `<div><h3>${esc(x[0])}</h3><p>${esc(x[1])}</p></div>`).join('')}</div>`;
 const catCard = (c, small, eager) => `<a class="cat" href="${catUrl(c)}"><span class="tile">${coverPhoto(c.s, c.n, eager ? ' loading="eager"' : '')}</span><span class="ct"><h3>${esc(small ? c.n : (c.cn || c.n))}</h3><span>${esc(c.d)}</span></span></a>`;
 const styleCard = (c, s, i, hidden) =>
-  `<a class="style" href="${styleUrl(c, s)}" data-tabs="${s[3].join(' ')}"${hidden ? ' hidden' : ''}><span class="tile hv"><span class="v1">${viewPhoto(s[0], 1, s[1], i < 4 ? ' loading="eager"' : '')}</span><span class="v2">${viewPhoto(s[0], 2, '')}</span></span><span class="code">${s[0]}</span><span class="name">${esc(s[1])}</span></a>`;
+  `<a class="style" href="${styleUrl(c, s)}" data-tabs="${s[3].join(' ')}"${hidden ? ' hidden' : ''}><span class="tile hv"><span class="v1">${viewPhoto(s[0], 1, s[1], i < 4 ? ' loading="eager"' : '')}</span><span class="v2">${viewPhoto(s[0], 2, s[1] + ', open view')}</span></span><span class="code">${s[0]}</span><span class="name">${esc(s[1])}</span></a>`;
 
 const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l4 4 10-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
@@ -461,16 +461,19 @@ ${ip(`<script>window.BX_HERO=${JSON.stringify(HERO_EXAMPLES)};</script>`, '')}
     '@context': 'https://schema.org', '@type': 'Organization', name: BRAND + ' Packaging', url: SITE_URL,
     email: CONTACT.email, description: 'Custom printed packaging delivered worldwide with shipping, duties and taxes included.'
   }, {
+    '@context': 'https://schema.org', '@type': 'WebSite', name: BRAND, url: SITE_URL
+  }, {
     '@context': 'https://schema.org', '@type': 'FAQPage',
     mainEntity: faq.map(q => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1].replace(/<[^>]+>/g, '') } }))
   }];
-  return { path: '/', title: 'Home', desc: ip('Custom printed boxes, bags, mailers and pouches with an instant landed price, delivered worldwide. Free 3D mockup.', 'Custom printed boxes, bags, mailers and pouches, delivered worldwide. Free 3D mockup, free quote in one business day.'), body, jsonld: ld, preload: '<link rel="preload" as="image" href="/photos/hero-group-alt.jpg" fetchpriority="high">' };
+  return { path: '/', title: 'Home', desc: ip('Custom printed boxes, bags, mailers and pouches with an instant landed price, delivered worldwide from 250 pieces. Free 3D mockup.', 'Custom printed boxes, bags, mailers and pouches, delivered worldwide from 250 pieces. Free 3D mockup, free quote in one business day.'), body, jsonld: ld, preload: '<link rel="preload" as="image" href="/photos/hero-group-alt.jpg" fetchpriority="high">' };
 };
 
 P.products = () => {
   const cr = crumbs([['Products']]);
+  const itemListLd = { '@context': 'https://schema.org', '@type': 'ItemList', name: 'Custom packaging products', itemListElement: D.CATS.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.n, url: SITE_URL + catUrl(c) })) };
   return { path: '/products/', title: 'Custom Packaging Products', desc: 'Browse every custom packaging product: folding cartons, mailer boxes, rigid boxes, paper bags, pouches, labels and more. Delivered worldwide.',
-    jsonld: [cr.ld],
+    jsonld: [cr.ld, itemListLd],
     body: `<div class="wrap">${cr.html}${pageHead('All packaging products', ip('Pick a product to see every style, then get an instant landed price for your size and country.', 'Pick a product to see every style, then request a free quote for your size and country.'))}<div class="cats">${D.CATS.map((c, i) => catCard(c, false, i < 4)).join('')}</div><div class="pad">${band('Not sure which one fits? Ask us.')}</div></div>` };
 };
 
@@ -479,6 +482,19 @@ P.category = c => {
   const tabs = c.tabs.concat([['all', `All styles (${c.st.length})`]]).map((t, i) => `<button type="button" class="tab" role="tab" data-tab="${t[0]}" aria-selected="${i === 0}">${esc(t[1])}</button>`).join('');
   const grid = c.st.map((s, i) => styleCard(c, s, i, !s[3].includes(c.tabs[0][0]))).join('');
   const more = D.CATS.filter(x => x.s !== c.s).map(x => `<a href="${catUrl(x)}"><span class="tile">${coverPhoto(x.s, x.n)}</span><span>${esc(x.n)}</span></a>`).join('');
+  // FAQ: one category-specific question (popular styles) + materials + the generic questions, with FAQPage schema
+  const pop = c.st.filter(s => s[3].includes('pop'));
+  const shown = pop.slice(0, 3).map(s => s[1].toLowerCase());
+  const shownTxt = shown.length > 2 ? shown.slice(0, -1).join(', ') + ' and ' + shown[shown.length - 1] : shown.join(' and ');
+  const faq = [
+    [`What ${c.n.toLowerCase()} do you make?`, `Our most popular ${esc(c.n.toLowerCase())} are ${esc(shownTxt)} — plus ${c.st.length - shown.length} more styles in this range, all made to your size, printed with your design.`],
+    [`What materials do you use for ${c.n.toLowerCase()}?`, `For ${esc(c.n.toLowerCase())} we use ${esc(c.specs[0][1])}.`],
+    ['How do I get a price?', 'Send your style, size, quantity and delivery country with the quote form. Within one business day we reply with the full price to your door: production, door-to-door shipping, import duty and tax, so there are no surprise bills on delivery.'],
+    ['What is your minimum order quantity (MOQ)?', 'Minimums depend on the product and print method. Offset printing gets cheaper per unit as quantities grow. See the <a href="/minimum-order-quantities/">minimum order quantities page</a> for a guide by product.'],
+    ['Will I see my packaging before it is printed?', 'Yes. We send a free 3D mockup and a digital proof. Production starts only after you approve it, and we send photos of your finished order before it ships.']
+  ];
+  const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(q => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1].replace(/<[^>]+>/g, '') } })) };
+  const itemListLd = { '@context': 'https://schema.org', '@type': 'ItemList', name: c.n + ' styles', itemListElement: c.st.map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s[1], url: SITE_URL + styleUrl(c, s) })) };
   const body = `<div class="wrap">${cr.html}</div>
   <section class="cat-hero2" style="background: ${catHeroBg(c)}"><div class="wrap cat-hero2-in">
     <div class="cat-hero2-copy"><h1>${esc(c.h)}</h1><p class="lede">${esc(c.i)}</p>
@@ -490,9 +506,15 @@ P.category = c => {
 </div>
 <section class="sec alt"><div class="wrap"><div class="head"><div><p class="eyebrow">Typical options</p><h2>${esc(c.n)}: what to expect</h2></div></div>
   <dl class="specs">${c.specs.map(s => `<div><dt>${esc(s[0])}</dt><dd>${esc(s[1])}</dd></div>`).join('')}</dl></div></section>
+<section class="sec" id="faq">
+  <div class="wrap">
+    <div class="head"><div><p class="eyebrow">FAQ</p><h2>Questions, answered</h2></div></div>
+    <div class="faq">${faq.map(q => `<details><summary>${esc(q[0])}</summary><p>${q[1]}</p></details>`).join('')}</div>
+  </div>
+</section>
 <section class="sec"><div class="wrap"><div class="head"><div><h2>More packaging</h2></div></div><div class="mini">${more}</div>
   <div style="margin-top:2.5rem">${band('Not seeing your style? We make custom structures.', 'Request a quote')}</div></div></section>`;
-  return { path: catUrl(c), title: c.ct || ('Custom ' + c.n), desc: `${firstSentence(c.i)} ${c.st.length} styles, made to your size.`, body, jsonld: [cr.ld], preload: '<link rel="preload" as="image" href="/photos/category-hero-' + c.s + '.jpg" fetchpriority="high">' };
+  return { path: catUrl(c), title: c.ct || ('Custom ' + c.n), desc: `${c.d} ${c.st.length} styles, made to your size, printed with your design. Free 3D mockup and free quote in one business day.`, body, jsonld: [cr.ld, itemListLd, faqLd], preload: '<link rel="preload" as="image" href="/photos/category-hero-' + c.s + '.jpg" fetchpriority="high">' };
 };
 
 P.style = (c, i) => {
@@ -542,8 +564,8 @@ P.style = (c, i) => {
 <p style="margin-top:1rem"><a class="more" href="/option-library/">Browse the full option library →</a></p>
 <h2 class="sub">More ${esc(c.n.toLowerCase())} styles</h2>
 <div class="styles">${rel}</div></div>`;
-  const sdFull = `${s[4]} ${/^custom /i.test(s[1]) ? '' : 'Custom '}${s[1].toLowerCase()} made to your size, ${ip('with an instant landed price', 'free quote in one business day')}.`;
-  const sd = sdFull.length > 155 ? `${s[4]} ${/^custom /i.test(s[1]) ? '' : 'Custom '}${s[1].toLowerCase()} made to your size.` : sdFull;
+  const styleName = /^custom /i.test(s[1]) ? s[1] : 'Custom ' + s[1];
+  const sd = `${s[4]} ${styleName} made to your size, printed with your design. Free 3D mockup, free quote in one business day, delivered worldwide.`;
   const productLd = {
     '@context': 'https://schema.org', '@type': 'Product',
     name: s[1], description: s[4], category: c.n,
@@ -551,7 +573,7 @@ P.style = (c, i) => {
     url: SITE_URL + styleUrl(c, s),
     image: SITE_URL + '/photos/' + s[0] + '-1.jpg'
   };
-  return { path: styleUrl(c, s), title: s[1], desc: sd, body, jsonld: [cr.ld, productLd] };
+  return { path: styleUrl(c, s), title: styleName + ', Made to Your Size', desc: sd, body, jsonld: [cr.ld, productLd] };
 };
 
 P.instantPrice = () => {
@@ -635,12 +657,13 @@ P.quote = () => {
       <div class="cta-row"><a class="btn" id="mailto" href="#">Email this request</a><button class="btn ghost" type="button" id="copy">Copy summary</button></div><p class="note" id="copy-note"></p></div>
   </div>
 </div></div>`;
-  return { path: '/quote/', title: 'Request a Free Quote', desc: 'Request a free custom packaging quote with your landed price, a free 3D mockup and lead time. Delivered worldwide.', body, jsonld: [cr.ld] };
+  return { path: '/quote/', title: 'Request a Free Quote', desc: 'Request a free custom packaging quote with your landed price, a free 3D mockup and lead time. Delivered worldwide, from 250 pieces.', body, jsonld: [cr.ld] };
 };
 
 P.industries = () => {
   const cr = crumbs([['Industries']]);
-  return { path: '/industries/', title: 'Packaging by Industry', desc: 'Custom packaging for cosmetics, food, coffee, candles, apparel, jewelry, electronics, supplements and e-commerce brands worldwide.', jsonld: [cr.ld],
+  const itemListLd = { '@context': 'https://schema.org', '@type': 'ItemList', name: 'Packaging by industry', itemListElement: D.IND.map((x, i) => ({ '@type': 'ListItem', position: i + 1, name: x[1], url: SITE_URL + indUrl(x) })) };
+  return { path: '/industries/', title: 'Packaging by Industry', desc: 'Custom packaging for cosmetics, food, coffee, candles, apparel, jewelry, electronics, supplements and e-commerce brands worldwide.', jsonld: [cr.ld, itemListLd],
     body: `<div class="wrap">${cr.html}${pageHead('Packaging by industry', 'Every industry has its own rules for protection, labelling and shelf appeal. Pick yours to see the packaging that suits it.')}
 <div class="cats small">${D.IND.map((x, i) => `<a class="cat" href="${indUrl(x)}"><span class="tile">${viewPhoto(IND_PHOTO[x[0]] || 'FC05', 1, x[1], i < 4 ? ' loading="eager"' : '')}</span><span class="ct"><h3>${esc(x[1])}</h3><span>${esc(x[2])}</span></span></a>`).join('')}</div>
 <div class="pad">${band('Your industry is not listed? Tell us what you sell.')}</div></div>` };
@@ -670,7 +693,8 @@ P.industry = x => {
     ['What is your minimum order quantity (MOQ)?', 'Minimums depend on the product and print method. Offset printing gets cheaper per unit as quantities grow. See the <a href="/minimum-order-quantities/">minimum order quantities page</a> for a guide by product.'],
     ['Will I see my packaging before it is printed?', 'Yes. We send a free 3D mockup and a digital proof. Production starts only after you approve it, and we send photos of your finished order before it ships.']
   ];
-  const ld = [cr.ld, { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(q => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1].replace(/<[^>]+>/g, '') } })) }];
+  const itemListLd = { '@context': 'https://schema.org', '@type': 'ItemList', name: 'Recommended ' + indName + ' packaging styles', itemListElement: popStyles.map(([c, s], i) => ({ '@type': 'ListItem', position: i + 1, name: s[1], url: SITE_URL + styleUrl(c, s) })) };
+  const ld = [cr.ld, itemListLd, { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(q => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1].replace(/<[^>]+>/g, '') } })) }];
   const body = `<div class="wrap">${cr.html}</div>
   <section class="cat-hero2" style="background: ${catHeroBg(heroCat)}"><div class="wrap cat-hero2-in">
     <div class="cat-hero2-copy"><h1>${esc('Custom packaging for ' + indName)}</h1><p class="lede">${esc(x[6])}</p>
@@ -692,11 +716,11 @@ P.industry = x => {
   </div>
 </section>
 <div class="wrap"><div class="pad">${band('Tell us about your ' + indName + ' product.')}</div></div>`;
-  return { path: indUrl(x), title: `Custom Packaging for ${x[1]}`, desc: `Custom packaging for ${indName} brands. ${x[6]}`, jsonld: ld, body, preload: '<link rel="preload" as="image" href="/photos/category-hero-' + heroCat.s + '.jpg" fetchpriority="high">' };
+  return { path: indUrl(x), title: `Custom Packaging for ${x[1]}`, desc: `Custom packaging for ${indName} brands. ${x[6]} Made to your size, printed with your design, delivered worldwide.`, jsonld: ld, body, preload: '<link rel="preload" as="image" href="/photos/category-hero-' + heroCat.s + '.jpg" fetchpriority="high">' };
 };
 P.service = x => {
   const cr = crumbs([['Services', '/#services'], [x[1]]]);
-  return { path: svcUrl(x), title: x[1], desc: x[5], jsonld: [cr.ld],
+  return { path: svcUrl(x), title: x[1].length < 18 ? x[1] + ' — Custom Packaging Services' : x[1], desc: x[5] + ' Free 3D mockup and digital proof included.', jsonld: [cr.ld],
     body: `<div class="wrap">${cr.html}${pageHead(x[1], x[5])}<div class="svc-hero">${photo('/photos/menu/menu-service-' + x[0] + '.jpg', 1200, 800, x[1])}</div><h2 class="sub">What you get</h2>${infoCards(x[6])}
 <h2 class="sub">Other services</h2><div class="svcs">${D.SVC.filter(y => y[0] !== x[0]).map(y => `<a class="scard" href="${svcUrl(y)}"><h3>${esc(y[1])}</h3><p>${esc(y[2])}</p><span class="more">Learn more →</span></a>`).join('')}</div>
 <div class="pad">${band('Start with a free quote.')}</div></div>` };
@@ -720,7 +744,7 @@ ${infoCards([['Landed price, up front', 'Production, shipping, import duty and t
 P.moq = () => {
   const cr = crumbs([['Minimum order quantities']]);
   const rows = D.MOQROWS.map(r => `<tr><th scope="row">${r[1] ? `<a href="/${r[1]}/">${esc(r[0])}</a>` : esc(r[0])}</th><td>${esc(r[2] + ' ' + r[3])}</td><td>${esc(r[4])}</td></tr>`).join('');
-  return { path: '/minimum-order-quantities/', title: 'Minimum Order Quantities (MOQ)', desc: 'Minimum order quantities for custom boxes, bags, pouches, labels and more, and what affects them.', jsonld: [cr.ld],
+  return { path: '/minimum-order-quantities/', title: 'Minimum Order Quantities (MOQ)', desc: 'Minimum order quantities for custom boxes, bags, pouches, labels and more, what affects them, and how to order from 250 pieces.', jsonld: [cr.ld],
     body: `<div class="wrap">${cr.html}${pageHead('Minimum order quantities (MOQ)', 'The smallest order we can make for each product. These are starting points; your quote confirms the exact minimum for your size, material, print and finish.')}
 <div class="moqt-wrap"><table class="moqt"><thead><tr><th scope="col">Product</th><th scope="col">Typical minimum</th><th scope="col">Notes</th></tr></thead><tbody>${rows}</tbody></table></div>
 <h2 class="sub">What affects the minimum</h2>${infoCards([['Print method', 'Digital printing uses no plates, so short runs are practical. Offset suits larger quantities.'], ['Finish and add-ons', 'Foil, embossing, custom inserts and special coatings can raise the minimum.'], ['Size and material', 'Very large pieces or special stock can need bigger runs.'], ['Several designs', 'Minimums usually apply to each design. Ask us about several versions in one order.']])}
@@ -729,7 +753,7 @@ P.moq = () => {
 P.ptimes = () => {
   const cr = crumbs([['Production times']]);
   const rows = D.PTROWS.map(r => `<tr><th scope="row"><a href="/${r[1]}/">${esc(r[0])}</a></th><td>${esc(r[2] + ' business days')}</td></tr>`).join('');
-  return { path: '/production-times/', title: 'Production Times', desc: 'How long custom packaging takes to make, counted from proof approval, and what changes the lead time.', jsonld: [cr.ld],
+  return { path: '/production-times/', title: 'Production Times for Custom Packaging', desc: 'How long custom packaging takes to make, counted from proof approval, what changes the lead time, and how to plan your order.', jsonld: [cr.ld],
     body: `<div class="wrap">${cr.html}${pageHead('Production times', 'A guide to how long each product takes to make, counted from proof approval. Shipping time is extra. Your quote gives the estimate for your order.')}
 <div class="moqt-wrap"><table class="moqt moqt2"><thead><tr><th scope="col">Product</th><th scope="col">Typical production time</th></tr></thead><tbody>${rows}</tbody></table></div>
 <h2 class="sub">What changes the time</h2>${infoCards([['Product and quantity', 'Larger orders and more complex structures take longer.'], ['Finishes and add-ons', 'Foil, embossing, special coatings and custom inserts add steps.'], ['Time of year', 'Busy seasons stretch lead times, so order early for holidays and launches.'], ['Proof approval', 'The clock starts when you approve the proof, so quick approval saves time.']])}
@@ -738,34 +762,49 @@ P.ptimes = () => {
 };
 P.blog = () => {
   const cr = crumbs([['Blog']]);
-  return { path: '/blog/', title: 'Packaging Guides', desc: 'Short, practical guides for choosing and ordering custom packaging.', jsonld: [cr.ld],
-    body: `<div class="wrap">${cr.html}${pageHead('Packaging guides', 'Short, practical guides for choosing and ordering custom packaging.')}<div class="svcs">${D.BLOG.map(b => `<a class="scard" href="/blog/${b[0]}/"><h3>${esc(b[1])}</h3><p>${esc(b[2])}</p><span class="more">Read more →</span></a>`).join('')}</div><div class="pad">${ip(band('Ready to see your landed price?', 'Get an instant price', '/instant-price/'), band('Ready to start? Get your free quote in one business day.', 'Request a quote', '/quote/'))}</div></div>` };
+  return { path: '/blog/', title: 'Custom Packaging Guides', desc: 'Short, practical guides for choosing and ordering custom packaging: dielines, printing methods, measuring, materials and finishes.', jsonld: [cr.ld],
+    body: `<div class="wrap">${cr.html}${pageHead('Packaging guides', 'Short, practical guides for choosing and ordering custom packaging.')}<div class="svcs">${D.BLOG.map(b => { const img = b[3].find(x => x && x.img); return `<a class="scard" href="/blog/${b[0]}/">${img ? `<span class="tile">${photo(img.img, 1080, 1080, b[1])}</span>` : ''}<h3>${esc(b[1])}</h3><p>${esc(b[2])}</p><span class="more">Read more →</span></a>`; }).join('')}</div><div class="pad">${ip(band('Ready to see your landed price?', 'Get an instant price', '/instant-price/'), band('Ready to start? Get your free quote in one business day.', 'Request a quote', '/quote/'))}</div></div>` };
 };
 P.article = b => {
   const cr = crumbs([['Blog', '/blog/'], [b[1]]]);
   const firstPara = b[3].find(x => typeof x === 'string') || '';
   const articleDesc = b[4] || (b[2] + ' ' + cutAtWord(firstPara, 110));
-  const blocks = b[3].map(x => typeof x === 'string' ? `<p>${esc(x)}</p>` : `<h2>${esc(x.h)}</h2>`).join('');
+  const blocks = b[3].map(x => typeof x === 'string' ? `<p>${esc(x)}</p>` : x.h ? `<h2>${esc(x.h)}</h2>` : `<figure>${photo(x.img, 1080, 1080, x.cap || b[1])}${x.cap ? `<figcaption>${esc(x.cap)}</figcaption>` : ''}</figure>`).join('');
   return { path: '/blog/' + b[0] + '/', title: b[1], desc: articleDesc, jsonld: [cr.ld, { '@context': 'https://schema.org', '@type': 'Article', headline: b[1], publisher: { '@type': 'Organization', name: BRAND } }],
     body: `<div class="wrap">${cr.html}<article class="article"><h1>${esc(b[1])}</h1>${blocks}</article><div class="pad">${band('Have a packaging question? Ask us.', 'Request a quote')}</div></div>` };
 };
 P.legal = (k, L) => {
   const cr = crumbs([[L[0]]]);
-  return { path: '/' + k + '/', title: L[0], desc: `${BRAND} ${L[0].toLowerCase()}.`, jsonld: [cr.ld],
+  const legalTitle = {
+    privacy: 'Privacy Policy — How We Handle Your Data',
+    terms: 'Terms & Conditions — Ordering from Boxenza',
+    shipping: 'Shipping Policy — Worldwide Delivery, Duties Paid'
+  }[k] || L[0];
+  const legalDesc = {
+    privacy: 'How Boxenza collects, uses and protects your personal information when you request a quote, order custom packaging or browse this website.',
+    terms: 'The terms for ordering custom packaging from Boxenza, including quotes, payment, production, delivery, defects and reprints.',
+    shipping: 'How your custom packaging is delivered worldwide, door to door, with production, shipping, duty and tax in one landed price.'
+  }[k] || `${BRAND} ${L[0].toLowerCase()}.`;
+  return { path: '/' + k + '/', title: legalTitle, desc: legalDesc, jsonld: [cr.ld],
     body: `<div class="wrap">${cr.html}<article class="article"><h1>${esc(L[0])}</h1>${L.slice(1).map(x => `<h2>${esc(x[0])}</h2><p>${linkEmails(esc(x[1]))}</p>`).join('')}</article><div class="pad"></div></div>` };
 };
 P.about = () => {
   const cr = crumbs([['About us']]);
-  return { path: '/about/', title: 'About Us', desc: `About ${BRAND}: custom packaging with landed prices up front, delivered worldwide.`, jsonld: [cr.ld],
+  return { path: '/about/', title: 'About Boxenza — Custom Packaging, Priced to Your Door', desc: `About ${BRAND}: custom packaging with landed prices up front, a free 3D mockup, digital proof and delivery worldwide, from 250 pieces.`, jsonld: [cr.ld],
     body: `<div class="wrap">${cr.html}${pageHead('About ' + BRAND, 'We started ' + BRAND + ' because ordering custom packaging from abroad meant guesswork: unclear prices, surprise customs bills and no idea what would arrive. We fixed that.')}
+<article class="article"><p>Every quote states the full landed price up front: production, door-to-door shipping, import duty and tax. The price you approve is the price you pay — no surprise bills on delivery.</p>
+<p>We make 16 kinds of packaging — folding cartons, corrugated mailer boxes, rigid gift boxes, box inserts, paper and reusable bags, mailer bags, pouches, corporate gift packaging, displays, labels, tissue, tape, card inserts, eco-friendly packaging and cup sleeves — in 183 styles, each made to your size, stock and print. Every order starts with a free 3D mockup and a digital proof. Production only starts after you approve it, and we send photos of your finished order before it ships.</p>
+<p>Orders start from 250 pieces. You pay 50% before production and the remaining 50% after production, before shipping. We deliver worldwide, door to door, and your quote arrives within one business day.</p></article>
+<div class="about-photos">${photo('/photos/hero-group-alt.jpg', 1200, 675, 'Custom packaging made by Boxenza')}${photo('/photos/category-hero-folding-cartons.jpg', 1200, 800, 'Custom printed folding cartons')}${photo('/photos/category-hero-rigid-boxes.jpg', 1200, 800, 'Custom rigid gift boxes')}</div>
 ${infoCards([['What we do', 'Custom boxes, bags, mailers, pouches, labels and more, made to your size.'], ['Who we serve', 'Growing brands worldwide, from first runs to repeat orders in the tens of thousands.'], ['How we work', ip('Instant landed price, free 3D mockup, proof approval, production photos, then delivery with duties paid.', 'Free quote in one business day, free 3D mockup, proof approval, production photos, then delivery with duties paid.')]])}
 <div class="pad">${band('Let us price your packaging.')}</div></div>` };
 };
 P.contact = () => {
   const cr = crumbs([['Contact us']]);
-  return { path: '/contact/', title: 'Contact Us', desc: `Contact ${BRAND} about custom packaging styles, materials or orders.`, jsonld: [cr.ld],
+  return { path: '/contact/', title: 'Contact Boxenza — Free Quote in One Business Day', desc: `Contact ${BRAND} about custom packaging styles, materials or orders. We reply within one business day with your landed price.`, jsonld: [cr.ld],
     body: `<div class="wrap">${cr.html}${pageHead('Contact us', 'Email us, message us on WhatsApp, or request a quote.')}
 <div class="why"><div><h3>Email</h3><p class="mono"><a href="mailto:${esc(CONTACT.email)}">${esc(CONTACT.email)}</a></p></div><div><h3>WhatsApp</h3><p class="mono"><a href="${CONTACT.whatsappLink}">${esc(CONTACT.whatsapp)}</a></p></div><div><h3>Hours</h3><p>Monday to Friday, 9:00 to 18:00 (GMT+5)</p></div><div><h3>Delivery</h3><p>Worldwide, door to door</p></div></div>
+<div style="margin-top:2.5rem"><h2 class="sub">What happens after you get in touch</h2>${infoCards([['1. We reply in one business day', 'With your full landed price — production, shipping, duty and tax — and a free 3D mockup of your packaging.'], ['2. You approve the proof', 'We send a digital proof of your artwork on the dieline. Production starts only after you approve it.'], ['3. We ship your order', 'We send photos of your finished order before it ships, then deliver it worldwide, door to door.']])}</div>
 <div class="pad">${ip(band('The fastest way to start is an instant price.', 'Get an instant price', '/instant-price/'), band('The fastest way to start is a free quote.', 'Request a quote', '/quote/'))}</div></div>` };
 };
 P.notFound = () => ({ path: '/404', title: 'Page not found', desc: 'Page not found.',
