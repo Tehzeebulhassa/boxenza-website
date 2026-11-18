@@ -246,10 +246,10 @@ textarea { min-height: 6.5rem; resize: vertical; }
 .scard { display: grid; gap: 0.5rem; align-content: start; padding: 1.4rem; background: var(--card); border: 1px solid var(--line); border-radius: 8px; text-decoration: none; transition: box-shadow 0.15s ease; }
 .scard:hover { box-shadow: 0 8px 22px rgba(20, 26, 51, 0.12); }
 .scard p { color: var(--ink-2); font-size: 0.93rem; }
-.scard .tile { padding: 0; }
-.scard .tile img { width: 100%; height: auto; border-radius: 6px; display: block; }
+.scard .tile { padding: 0; margin: -1.4rem -1.4rem 0; }
+.scard .tile img { width: 100%; height: auto; border-radius: 8px 8px 0 0; display: block; aspect-ratio: 4 / 3; object-fit: cover; }
 .about-photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
-.about-photos img { width: 100%; height: auto; border-radius: 10px; display: block; }
+.about-photos img { width: 100%; height: auto; border-radius: 10px; display: block; aspect-ratio: 3 / 2; object-fit: cover; }
 .article figure { margin: 1.5rem 0; }
 .article figure img { width: 100%; height: auto; border-radius: 10px; display: block; }
 .article figcaption { font-size: 0.88rem; color: var(--ink-2); margin-top: 0.5rem; }

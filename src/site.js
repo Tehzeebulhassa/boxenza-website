@@ -281,7 +281,7 @@ ${preload || ''}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=4">
+<link rel="stylesheet" href="/assets/style.css?v=5">
 ${ld}
 </head>
 <body${bodyClass ? ` class="${bodyClass}"` : ''}>
@@ -763,7 +763,7 @@ P.ptimes = () => {
 P.blog = () => {
   const cr = crumbs([['Blog']]);
   return { path: '/blog/', title: 'Custom Packaging Guides', desc: 'Short, practical guides for choosing and ordering custom packaging: dielines, printing methods, measuring, materials and finishes.', jsonld: [cr.ld],
-    body: `<div class="wrap">${cr.html}${pageHead('Packaging guides', 'Short, practical guides for choosing and ordering custom packaging.')}<div class="svcs">${D.BLOG.map(b => { const img = b[3].find(x => x && x.img); return `<a class="scard" href="/blog/${b[0]}/">${img ? `<span class="tile">${photo(img.img, 1080, 1080, b[1])}</span>` : ''}<h3>${esc(b[1])}</h3><p>${esc(b[2])}</p><span class="more">Read more →</span></a>`; }).join('')}</div><div class="pad">${ip(band('Ready to see your landed price?', 'Get an instant price', '/instant-price/'), band('Ready to start? Get your free quote in one business day.', 'Request a quote', '/quote/'))}</div></div>` };
+    body: `<div class="wrap">${cr.html}${pageHead('Packaging guides', 'Short, practical guides for choosing and ordering custom packaging.')}<div class="svcs">${D.BLOG.map(b => { const thumb = b[5] || ((b[3].find(x => x && x.img) || {}).img); return `<a class="scard" href="/blog/${b[0]}/">${thumb ? `<span class="tile">${photo(thumb, 1200, 900, b[1])}</span>` : ''}<h3>${esc(b[1])}</h3><p>${esc(b[2])}</p><span class="more">Read more →</span></a>`; }).join('')}</div><div class="pad">${ip(band('Ready to see your landed price?', 'Get an instant price', '/instant-price/'), band('Ready to start? Get your free quote in one business day.', 'Request a quote', '/quote/'))}</div></div>` };
 };
 P.article = b => {
   const cr = crumbs([['Blog', '/blog/'], [b[1]]]);

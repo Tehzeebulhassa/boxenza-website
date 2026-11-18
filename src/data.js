@@ -266,7 +266,8 @@
         "On the proof, check the dimensions against your real product, not against the size you guessed at the start. Check that fold lines sit where the box should bend, that artwork does not cross a fold, and that text is spelled correctly. If the pack has a window, check that the product shows through it. A 3D mockup helps you see the finished box before anything is printed, and for a first order a physical sample lets you hold it in your hands.",
         "At Boxenza, your dieline is built from the dimensions you send with your quote. We place your artwork on it, send you a free 3D mockup and a digital proof, and production only starts after you approve it. If you already have a dieline from another supplier, send it with your artwork and we will check it against your product size before we print."
       ],
-      "What a dieline is, how artwork is placed on it, and why the right size and a checked proof save costly reprints — with a real dieline diagram."
+      "What a dieline is, how artwork is placed on it, and why the right size and a checked proof save costly reprints — with a real dieline diagram.",
+      "/photos/category-hero-folding-cartons.jpg"
     ],
     [
       "digital-vs-offset",
@@ -292,7 +293,8 @@
         "Offset can print exact Pantone spot colours, which is how brands keep their colour identical across every product and every print run. Digital prints in CMYK, which can match most Pantone colours closely, but not exactly, and the match can shift slightly between runs. If your brand colour is sacred, offset is the safer choice. If it is close enough, digital will do. Either way, finishes like foil stamping, embossing and spot UV are added after printing and work with both methods.",
         "The simplest way to decide is to look at your order. Small quantity, several versions, a tight deadline or a design you are still testing: digital. Large quantity, one design, exact brand colour, and a product that will sit on shelves for months: offset. And whichever you choose, check the proof before you approve it, because a proof catches mistakes that no press can fix."
       ],
-      "Digital printing suits short runs and several versions; offset suits large runs and exact Pantone colour. How to choose for your order."
+      "Digital printing suits short runs and several versions; offset suits large runs and exact Pantone colour. How to choose for your order.",
+      "/photos/FC01-1.jpg"
     ],
     [
       "measure-for-a-box",
@@ -318,7 +320,8 @@
         "On the proof, compare the dimensions with your real product, not with the numbers you guessed at the start. Check that the fold lines sit where the box should bend, that the window shows the right part of the product, and that there is space for a barcode and any required text. If the fit is critical, order a physical sample first and test it with your real product before the full run.",
         "At Boxenza, you send the measurements with your quote and we build the dieline to your size. We send a free 3D mockup and a digital proof, and production only starts after you approve it. If you are unsure about an allowance or a measurement, tell us what the product is and how it will be packed, and we will recommend a size."
       ],
-      "How to measure your product for a custom box: length, width and height, the allowance to add, and what to check on the proof."
+      "How to measure your product for a custom box: length, width and height, the allowance to add, and what to check on the proof.",
+      "/photos/CB01-1.jpg"
     ]
   ];
   var LEGAL = {
