@@ -268,7 +268,10 @@ function layout({ path, title, desc, body, jsonld, bodyClass, preload }) {
 <meta property="og:title" content="${esc(full)}">
 <meta property="og:description" content="${esc(d)}">
 <meta property="og:url" content="${canon}">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="${SITE_URL}/photos/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#16224A">
 ${preload || ''}
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-JVGN36JLMT"></script>
@@ -657,9 +660,11 @@ P.industry = x => {
   const grid = popStyles.map(([c, s], i) => { const s2 = [...s]; s2.slug = s.slug; s2[3] = [c.s]; return styleCard(c, s2, i, false); }).join('');
   // Materials & finishes per related category (from the quote-form data)
   const mats = cats.map(c => { const f = formFor(c.s); return `<div><dt>${esc(c.n)}</dt><dd>Materials: ${esc(f.mat.join(', '))}. Options: ${esc(f.opts.join(', '))}.</dd></div>`; }).join('');
-  // FAQ: one industry-specific question (from the industry's own description) + the site's generic questions
+  // FAQ: one industry-specific question (lists what we actually make for this industry) + the site's generic questions
+  const madeList = cats.map(c => c.n.toLowerCase());
+  const made = madeList.length > 2 ? madeList.slice(0, -1).join(', ') + ', and ' + madeList[madeList.length - 1] : madeList.join(' and ');
   const faq = [
-    [`What ${indName} packaging do you make?`, esc(x[6])],
+    [`What ${indName} packaging do you make?`, `We make ${esc(made)} for ${esc(indName)} — all made to your size, printed with your design, and delivered to your door.`],
     ['How do I get a price?', 'Send your style, size, quantity and delivery country with the quote form. Within one business day we reply with the full price to your door: production, door-to-door shipping, import duty and tax, so there are no surprise bills on delivery.'],
     ['Which countries do you deliver to?', 'We deliver worldwide, door to door, including the United States, the United Kingdom, the European Union, the UAE, Saudi Arabia, Australia and Canada. Every quote includes shipping, duty and tax to your country.'],
     ['What is your minimum order quantity (MOQ)?', 'Minimums depend on the product and print method. Offset printing gets cheaper per unit as quantities grow. See the <a href="/minimum-order-quantities/">minimum order quantities page</a> for a guide by product.'],
