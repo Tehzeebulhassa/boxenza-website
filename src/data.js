@@ -267,7 +267,8 @@
         "At Boxenza, your dieline is built from the dimensions you send with your quote. We place your artwork on it, send you a free 3D mockup and a digital proof, and production only starts after you approve it. If you already have a dieline from another supplier, send it with your artwork and we will check it against your product size before we print."
       ],
       "What a dieline is, how artwork is placed on it, and why the right size and a checked proof save costly reprints — with a real dieline diagram.",
-      "/photos/category-hero-folding-cartons.jpg"
+      "/photos/FC01-d.jpg",
+      "contain"
     ],
     [
       "digital-vs-offset",
