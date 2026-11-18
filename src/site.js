@@ -98,7 +98,7 @@ const FORM = {
   'tissue-paper': { dims: ['Sheet width', 'Sheet height'], req: 2, mat: ['17 gsm tissue', '22 gsm tissue', 'Greaseproof paper', 'Wax-coated paper', 'Recycled tissue'], opts: ['1 Colour Print', '2 Colour Print', 'Full-colour Print'] },
   'packing-tape': { dims: ['Tape width', 'Roll length (yards)'], req: 2, mat: ['BOPP plastic', 'Kraft paper', 'Reinforced kraft (water-activated)', 'Paper (water-activated)'], opts: ['1 Colour Print', '2 Colour Print', 'Full-colour Print'] },
   'card-inserts': { dims: ['Width', 'Height'], req: 2, mat: ['Matte card (350 gsm)', 'Gloss card (350 gsm)', 'Kraft card', 'Uncoated card', 'Textured card'], opts: ['Foil Stamping', 'Embossing', 'Spot UV', 'Rounded Corners'] },
-  'eco-packaging': { mat: ['Recycled kraft board', 'Recycled corrugated', 'FSC-certified board', 'Compostable film', 'Molded pulp', 'Recycled poly'], opts: ['Soy-based Ink', 'Water-based Ink', 'Foil-free Finish'] },
+  'eco-packaging': { mat: ['Recycled kraft board', 'Recycled corrugated', 'Responsibly sourced board', 'Compostable film', 'Molded pulp', 'Recycled poly'], opts: ['Soy-based Ink', 'Water-based Ink', 'Foil-free Finish'] },
   'cup-sleeves': { dims: ['Sleeve width', 'Sleeve height'], req: 2, mat: ['White paperboard', 'Kraft paperboard', 'Corrugated (E-flute)', 'Recycled board'], opts: ['1 Colour Print', 'Full-colour Print', 'Embossing'] }
 };
 const formFor = s => Object.assign({}, FORM._, FORM[s] || {});
@@ -390,7 +390,7 @@ P.home = () => {
         ${ip('<a class="btn btn-light" href="/instant-price/">Get an instant price</a>', '<a class="btn btn-light" href="/quote/">Get a free quote</a>')}
         <a class="btn ghost" href="/#products">Browse packaging styles</a>
       </div>
-      <ul class="hero-facts">${ip('<li><b>7</b> currencies</li>', '<li><b>24 h</b> quote</li>')}<li><b>Free</b> 3D mockup</li></ul>
+      <ul class="hero-facts">${ip('<li><b>7</b> currencies</li>', '<li><b>1 business day</b> quote</li>')}<li><b>Free</b> 3D mockup</li></ul>
     </div>
   </div>
 </section>
@@ -441,7 +441,7 @@ ${ip(`<script>window.BX_HERO=${JSON.stringify(HERO_EXAMPLES)};</script>`, '')}
   <div class="wrap">
     <div class="head"><div><p class="eyebrow">How it works</p><h2>From brief to doorstep in four steps</h2></div></div>
     <ol class="steps">
-      ${ip('<li><h3>Instant price</h3><p>Choose a style, size, quantity and country. See the landed price, then request your quote.</p></li>', '<li><h3>Free quote</h3><p>Send your style, size, quantity and country. Within one business day you get the full price to your door.</p></li>')}
+      ${ip('<li><h3>Instant price</h3><p>Choose a style, size, quantity and country. Orders start from 250 pieces. See the landed price, then request your quote.</p></li>', '<li><h3>Free quote</h3><p>Send your style, size, quantity and country. Orders start from 250 pieces. Within one business day you get the full price to your door.</p></li>')}
       <li><h3>Free 3D mockup</h3><p>We build a dieline to your exact size, place your artwork and send a 3D preview.</p></li>
       <li><h3>Approve the proof</h3><p>Production starts only when you are happy with the digital proof.</p></li>
       <li><h3>Photos, then delivery</h3><p>We send photos of your finished order, then deliver it to your door with duties paid.</p></li>
@@ -738,7 +738,7 @@ P.why = () => {
   const cr = crumbs([['Why us']]);
   return { path: '/why-us/', title: 'Why Brands Choose Us', desc: 'Landed prices up front, a free 3D mockup, production photos before shipping and a reprint guarantee. Custom packaging delivered worldwide.', jsonld: [cr.ld],
     body: `<div class="wrap">${cr.html}${pageHead('Why brands choose ' + BRAND, 'Custom packaging should be simple to price, simple to order and reliable to receive. This is how we work.')}
-${infoCards([['Landed price, up front', 'Production, shipping, import duty and tax in one number, in your currency. No surprise bills on delivery.'], ip(['Instant estimate', 'Enter size, quantity and country and see a price in seconds.'], ['Quote in one business day', 'Send size, quantity and country and get the full price within one business day.']), ['Free 3D mockup', 'See your design on the real structure before anything is printed.'], ['Production photos', 'We send photos of your finished order before it ships.'], ['Reprint guarantee', 'If the order does not match the approved proof, we reprint it.'], ['Clear minimums', 'See the minimum order for every product on our MOQ page before you ask for a quote.'], ['Sustainable options', 'Recycled and FSC-certified stock, soy and water-based inks, right-sized structures.'], ['Worldwide delivery', 'Door-to-door delivery with duties paid to the US, UK, EU, Gulf, Australia, Canada and more.']])}
+${infoCards([['Landed price, up front', 'Production, shipping, import duty and tax in one number, in your currency. No surprise bills on delivery.'], ip(['Instant estimate', 'Enter size, quantity and country and see a price in seconds.'], ['Quote in one business day', 'Send size, quantity and country and get the full price within one business day.']), ['Free 3D mockup', 'See your design on the real structure before anything is printed.'], ['Production photos', 'We send photos of your finished order before it ships.'], ['Reprint guarantee', 'If the order does not match the approved proof, we reprint it.'], ['Clear minimums', 'See the minimum order for every product on our MOQ page before you ask for a quote.'], ['Sustainable options', 'Recycled and responsibly sourced stock, soy and water-based inks, right-sized structures.'], ['Worldwide delivery', 'Door-to-door delivery with duties paid to the US, UK, EU, Gulf, Australia, Canada and more.']])}
 <div class="pad">${ip(band('Ready to see your landed price?', 'Get an instant price', '/instant-price/'), band('Ready to start? Get your free quote in one business day.', 'Request a quote', '/quote/'))}</div></div>` };
 };
 P.moq = () => {
