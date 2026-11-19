@@ -60,13 +60,13 @@
         [
           "SBS C1S",
           "Bleached white paperboard, coated on one side for high-quality print.",
-          0,
+          1,
           "#ffffff"
         ],
         [
           "SBS C2S",
           "Bleached white paperboard, coated on both sides.",
-          0,
+          1,
           "#ffffff"
         ],
         [
@@ -108,7 +108,7 @@
         [
           "Textured paper",
           "Wrapping paper with a tactile surface for rigid boxes.",
-          0,
+          1,
           "#efe8d8"
         ],
         [
