@@ -756,7 +756,7 @@ P.options = () => {
 };
 P.dielines = () => {
   const cr = crumbs([['Free dielines']]);
-  const jump = `<p><b>Jump to:</b> ${D.CATS.map(c => `<a href="#dl-${c.s}">${esc(c.n)} (${c.st.length})</a>`).join(' · ')}</p>`;
+  const jump = `<div style="max-width:24rem;margin-block:1rem"><label for="dl-jump" style="display:block;font-weight:700;margin-bottom:0.35rem">Jump to a category</label><select id="dl-jump" onchange="if(this.value){location.hash=this.value;}"><option value="" selected>Choose a category</option>${D.CATS.map(c => `<option value="#dl-${c.s}">${esc(c.n)} (${c.st.length})</option>`).join('')}</select></div>`;
   const sections = D.CATS.map(c => `<h2 class="sub" id="dl-${c.s}">${esc(c.n)} (${c.st.length})</h2><div class="svcs">${c.st.map(s => `<div class="scard"><a href="/photos/${s[0]}-d.jpg" download><span class="tile fit-contain">${photo('/photos/' + s[0] + '-d.jpg', 600, 450, s[1] + ' dieline')}</span></a><h3><a href="${styleUrl(c, s)}">${esc(s[1])}</a></h3><p><a href="/photos/${s[0]}-d.jpg" download>Download dieline (JPG)</a></p></div>`).join('')}</div>`).join('');
   return { path: '/free-dielines/', title: 'Free Dielines for Custom Packaging', desc: 'Download free dielines for all 183 Boxenza packaging styles: folding cartons, mailer boxes, rigid boxes, bags, pouches, labels and more. JPG format, free to use. Your exact dieline is made to your size after your quote.', jsonld: [cr.ld],
     body: `<div class="wrap">${cr.html}${pageHead('Free dielines', 'Free dieline templates for every Boxenza style. Download the JPG, place your artwork on it, and send it with your quote. Your exact dieline is made to your size after your quote.')}
