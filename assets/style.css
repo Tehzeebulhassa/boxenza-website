@@ -491,6 +491,7 @@ input[type="file"] { padding: 0.55rem; }
 .bx-bar-in { max-width: 40rem; margin-inline: auto; }
 .bx-form { position: relative; background: none; border: 0; border-radius: 0; padding: 0; display: block; gap: 0; }
 .bx-input { width: 100%; padding-right: 2.6rem; }
+.bx-search.desk .bx-input { padding: 0.65rem 2.6rem 0.65rem 1rem; font-size: 0.88rem; line-height: 1; border-width: 1.5px; }
 .bx-input:focus { outline: none; border-color: var(--ink); }
 .bx-go:focus-visible, .bx-toggle:focus-visible { outline: none; }
 .bx-go { position: absolute; right: 0.3rem; top: 50%; transform: translateY(-50%); display: flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; background: none; border: 0; color: var(--ink-2); cursor: pointer; padding: 0; }
