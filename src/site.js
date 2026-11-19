@@ -6,7 +6,7 @@ const { dielineFor } = require('./dielines');
 
 const BRAND = 'Boxenza';
 const SITE_URL = process.env.SITE_URL || 'https://www.boxenza.com';
-const CONTACT = { email: 'sales@boxenza.com', whatsapp: '+1 202 960 7921', whatsappLink: 'https://wa.me/12029607921' };
+const CONTACT = { email: 'sales@boxenza.com', whatsapp: '', whatsappLink: '' }; // WhatsApp removed 2026-11-19 until the new number arrives (old: +1 202 960 7921)
 
 /* ---------- helpers ---------- */
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -261,7 +261,7 @@ function footer() {
         <li><a href="/quote/">Request a quote</a></li>
       </ul></div>
       <div><h3>Contact</h3><ul>
-        <li><a href="mailto:${esc(CONTACT.email)}">${esc(CONTACT.email)}</a></li><li>WhatsApp: <a href="${CONTACT.whatsappLink}">${esc(CONTACT.whatsapp)}</a></li><li>Delivering worldwide</li>
+        <li><a href="mailto:${esc(CONTACT.email)}">${esc(CONTACT.email)}</a></li>${CONTACT.whatsapp ? `<li>WhatsApp: <a href="${CONTACT.whatsappLink}">${esc(CONTACT.whatsapp)}</a></li>` : ''}<li>Delivering worldwide</li>
       </ul></div>
     </div>
     <p class="legal">&copy; ${new Date().getFullYear()} ${BRAND} Packaging. <a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/shipping/">Shipping</a></p>
@@ -653,7 +653,7 @@ P.quote = () => {
     <div style="display:grid;gap:0.7rem"><p class="eyebrow">Free quote</p><h1 style="font-size:clamp(1.9rem,4.4vw,2.8rem)">Tell us what you need</h1>
     <p class="lede">A rough size and quantity is enough to start. We reply with your landed price, a free 3D mockup and the lead time.</p></div>
     <ul class="checks"><li>Landed price: shipping, duty and tax included</li><li>Free 3D mockup and digital proof</li><li>Production photos before shipping</li><li>Delivery worldwide</li></ul>
-    <div class="contact"><b>Contact</b><span>Email: <a href="mailto:${esc(CONTACT.email)}">${esc(CONTACT.email)}</a></span><span>WhatsApp: <a href="${CONTACT.whatsappLink}">${esc(CONTACT.whatsapp)}</a></span></div>
+    <div class="contact"><b>Contact</b><span>Email: <a href="mailto:${esc(CONTACT.email)}">${esc(CONTACT.email)}</a></span>${CONTACT.whatsapp ? `<span>WhatsApp: <a href="${CONTACT.whatsappLink}">${esc(CONTACT.whatsapp)}</a></span>` : ''}</div>
   </div>
   <div style="display:grid;gap:1rem;min-width:0">
     <div id="basket" class="basket" hidden></div>
@@ -857,8 +857,8 @@ ${infoCards([['What we do', 'Custom boxes, bags, mailers, pouches, labels and mo
 P.contact = () => {
   const cr = crumbs([['Contact us']]);
   return { path: '/contact/', title: 'Contact Boxenza — Free Quote in One Business Day', desc: `Contact ${BRAND} about custom packaging styles, materials or orders. We reply within one business day with your landed price.`, jsonld: [cr.ld],
-    body: `<div class="wrap">${cr.html}${pageHead('Contact us', 'Email us, message us on WhatsApp, or request a quote.')}
-<div class="why"><div><h3>Email</h3><p class="mono"><a href="mailto:${esc(CONTACT.email)}">${esc(CONTACT.email)}</a></p></div><div><h3>WhatsApp</h3><p class="mono"><a href="${CONTACT.whatsappLink}">${esc(CONTACT.whatsapp)}</a></p></div><div><h3>Hours</h3><p>Monday to Friday, 9:00 to 18:00 (GMT+5)</p></div><div><h3>Delivery</h3><p>Worldwide, door to door</p></div></div>
+    body: `<div class="wrap">${cr.html}${pageHead('Contact us', 'Email us or request a quote.')}
+<div class="why"><div><h3>Email</h3><p class="mono"><a href="mailto:${esc(CONTACT.email)}">${esc(CONTACT.email)}</a></p></div>${CONTACT.whatsapp ? `<div><h3>WhatsApp</h3><p class="mono"><a href="${CONTACT.whatsappLink}">${esc(CONTACT.whatsapp)}</a></p></div>` : ''}<div><h3>Hours</h3><p>Monday to Friday, 9:00 to 18:00 (GMT+5)</p></div><div><h3>Delivery</h3><p>Worldwide, door to door</p></div></div>
 <div style="margin-top:2.5rem"><h2 class="sub">What happens after you get in touch</h2>${infoCards([['1. We reply in one business day', 'With your full landed price — production, shipping, duty and tax — and a free 3D mockup of your packaging.'], ['2. You approve the proof', 'We send a digital proof of your artwork on the dieline. Production starts only after you approve it.'], ['3. We ship your order', 'We send photos of your finished order before it ships, then deliver it worldwide, door to door.']])}</div>
 <div class="pad">${ip(band('The fastest way to start is an instant price.', 'Get an instant price', '/instant-price/'), band('The fastest way to start is a free quote.', 'Request a quote', '/quote/'))}</div></div>` };
 };
