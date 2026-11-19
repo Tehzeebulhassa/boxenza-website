@@ -201,7 +201,7 @@ function header() {
     </nav>
     <div class="bx-search desk">
       <form class="bx-form" id="bx-form-desk" action="/search/" method="get" role="search">
-        <input class="bx-input" id="bx-input-desk" type="search" name="q" placeholder="Search styles, products…" aria-label="Search Boxenza" autocomplete="off" spellcheck="false">
+        <input class="bx-input" id="bx-input-desk" type="search" name="q" placeholder="Search" aria-label="Search Boxenza" autocomplete="off" spellcheck="false">
         <button class="bx-go" type="submit" aria-label="Search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.8-3.8"/></svg></button>
       </form>
       <div class="bx-results" id="bx-results-desk" hidden></div>
@@ -213,7 +213,7 @@ function header() {
   <div class="bx-bar" id="bx-bar" hidden>
     <div class="bx-bar-in">
       <form class="bx-form" id="bx-form" action="/search/" method="get" role="search">
-        <input class="bx-input" id="bx-input" type="search" name="q" placeholder="Search styles, products, industries…" aria-label="Search Boxenza" autocomplete="off" spellcheck="false">
+        <input class="bx-input" id="bx-input" type="search" name="q" placeholder="Search" aria-label="Search Boxenza" autocomplete="off" spellcheck="false">
         <button class="bx-go" type="submit" aria-label="Search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.8-3.8"/></svg></button>
       </form>
       <div class="bx-results" id="bx-results" hidden></div>
@@ -300,7 +300,7 @@ ${preload || ''}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=13">
+<link rel="stylesheet" href="/assets/style.css?v=14">
 <script>
 /* Prefetch the page a visitor is about to open, so tapping a photo opens it at once instead of showing a blank screen while it loads. */
 (function () {
