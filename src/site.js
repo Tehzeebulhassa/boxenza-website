@@ -570,7 +570,7 @@ P.style = (c, i) => {
     </div>
     <div class="pp-g"><b>Additional options</b><div class="opts">${chips(F.opts, 'opt')}</div></div>
     ${adds.length ? `<div class="pp-g"><b>Add-on</b><div class="opts">${chips(adds, 'add')}</div></div>` : ''}
-    <div class="pp-f" style="max-width:12rem"><label for="pp-qty">Quantity</label>${qtySelect('pp-qty', 1000)}</div>
+    <div class="pp-f" style="max-width:12rem"><label for="pp-qty">Quantity</label>${qtySelect('pp-qty', 500)}</div>
     ${ip(estimatorBox('pp-est'), quoteBox())}
     <div class="buy"><span class="buy-total" id="buy-total"></span><button type="button" class="btn add" data-add><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v10M7 12h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Add to quote</button></div>
     <p class="pp-msg" id="pp-msg" role="status"></p>
