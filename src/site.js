@@ -282,6 +282,23 @@ ${preload || ''}
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/style.css?v=9">
+<script>
+/* Prefetch the page a visitor is about to open, so tapping a photo opens it at once instead of showing a blank screen while it loads. */
+(function () {
+  function prefetch(a) {
+    if (!a) return;
+    var u = a.getAttribute('href');
+    if (!u || u.charAt(0) === '#' || a.getAttribute('target') === '_blank') return;
+    if (/^[a-z][a-z0-9+.-]*:/i.test(u) && u.indexOf(location.origin) !== 0) return;
+    if (document.querySelector('link[rel="prefetch"][href="' + u + '"]')) return;
+    var l = document.createElement('link');
+    l.rel = 'prefetch'; l.href = u;
+    document.head.appendChild(l);
+  }
+  document.addEventListener('touchstart', function (e) { prefetch(e.target.closest && e.target.closest('a')); }, { passive: true });
+  document.addEventListener('mouseover', function (e) { prefetch(e.target.closest && e.target.closest('a')); });
+})();
+</script>
 ${ld}
 </head>
 <body${bodyClass ? ` class="${bodyClass}"` : ''}>
