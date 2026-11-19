@@ -545,7 +545,7 @@ P.style = (c, i) => {
   ];
   const labels = ['View 1', 'View 2', 'View 3', 'Dieline'];
   const sel = (list, def) => '<option>Need consultation</option>' + list.map(o => `<option${o[0] === def ? ' selected' : ''}>${esc(o[0])}</option>`).join('');
-  const DEF = { 'folding-cartons': { mat: 'SBS C1S', print: 'Offset print' } }[c.s] || {};
+  const DEF = { 'folding-cartons': { mat: 'SBS C1S', print: 'Offset print', fin: 'Matte or gloss lamination' } }[c.s] || {};
   const chips = (list, kind) => list.map(o => `<button type="button" class="opt" data-kind="${kind}" data-val="${esc(o)}" aria-pressed="false">${esc(o)}</button>`).join('');
   const adds = D.ADDS[c.s] || [];
   const F = formFor(c.s);
@@ -567,7 +567,7 @@ P.style = (c, i) => {
     <div class="pp-row">
       <div class="pp-f"><label for="pp-mat">Material</label><select id="pp-mat">${sel(F.mat.map(m => [m]), DEF.mat)}</select></div>
       <div class="pp-f"><label for="pp-print">Print</label><select id="pp-print">${sel(D.OPTS.print[1], DEF.print)}</select></div>
-      <div class="pp-f"><label for="pp-fin">Finishing</label><select id="pp-fin">${sel(D.OPTS.coat[1])}</select></div>
+      <div class="pp-f"><label for="pp-fin">Finishing</label><select id="pp-fin">${sel(D.OPTS.coat[1], DEF.fin)}</select></div>
     </div>
     <div class="pp-g"><b>Additional options</b><div class="opts">${chips(F.opts, 'opt')}</div></div>
     ${adds.length ? `<div class="pp-g"><b>Add-on</b><div class="opts">${chips(adds, 'add')}</div></div>` : ''}
