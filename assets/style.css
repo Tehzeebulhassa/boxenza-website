@@ -489,7 +489,7 @@ input[type="file"] { padding: 0.55rem; }
 .bx-bar { border-top: 1px solid var(--line); background: var(--card); padding: 0.8rem 1rem 1rem; }
 .bx-bar[hidden] { display: none; }
 .bx-bar-in { max-width: 40rem; margin-inline: auto; }
-.bx-form { position: relative; }
+.bx-form { position: relative; background: none; border: 0; border-radius: 0; padding: 0; display: block; gap: 0; }
 .bx-input { width: 100%; padding-right: 2.6rem; }
 .bx-go { position: absolute; right: 0.3rem; top: 50%; transform: translateY(-50%); display: flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; background: none; border: 0; color: var(--ink-2); cursor: pointer; padding: 0; }
 .bx-go:hover { color: var(--accent); }
@@ -503,6 +503,14 @@ input[type="file"] { padding: 0.55rem; }
 .bx-all { display: block; padding: 0.65rem 0.9rem; border-top: 1px solid var(--line); font-weight: 600; text-decoration: none; color: var(--accent-ink); }
 .bx-all:hover { background: var(--accent-soft); }
 .sres .bx-row { border-bottom: 1px solid var(--line); padding: 0.8rem 0.25rem; }
+/* Header search box (PakFactory style): visible in the header row on wide
+   screens, with the results dropdown under it. Below 1200px there is no room
+   for it, so the box hides and the magnifier button opens the bar instead. */
+.bx-search { position: relative; }
+.bx-search.desk { flex: 1 1 11rem; min-width: 11rem; max-width: 18rem; }
+.bx-search.desk .bx-results { position: absolute; top: calc(100% + 0.4rem); right: 0; width: 22rem; max-width: calc(100vw - 2rem); margin-top: 0; }
+@media (max-width: 1199px) { .bx-search.desk { display: none; } }
+@media (min-width: 1200px) { .bx-toggle { display: none; } }
 @media (max-width: 560px) {
   .hdr-cta { padding: 0.55rem 0.7rem; font-size: 0.8rem; }
   .topbar { font-size: 0.74rem; }

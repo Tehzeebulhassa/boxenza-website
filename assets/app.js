@@ -273,8 +273,7 @@
   function searchAllUrl(q) { return u('/search/?q=' + encodeURIComponent(q)); }
 
   var bxBar = $('bx-bar'), bxToggle = $('bx-toggle'), bxInput = $('bx-input'), bxForm = $('bx-form'), bxRes = $('bx-results');
-  var bxItems = [], bxActive = -1, bxTimer = null;
-  function bxCloseResults() { if (bxRes) bxRes.hidden = true; bxActive = -1; bxItems = []; }
+  var bxInputD = $('bx-input-desk'), bxFormD = $('bx-form-desk'), bxResD = $('bx-results-desk');
   function bxOpenBar(focus) {
     if (!bxBar) return;
     bxBar.hidden = false;
@@ -286,50 +285,65 @@
     if (!bxBar || bxBar.hidden) return;
     bxBar.hidden = true;
     bxToggle.setAttribute('aria-expanded', 'false');
-    bxCloseResults();
+    if (bxWired) bxWired.close();
   }
-  function bxShowResults(q) {
-    loadSearchIndex().then(function (idx) {
-      if (!bxInput || bxInput.value.trim() !== q) return; // typed on since
-      bxItems = matchSearch(idx, q).slice(0, 8);
-      if (!bxItems.length) {
-        bxRes.innerHTML = '<div class="bx-no">No results for &ldquo;' + esc(q) + '&rdquo;. <a href="' + searchAllUrl(q) + '">See all results</a></div>';
-      } else {
-        bxRes.innerHTML = bxItems.map(searchRow).join('') + '<a class="bx-all" href="' + searchAllUrl(q) + '">See all results for &ldquo;' + esc(q) + '&rdquo;</a>';
-      }
-      bxRes.hidden = false; bxActive = -1;
+  // Wires one search input + its results box. Same behaviour for the header
+  // box (desktop) and the slide-down bar (narrow screens): live dropdown,
+  // arrow keys to pick a result, Enter to open it, Escape to close.
+  function bxWire(input, res, form, onEsc) {
+    if (!input || !res) return null;
+    var timer = null, items = [], active = -1;
+    function close() { res.hidden = true; active = -1; items = []; }
+    function show(q) {
+      loadSearchIndex().then(function (idx) {
+        if (input.value.trim() !== q) return; // typed on since
+        items = matchSearch(idx, q).slice(0, 8);
+        if (!items.length) {
+          res.innerHTML = '<div class="bx-no">No results for &ldquo;' + esc(q) + '&rdquo;. <a href="' + searchAllUrl(q) + '">See all results</a></div>';
+        } else {
+          res.innerHTML = items.map(searchRow).join('') + '<a class="bx-all" href="' + searchAllUrl(q) + '">See all results for &ldquo;' + esc(q) + '&rdquo;</a>';
+        }
+        res.hidden = false; active = -1;
+      });
+    }
+    if (form) form.setAttribute('action', u('/search/'));
+    input.addEventListener('input', function () {
+      var q = input.value;
+      if (timer) clearTimeout(timer);
+      if (q.trim().length < 2) { close(); return; }
+      timer = setTimeout(function () { show(q.trim()); }, 160);
     });
-  }
-  if (bxBar && bxToggle && bxInput) {
-    bxForm.setAttribute('action', u('/search/'));
-    bxToggle.addEventListener('click', function () { if (bxBar.hidden) bxOpenBar(); else bxCloseBar(); });
-    bxInput.addEventListener('input', function () {
-      var q = bxInput.value;
-      if (bxTimer) clearTimeout(bxTimer);
-      if (q.trim().length < 2) { bxCloseResults(); return; }
-      bxTimer = setTimeout(function () { bxShowResults(q.trim()); }, 160);
-    });
-    bxInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') { bxCloseBar(); bxToggle.focus(); return; }
-      if (bxRes.hidden || !bxItems.length) return;
-      var rows = $$('.bx-row', bxRes);
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { close(); input.blur(); if (onEsc) onEsc(); return; }
+      if (res.hidden || !items.length) return;
+      var rows = $$('.bx-row', res);
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         e.preventDefault();
-        bxActive = e.key === 'ArrowDown' ? (bxActive + 1) % rows.length : (bxActive - 1 + rows.length) % rows.length;
-        rows.forEach(function (r, i) { r.classList.toggle('active', i === bxActive); });
-      } else if (e.key === 'Enter' && bxActive >= 0) {
+        active = e.key === 'ArrowDown' ? (active + 1) % rows.length : (active - 1 + rows.length) % rows.length;
+        rows.forEach(function (r, i) { r.classList.toggle('active', i === active); });
+      } else if (e.key === 'Enter' && active >= 0) {
         e.preventDefault();
-        window.location.href = rows[bxActive].getAttribute('href');
+        window.location.href = rows[active].getAttribute('href');
       }
     });
-    document.addEventListener('click', function (e) {
-      if (e.target.closest('#bx-toggle')) return;
-      if (e.target.closest('#burger')) { bxCloseBar(); return; }
-      if (e.target.closest('[data-menu]')) { bxCloseBar(); return; }
-      if (!e.target.closest('#bx-bar')) bxCloseBar();
-    });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') bxCloseBar(); });
+    return { close: close, input: input };
   }
+  var bxWired = bxWire(bxInput, bxRes, bxForm, function () { bxCloseBar(); if (bxToggle) bxToggle.focus(); });
+  var bxWiredD = bxWire(bxInputD, bxResD, bxFormD, null);
+  if (bxBar && bxToggle) {
+    bxToggle.addEventListener('click', function () { if (bxBar.hidden) bxOpenBar(); else bxCloseBar(); });
+    window.addEventListener('resize', function () { if (window.innerWidth >= 1200) bxCloseBar(); });
+  }
+  document.addEventListener('click', function (e) {
+    if (bxBar && bxToggle) {
+      if (e.target.closest('#bx-toggle')) return;
+      if (e.target.closest('#burger')) { bxCloseBar(); }
+      else if (e.target.closest('[data-menu]')) { bxCloseBar(); }
+      else if (!e.target.closest('#bx-bar')) { bxCloseBar(); }
+    }
+    if (bxWiredD && !e.target.closest('.bx-search.desk')) bxWiredD.close();
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') bxCloseBar(); });
 
   /* ---------- search results page ---------- */
   var sres = $('search-results');
@@ -337,9 +351,10 @@
     var sq = new URLSearchParams(location.search).get('q') || '';
     var sstatus = $('search-status');
     if (bxInput) bxInput.value = sq;
+    if (bxInputD) bxInputD.value = sq;
     if (sq) {
       document.title = 'Results for "' + sq + '" | Boxenza';
-      bxOpenBar(false);
+      if (window.innerWidth < 1200) bxOpenBar(false);
     }
     if (sq.trim().length < 2) {
       sstatus.textContent = 'Type at least 2 letters in the search box to search.';
