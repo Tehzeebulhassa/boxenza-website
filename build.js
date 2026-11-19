@@ -28,7 +28,7 @@ const write = (rel, content) => {
   fs.writeFileSync(f, content);
 };
 
-const pages = [P.home(), P.products(), ...(INSTANT ? [P.instantPrice()] : []), P.quote(), P.industries(), P.options(), P.why(), P.moq(), P.ptimes(), P.blog(), P.about(), P.contact()];
+const pages = [P.home(), P.products(), ...(INSTANT ? [P.instantPrice()] : []), P.quote(), P.industries(), P.options(), P.dielines(), P.why(), P.moq(), P.ptimes(), P.blog(), P.about(), P.contact()];
 D.CATS.forEach(c => { pages.push(P.category(c)); c.st.forEach((s, i) => pages.push(P.style(c, i))); });
 D.IND.forEach(x => pages.push(P.industry(x)));
 D.SVC.forEach(x => pages.push(P.service(x)));

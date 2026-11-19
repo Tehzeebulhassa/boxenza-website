@@ -210,6 +210,7 @@ function header() {
     <details><summary>Services</summary><div class="mp-list">${D.SVC.map(x => `<a href="${svcUrl(x)}">${esc(x[1])}</a>`).join('')}</div></details>
     <a href="/why-us/">Why us</a>
     <a href="/option-library/">Option library</a>
+    <a href="/free-dielines/">Free dielines</a>
     <a href="/minimum-order-quantities/">Minimum order quantities</a>
     <a href="/contact/">Contact</a>
     <a href="/quote/">Request a quote<span class="qn" data-qn></span></a>
@@ -233,6 +234,7 @@ function footer() {
         <li><a href="/industries/">Industries</a></li>
         <li><a href="/services/structural-design/">Services</a></li>
         <li><a href="/option-library/">Option library</a></li>
+        <li><a href="/free-dielines/">Free dielines</a></li>
         <li><a href="/minimum-order-quantities/">Minimum order quantities</a></li>
         <li><a href="/production-times/">Production times</a></li>
         <li><a href="/why-us/">Why us</a></li>
@@ -541,7 +543,7 @@ P.style = (c, i) => {
     viewPhoto(s[0], 1, s[1] + ' photo', ' loading="eager"'),
     viewPhoto(s[0], 2, s[1] + ' photo, view 2'),
     viewPhoto(s[0], 3, s[1] + ' photo, view 3'),
-    `<div class="dl-wrap">${photo('/photos/' + s[0] + '-d.jpg', 1080, 1080, s[1] + ' dieline')}<p class="dl-note">Free dieline for this style. <a href="/photos/${s[0]}-d.jpg" download>Download the dieline (JPG)</a> Your exact dieline is made to your size after your quote.</p></div>`
+    `<div class="dl-wrap">${photo('/photos/' + s[0] + '-d.jpg', 1080, 1080, s[1] + ' dieline')}<p class="dl-note">Free dieline for this style. <a href="/photos/${s[0]}-d.jpg" download>Download the dieline (JPG)</a> Your exact dieline is made to your size after your quote. <a href="/free-dielines/">See all 183 free dielines →</a></p></div>`
   ];
   const labels = ['View 1', 'View 2', 'View 3', 'Dieline'];
   const sel = (list, def) => '<option>Need consultation</option>' + list.map(o => `<option${o[0] === def ? ' selected' : ''}>${esc(o[0])}</option>`).join('');
@@ -751,6 +753,15 @@ P.options = () => {
   return { path: '/option-library/', title: 'Packaging Materials, Printing & Finishes', desc: 'Every stock, print method, finish and coating for custom packaging: kraft, SBS, corrugated, foil, emboss, spot UV, soft-touch and more.', jsonld: [cr.ld],
     body: `<div class="wrap">${cr.html}${pageHead('Option library', 'Every stock, print method, finish and coating you can choose from. Not sure what to pick? Describe your product and we will recommend a combination.')}
 <div class="tabs" role="tablist" aria-label="Option groups">${tabs}</div>${groups}<div class="pad">${band('Want help choosing? We will recommend options.', 'Ask for advice')}</div></div>` };
+};
+P.dielines = () => {
+  const cr = crumbs([['Free dielines']]);
+  const jump = `<p><b>Jump to:</b> ${D.CATS.map(c => `<a href="#dl-${c.s}">${esc(c.n)} (${c.st.length})</a>`).join(' · ')}</p>`;
+  const sections = D.CATS.map(c => `<h2 class="sub" id="dl-${c.s}">${esc(c.n)} (${c.st.length})</h2><div class="svcs">${c.st.map(s => `<div class="scard"><a href="/photos/${s[0]}-d.jpg" download><span class="tile fit-contain">${photo('/photos/' + s[0] + '-d.jpg', 600, 450, s[1] + ' dieline')}</span></a><h3><a href="${styleUrl(c, s)}">${esc(s[1])}</a></h3><p><a href="/photos/${s[0]}-d.jpg" download>Download dieline (JPG)</a></p></div>`).join('')}</div>`).join('');
+  return { path: '/free-dielines/', title: 'Free Dielines for Custom Packaging', desc: 'Download free dielines for all 183 Boxenza packaging styles: folding cartons, mailer boxes, rigid boxes, bags, pouches, labels and more. JPG format, free to use. Your exact dieline is made to your size after your quote.', jsonld: [cr.ld],
+    body: `<div class="wrap">${cr.html}${pageHead('Free dielines', 'Free dieline templates for every Boxenza style. Download the JPG, place your artwork on it, and send it with your quote. Your exact dieline is made to your size after your quote.')}
+${infoCards([['1. Download the dieline', 'Find your style below and download its free dieline as a JPG.'], ['2. Place your artwork', 'Put your design on the dieline in your design software, keeping text and logos inside the safe area.'], ['3. Send it with your quote', 'Attach the finished artwork when you request a quote. We make your exact dieline to your size and send a free 3D mockup and digital proof.']])}
+${jump}${sections}<div class="pad">${band('Need a dieline made to your size? Send your measurements.', 'Request a quote')}</div></div>` };
 };
 P.why = () => {
   const cr = crumbs([['Why us']]);
