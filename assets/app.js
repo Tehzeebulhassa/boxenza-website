@@ -9,9 +9,11 @@
     if (typeof window.BX_BASE !== 'string') return p;
     var h = '', i = p.indexOf('#');
     if (i >= 0) { h = p.slice(i); p = p.slice(0, i); }
+    var q = '', j = p.indexOf('?');
+    if (j >= 0) { q = p.slice(j); p = p.slice(0, j); }
     p = p.replace(/^\//, '');
     if (p === '' || /\/$/.test(p)) p += 'index.html';
-    return window.BX_BASE + p + h;
+    return window.BX_BASE + p + q + h;
   }
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   var store = {
@@ -228,6 +230,137 @@
       $$('[data-ogroup]').forEach(function (g) { g.hidden = g.getAttribute('data-ogroup') !== t; });
     });
   });
+
+  /* ---------- search ---------- */
+  var searchIdx = null, searchReq = null;
+  function loadSearchIndex() {
+    if (searchIdx) return Promise.resolve(searchIdx);
+    if (searchReq) return searchReq;
+    searchReq = fetch(u('/assets/search-index.json')).then(function (r) { return r.json(); }).then(function (j) { searchIdx = j; return j; }).catch(function () { searchReq = null; return []; });
+    return searchReq;
+  }
+  var SEARCH_TYPE = { style: 0, category: 1, industry: 2, service: 3, article: 4, page: 5 };
+  function searchScore(e, q) {
+    var name = e.n.toLowerCase();
+    if (name.indexOf(q) === 0) return 0;
+    if (e.c && e.c.toLowerCase() === q) return 0;
+    if (name.indexOf(q) >= 0) return 1;
+    if (e.k.indexOf(q) >= 0) return 2;
+    return 3;
+  }
+  function matchSearch(idx, q) {
+    q = (q || '').trim().toLowerCase();
+    if (q.length < 2) return [];
+    var words = q.split(/\s+/), out = [];
+    idx.forEach(function (e) {
+      for (var i = 0; i < words.length; i++) { if (e.k.indexOf(words[i]) < 0) return; }
+      out.push({ e: e, s: searchScore(e, q) });
+    });
+    out.sort(function (a, b) { return (a.s - b.s) || (SEARCH_TYPE[a.e.t] - SEARCH_TYPE[b.e.t]) || (a.e.n < b.e.n ? -1 : 1); });
+    return out.map(function (x) { return x.e; });
+  }
+  function searchMeta(e) {
+    if (e.t === 'style') return e.c + ' · ' + e.cat;
+    if (e.t === 'category') return 'Category';
+    if (e.t === 'industry') return 'Industry';
+    if (e.t === 'service') return 'Service';
+    if (e.t === 'article') return 'Guide';
+    return 'Page';
+  }
+  function searchRow(e) {
+    return '<a class="bx-row" href="' + u(e.u) + '"><span class="bx-rn">' + esc(e.n) + '</span><span class="bx-rm">' + esc(searchMeta(e)) + '</span></a>';
+  }
+  function searchAllUrl(q) { return u('/search/?q=' + encodeURIComponent(q)); }
+
+  var bxBar = $('bx-bar'), bxToggle = $('bx-toggle'), bxInput = $('bx-input'), bxForm = $('bx-form'), bxRes = $('bx-results');
+  var bxItems = [], bxActive = -1, bxTimer = null;
+  function bxCloseResults() { if (bxRes) bxRes.hidden = true; bxActive = -1; bxItems = []; }
+  function bxOpenBar(focus) {
+    if (!bxBar) return;
+    bxBar.hidden = false;
+    bxToggle.setAttribute('aria-expanded', 'true');
+    if (typeof closeMenu === 'function') closeMenu();
+    if (focus !== false && bxInput) bxInput.focus();
+  }
+  function bxCloseBar() {
+    if (!bxBar || bxBar.hidden) return;
+    bxBar.hidden = true;
+    bxToggle.setAttribute('aria-expanded', 'false');
+    bxCloseResults();
+  }
+  function bxShowResults(q) {
+    loadSearchIndex().then(function (idx) {
+      if (!bxInput || bxInput.value.trim() !== q) return; // typed on since
+      bxItems = matchSearch(idx, q).slice(0, 8);
+      if (!bxItems.length) {
+        bxRes.innerHTML = '<div class="bx-no">No results for &ldquo;' + esc(q) + '&rdquo;. <a href="' + searchAllUrl(q) + '">See all results</a></div>';
+      } else {
+        bxRes.innerHTML = bxItems.map(searchRow).join('') + '<a class="bx-all" href="' + searchAllUrl(q) + '">See all results for &ldquo;' + esc(q) + '&rdquo;</a>';
+      }
+      bxRes.hidden = false; bxActive = -1;
+    });
+  }
+  if (bxBar && bxToggle && bxInput) {
+    bxForm.setAttribute('action', u('/search/'));
+    bxToggle.addEventListener('click', function () { if (bxBar.hidden) bxOpenBar(); else bxCloseBar(); });
+    bxInput.addEventListener('input', function () {
+      var q = bxInput.value;
+      if (bxTimer) clearTimeout(bxTimer);
+      if (q.trim().length < 2) { bxCloseResults(); return; }
+      bxTimer = setTimeout(function () { bxShowResults(q.trim()); }, 160);
+    });
+    bxInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { bxCloseBar(); bxToggle.focus(); return; }
+      if (bxRes.hidden || !bxItems.length) return;
+      var rows = $$('.bx-row', bxRes);
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        bxActive = e.key === 'ArrowDown' ? (bxActive + 1) % rows.length : (bxActive - 1 + rows.length) % rows.length;
+        rows.forEach(function (r, i) { r.classList.toggle('active', i === bxActive); });
+      } else if (e.key === 'Enter' && bxActive >= 0) {
+        e.preventDefault();
+        window.location.href = rows[bxActive].getAttribute('href');
+      }
+    });
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('#bx-toggle')) return;
+      if (e.target.closest('#burger')) { bxCloseBar(); return; }
+      if (e.target.closest('[data-menu]')) { bxCloseBar(); return; }
+      if (!e.target.closest('#bx-bar')) bxCloseBar();
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') bxCloseBar(); });
+  }
+
+  /* ---------- search results page ---------- */
+  var sres = $('search-results');
+  if (sres) {
+    var sq = new URLSearchParams(location.search).get('q') || '';
+    var sstatus = $('search-status');
+    if (bxInput) bxInput.value = sq;
+    if (sq) {
+      document.title = 'Results for "' + sq + '" | Boxenza';
+      bxOpenBar(false);
+    }
+    if (sq.trim().length < 2) {
+      sstatus.textContent = 'Type at least 2 letters in the search box to search.';
+    } else {
+      loadSearchIndex().then(function (idx) {
+        var all = matchSearch(idx, sq);
+        if (!all.length) {
+          sstatus.textContent = 'No results for "' + sq + '". Try a style name, a code like FC05, or a product such as mailer box.';
+          return;
+        }
+        sstatus.textContent = all.length + ' result' + (all.length === 1 ? '' : 's') + ' for "' + sq + '"';
+        var groups = {};
+        all.forEach(function (e) { (groups[e.t] = groups[e.t] || []).push(e); });
+        var order = ['style', 'category', 'industry', 'service', 'article', 'page'];
+        var labels = { style: 'Styles', category: 'Categories', industry: 'Industries', service: 'Services', article: 'Guides', page: 'Pages' };
+        sres.innerHTML = order.filter(function (t) { return groups[t]; }).map(function (t) {
+          return '<h2 class="sub">' + labels[t] + ' (' + groups[t].length + ')</h2>' + groups[t].map(searchRow).join('');
+        }).join('');
+      });
+    }
+  }
 
   /* ---------- mega menu ---------- */
   var mega = $('mega'), navBtns = $$('[data-menu]'), openMenu = null;

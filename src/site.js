@@ -199,8 +199,18 @@ function header() {
       ${ip('<a href="/instant-price/">Instant price</a>', '<a href="/#process">How it works</a>')}
       <a href="/why-us/">Why us</a>
     </nav>
+    <button type="button" class="bx-toggle" id="bx-toggle" aria-expanded="false" aria-controls="bx-bar" aria-label="Search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.8-3.8"/></svg></button>
     <a class="btn hdr-cta" href="/quote/">Request a quote<span id="qn" class="qn"></span></a>
     <button type="button" class="burger" id="burger" aria-expanded="false" aria-controls="mpanel" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="bx-bar" id="bx-bar" hidden>
+    <div class="bx-bar-in">
+      <form class="bx-form" id="bx-form" action="/search/" method="get" role="search">
+        <input class="bx-input" id="bx-input" type="search" name="q" placeholder="Search styles, products, industries…" aria-label="Search Boxenza" autocomplete="off" spellcheck="false">
+        <button class="bx-go" type="submit" aria-label="Search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.8-3.8"/></svg></button>
+      </form>
+      <div class="bx-results" id="bx-results" hidden></div>
+    </div>
   </div>
   <div class="mega" id="mega" hidden><div class="mwrap">${megaPanels()}</div></div>
   <nav class="mpanel" id="mpanel" aria-label="Mobile" hidden>
@@ -283,7 +293,7 @@ ${preload || ''}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=11">
+<link rel="stylesheet" href="/assets/style.css?v=12">
 <script>
 /* Prefetch the page a visitor is about to open, so tapping a photo opens it at once instead of showing a blank screen while it loads. */
 (function () {
@@ -310,7 +320,7 @@ ${body}
 </main>
 ${footer()}
 <script>window.BX_INSTANT=${INSTANT};</script><script src="/assets/pricing.js"></script>
-<script src="/assets/app.js" defer></script>
+<script src="/assets/app.js?v=2" defer></script>
 </body>
 </html>`;
 }
@@ -762,6 +772,15 @@ P.dielines = () => {
     body: `<div class="wrap">${cr.html}${pageHead('Free dielines', 'Free dieline templates for every Boxenza style. Download the JPG, place your artwork on it, and send it with your quote. Your exact dieline is made to your size after your quote.')}
 ${infoCards([['1. Download the dieline', 'Find your style below and download its free dieline as a JPG.'], ['2. Place your artwork', 'Put your design on the dieline in your design software, keeping text and logos inside the safe area.'], ['3. Send it with your quote', 'Attach the finished artwork when you request a quote. We make your exact dieline to your size and send a free 3D mockup and digital proof.']])}
 ${jump}${sections}<div class="pad">${band('Need a dieline made to your size? Send your measurements.', 'Request a quote')}</div></div>` };
+};
+P.search = () => {
+  const cr = crumbs([['Search']]);
+  return { path: '/search/', title: 'Search Boxenza', desc: 'Search all 183 Boxenza packaging styles, categories, industries and guides.', jsonld: [cr.ld],
+    body: `<div class="wrap">${cr.html}${pageHead('Search', 'Type a style, a code like FC05, or a product such as mailer box in the search box above.')}
+<p id="search-status" class="note">Searching…</p>
+<div id="search-results" class="sres"></div>
+<noscript><p>Search needs JavaScript. Browse <a href="/products/">all products</a> instead.</p></noscript>
+<div class="pad">${band('Cannot find what you need? Describe it and we will help.', 'Request a quote')}</div></div>` };
 };
 P.why = () => {
   const cr = crumbs([['Why us']]);
