@@ -545,7 +545,7 @@ P.style = (c, i) => {
   ];
   const labels = ['View 1', 'View 2', 'View 3', 'Dieline'];
   const sel = (list, def) => '<option>Need consultation</option>' + list.map(o => `<option${o[0] === def ? ' selected' : ''}>${esc(o[0])}</option>`).join('');
-  const DEF = { 'folding-cartons': { mat: 'SBS C1S', print: 'Offset print', fin: 'Matte or gloss lamination' } }[c.s] || {};
+  const DEF = { 'folding-cartons': { mat: 'SBS C1S', print: 'Offset print', fin: 'Aqueous coating' } }[c.s] || {};
   const chips = (list, kind) => list.map(o => `<button type="button" class="opt" data-kind="${kind}" data-val="${esc(o)}" aria-pressed="false">${esc(o)}</button>`).join('');
   const adds = D.ADDS[c.s] || [];
   const F = formFor(c.s);
