@@ -544,7 +544,8 @@ P.style = (c, i) => {
     `<div class="dl-wrap">${photo('/photos/' + s[0] + '-d.jpg', 1080, 1080, s[1] + ' dieline')}<p class="dl-note">Free dieline for this style. <a href="/photos/${s[0]}-d.jpg" download>Download the dieline (JPG)</a> Your exact dieline is made to your size after your quote.</p></div>`
   ];
   const labels = ['View 1', 'View 2', 'View 3', 'Dieline'];
-  const sel = list => '<option>Need consultation</option>' + list.map(o => `<option>${esc(o[0])}</option>`).join('');
+  const sel = (list, def) => '<option>Need consultation</option>' + list.map(o => `<option${o[0] === def ? ' selected' : ''}>${esc(o[0])}</option>`).join('');
+  const DEF = { 'folding-cartons': { mat: 'SBS C1S', print: 'Offset print' } }[c.s] || {};
   const chips = (list, kind) => list.map(o => `<button type="button" class="opt" data-kind="${kind}" data-val="${esc(o)}" aria-pressed="false">${esc(o)}</button>`).join('');
   const adds = D.ADDS[c.s] || [];
   const F = formFor(c.s);
@@ -564,8 +565,8 @@ P.style = (c, i) => {
       ${['l', 'w', 'd'].map((k, j) => `<div class="pp-f"${F.dims[j] ? '' : ' hidden'}><label for="pp-${k}">${esc(F.dims[j] || 'Depth')}${j < F.req ? ' <span class="req">*</span>' : ''}</label><input id="pp-${k}" type="number" min="0" step="any" inputmode="decimal"></div>`).join('\n      ')}
     </div>
     <div class="pp-row">
-      <div class="pp-f"><label for="pp-mat">Material</label><select id="pp-mat">${sel(F.mat.map(m => [m]))}</select></div>
-      <div class="pp-f"><label for="pp-print">Print</label><select id="pp-print">${sel(D.OPTS.print[1])}</select></div>
+      <div class="pp-f"><label for="pp-mat">Material</label><select id="pp-mat">${sel(F.mat.map(m => [m]), DEF.mat)}</select></div>
+      <div class="pp-f"><label for="pp-print">Print</label><select id="pp-print">${sel(D.OPTS.print[1], DEF.print)}</select></div>
       <div class="pp-f"><label for="pp-fin">Finishing</label><select id="pp-fin">${sel(D.OPTS.coat[1])}</select></div>
     </div>
     <div class="pp-g"><b>Additional options</b><div class="opts">${chips(F.opts, 'opt')}</div></div>
