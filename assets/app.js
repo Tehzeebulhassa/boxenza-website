@@ -487,19 +487,13 @@
   /* ---------- quote page ---------- */
   var form = $('quote-form');
   if (form) {
-    var qCountry = $('country');
-    qCountry.value = PR.countries[country] ? country : 'OTHER';
-    qCountry.addEventListener('change', function () {
-      country = qCountry.value; store.set('bx_country', country);
-      if (selCountry) selCountry.value = country;
-      if (PR.countries[country]) { cur = PR.countries[country].currency; store.set('bx_cur', cur); if (selCur) selCur.value = cur; }
-      fireLoc();
-    });
-    onLocChange(function () { qCountry.value = PR.countries[country] ? country : 'OTHER'; renderBasket(); });
+    onLocChange(renderBasket);
 
     var itemEst = function (it) { return estimate({ cat: it.cat, dims: it.dims, unit: it.unit, qty: it.qty, opts: it.opts, adds: it.adds, country: country }); };
     var renderBasket = function () {
       var el = $('basket'), has = basket.length > 0;
+      $$('.manual', form).forEach(function (x) { x.hidden = has; });
+      $('from-basket').hidden = !has;
       if (!has) { el.hidden = true; el.innerHTML = ''; return; }
       el.hidden = false;
       el.innerHTML = '<h3>Styles in your quote</h3><ul>' + basket.map(function (it, k) {
@@ -530,7 +524,7 @@
       var has = basket.length > 0;
       var text = [
         'Quote request', 'Name: ' + val('name'), 'Email: ' + val('email'), 'Phone / WhatsApp: ' + (val('phone') || '-'),
-        'Delivery country: ' + (PR.countries[qCountry.value] ? PR.countries[qCountry.value].name : 'Other'), 'Currency: ' + cur,
+        'Product: ' + (val('product') || '-'), 'Quantity: ' + (val('qty') || '-'), 'Currency: ' + cur,
         'Styles:' + (has ? '\n' + basket.map(line).join('\n') : ' -')
       ].filter(function (x) { return x !== null; }).join('\n');
 
@@ -544,7 +538,7 @@
       };
       var btn = $('q-submit'), note = $('form-note');
       var payload = {
-        name: val('name'), email: val('email'), phone: val('phone'), country: PR.countries[qCountry.value] ? PR.countries[qCountry.value].name : 'Other',
+        name: val('name'), email: val('email'), phone: val('phone'), product: val('product'), qty: val('qty'),
         currency: cur, items: basket, summary: text, website: val('website')
       };
       var send = function () {
