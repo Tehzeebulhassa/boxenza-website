@@ -665,7 +665,7 @@ P.quote = () => {
         <div class="field"><label for="phone">Phone or WhatsApp (optional)</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel"></div>
         <div class="field manual"><label for="product">Product</label><select id="product" name="product"><option value="">Select…</option>${D.CATS.map(c => `<option>${esc(c.n)}</option>`).join('')}<option>Not sure yet</option></select></div>
       </div>
-      <div class="field manual"><label for="qty">Quantity</label><select id="qty" name="qty"><option value="">Approx. quantity…</option><option>250 – 500</option><option>500 – 1,000</option><option>1,000 – 5,000</option><option>5,000 – 25,000</option><option>25,000+</option><option>Not sure yet</option></select></div>
+      <div class="field manual"><label for="qty">Quantity</label><select id="qty" name="qty"><option value="">Approx. quantity…</option><option>250 – 500</option><option>500 – 1,000</option><option>1,000 – 5,000</option><option>5,000 – 10,000</option><option>Not sure yet</option></select></div>
       <p class="note" id="from-basket" hidden style="margin:0">Product and quantity come from the styles in your quote above. Remove them to enter these by hand.</p>
       <div class="field"><label for="file">Artwork or logo (optional, up to 3 MB)</label><input id="file" name="file" type="file" accept=".pdf,.ai,.eps,.png,.jpg,.jpeg,.svg"></div>
       <div class="hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
