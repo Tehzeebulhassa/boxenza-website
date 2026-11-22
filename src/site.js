@@ -327,7 +327,7 @@ ${body}
 </main>
 ${footer()}
 <script>window.BX_INSTANT=${INSTANT};</script><script src="/assets/pricing.js"></script>
-<script src="/assets/app.js?v=3" defer></script>
+<script src="/assets/app.js?v=4" defer></script>
 </body>
 </html>`;
 }
@@ -663,27 +663,9 @@ P.quote = () => {
         <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
       </div>
       <div class="row">
-        <div class="field"><label for="company">Company or brand</label><input id="company" name="company" type="text" autocomplete="organization"></div>
         <div class="field"><label for="phone">Phone or WhatsApp (optional)</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel"></div>
-      </div>
-      <div class="row">
         <div class="field"><label for="country">Delivery country</label><select id="country" name="country">${countries}</select></div>
       </div>
-      <div class="row manual">
-        <div class="field"><label for="product">Product</label><select id="product" name="product"><option value="">Select…</option>${D.CATS.map(c => `<option>${esc(c.n)}</option>`).join('')}<option>Not sure yet</option></select></div>
-        <div class="field"><label for="qty">Quantity</label><select id="qty" name="qty"><option value="">Approx. quantity…</option><option>250 – 500</option><option>500 – 1,000</option><option>1,000 – 5,000</option><option>5,000 – 25,000</option><option>25,000+</option><option>Not sure yet</option></select></div>
-      </div>
-      <p class="note" style="margin:0">Minimum order starts at 250 pieces. <a href="/minimum-order-quantities/">See minimums for every product</a>.</p>
-      <p class="note" id="from-basket" hidden style="margin:0">Product, size and quantity come from the styles in your quote above. Remove them to enter these by hand.</p>
-      <fieldset class="field manual"><legend>Size (optional)</legend>
-        <div class="dims"><label for="dl">LENGTH<input id="dl" name="dl" type="number" min="0" step="any" inputmode="decimal"></label><label for="dw">WIDTH<input id="dw" name="dw" type="number" min="0" step="any" inputmode="decimal"></label><label for="dh">HEIGHT<input id="dh" name="dh" type="number" min="0" step="any" inputmode="decimal"></label></div>
-        <div class="units"><label for="u-in"><input id="u-in" type="radio" name="unit" value="in" checked> inches</label><label for="u-mm"><input id="u-mm" type="radio" name="unit" value="mm"> mm</label></div>
-      </fieldset>
-      <div class="row">
-        <div class="field"><label for="art">Artwork</label><select id="art" name="art"><option>I have print-ready artwork</option><option>I have a logo only</option><option>I need design help</option></select></div>
-        <div class="field"><label for="style">Style notes (optional)</label><input id="style" name="style" type="text" placeholder="e.g. mailer box with an insert"></div>
-      </div>
-      <div class="field"><label for="details">Project details (optional)</label><textarea id="details" name="details" placeholder="What goes inside, finishes you like, deadline…"></textarea></div>
       <div class="field"><label for="file">Artwork or logo (optional, up to 3 MB)</label><input id="file" name="file" type="file" accept=".pdf,.ai,.eps,.png,.jpg,.jpeg,.svg"></div>
       <div class="hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
       <button class="btn" type="submit" id="q-submit">Get my quote</button>

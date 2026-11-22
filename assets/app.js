@@ -500,8 +500,6 @@
     var itemEst = function (it) { return estimate({ cat: it.cat, dims: it.dims, unit: it.unit, qty: it.qty, opts: it.opts, adds: it.adds, country: country }); };
     var renderBasket = function () {
       var el = $('basket'), has = basket.length > 0;
-      $$('.manual', form).forEach(function (x) { x.hidden = has; });
-      $('from-basket').hidden = !has;
       if (!has) { el.hidden = true; el.innerHTML = ''; return; }
       el.hidden = false;
       el.innerHTML = '<h3>Styles in your quote</h3><ul>' + basket.map(function (it, k) {
@@ -529,17 +527,11 @@
     };
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var unit = form.querySelector('input[name="unit"]:checked').value;
-      var l = val('dl'), w = val('dw'), h = val('dh');
-      var size = (l || w || h) ? [l || '?', w || '?', h || '?'].join(' x ') + ' ' + unit : 'Not given';
       var has = basket.length > 0;
       var text = [
-        'Quote request', 'Name: ' + val('name'), 'Email: ' + val('email'), 'Phone / WhatsApp: ' + (val('phone') || '-'), 'Company: ' + (val('company') || '-'),
+        'Quote request', 'Name: ' + val('name'), 'Email: ' + val('email'), 'Phone / WhatsApp: ' + (val('phone') || '-'),
         'Delivery country: ' + (PR.countries[qCountry.value] ? PR.countries[qCountry.value].name : 'Other'), 'Currency: ' + cur,
-        has ? null : 'Product: ' + (val('product') || '-'),
-        'Styles:' + (has ? '\n' + basket.map(line).join('\n') : ' -'),
-        has ? null : 'Quantity: ' + (val('qty') || '-'), has ? null : 'Size (L x W x H): ' + size,
-        'Artwork: ' + val('art'), 'Style notes: ' + (val('style') || '-'), 'Details: ' + (val('details') || '-')
+        'Styles:' + (has ? '\n' + basket.map(line).join('\n') : ' -')
       ].filter(function (x) { return x !== null; }).join('\n');
 
       var showFallback = function (why) {
@@ -552,9 +544,8 @@
       };
       var btn = $('q-submit'), note = $('form-note');
       var payload = {
-        name: val('name'), email: val('email'), phone: val('phone'), company: val('company'), country: PR.countries[qCountry.value] ? PR.countries[qCountry.value].name : 'Other',
-        currency: cur, product: has ? '' : val('product'), qty: has ? '' : val('qty'), size: has ? '' : size, artwork: val('art'),
-        style: val('style'), details: val('details'), items: basket, summary: text, website: val('website')
+        name: val('name'), email: val('email'), phone: val('phone'), country: PR.countries[qCountry.value] ? PR.countries[qCountry.value].name : 'Other',
+        currency: cur, items: basket, summary: text, website: val('website')
       };
       var send = function () {
         btn.disabled = true; btn.textContent = 'Sending…';
